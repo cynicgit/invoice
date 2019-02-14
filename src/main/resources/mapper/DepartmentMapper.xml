@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.DepartmentMapper">
+    <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, name, pid
+  </sql>
+
+
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Department" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_department
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="pid != null">
+                pid
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="pid != null">
+                #{pid},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateDep" parameterType="com.zhongyi.invoice.entity.Department" >
+        update t_department
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteDep">
+        DELETE FROM t_department where id = #{id}
+    </delete>
+
+
+
+    <select id="getParentDep" resultType="com.zhongyi.invoice.entity.Department">
+        select * from t_department where pid = 0;
+    </select>
+    <select id="getDep" resultType="com.zhongyi.invoice.entity.Department">
+         select * FROM t_department
+         <where>
+             <if test="name != null and name  != ''">
+                 `name` LIKE concat('%',#{name},'%')
+             </if>
+         </where>
+    </select>
+    <select id="getDepById" resultType="com.zhongyi.invoice.entity.Department">
+        select * FROM t_department where id = #{id}
+    </select>
+    <select id="getDepByName" resultType="com.zhongyi.invoice.entity.Department">
+        select * FROM t_department where `name` = #{name}
+    </select>
+</mapper>
