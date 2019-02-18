@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.GroupMapper">
+    <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, `name`
+  </sql>
+
+    <resultMap id="group" type="com.zhongyi.invoice.entity.Group">
+        <id property="id" column="id"/>
+        <result column="name" property="name"/>
+        <collection property="users" ofType="com.zhongyi.invoice.entity.User">
+            <id property="id" column="userId"/>
+            <result property="name" column="userName"/>
+        </collection>
+    </resultMap>
+
+
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Group" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertMember">
+        INSERT INTO t_group_member (user_id, group_id) VALUES(#{userId}, #{groupId})
+    </insert>
+    <update id="updateGroup" parameterType="com.zhongyi.invoice.entity.Group" >
+        update t_group
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteGroupById">
+         DELETE FROM t_group where id = #{id}
+    </delete>
+    <delete id="deleteMemberByGroupId">
+         DELETE FROM t_group_member where group_id = #{groupId}
+    </delete>
+
+    <select id="getGroupByName" resultType="com.zhongyi.invoice.entity.Group">
+        select * FROM t_group where `name` = #{name}
+    </select>
+    <select id="getGroup" resultMap="group">
+        select g.id, g.name, u.name userName, u.id userId FROM t_group g
+        LEFT JOIN t_group_member m
+        ON g.id = m.group_id
+        LEFT JOIN t_user u
+        ON m.user_id = u.id
+    </select>
+    <select id="getGroupById"  resultMap="group">
+       select g.id, g.name, u.name userName, u.id userId FROM t_group g
+        LEFT JOIN t_group_member m
+        ON g.id = m.group_id
+        LEFT JOIN t_user u
+        ON m.user_id = u.id
+         where g.id = #{id}
+    </select>
+    <select id="getMemberByUserId" resultType="java.lang.Integer">
+        select user_id FROM t_group_member where user_id = #{id}
+    </select>
+    <select id="getGroupMember" resultType="java.lang.Integer">
+        select user_id FROM t_group_member
+    </select>
+
+</mapper>

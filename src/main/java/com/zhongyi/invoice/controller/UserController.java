@@ -38,6 +38,11 @@ public class UserController {
         return ZYResponse.success(pageInfo);
     }
 
+    @GetMapping("/all")
+    public ZYResponse all() {
+        return ZYResponse.success(userService.getAllUser());
+    }
+
     @GetMapping("/{id}")
     public ZYResponse getUserDeatil(@PathVariable Integer id) {
         User u = userService.getUserById(id);

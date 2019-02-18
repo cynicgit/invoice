@@ -51,4 +51,8 @@ public class UserService {
     public User getUserById(Integer id) {
         return userMapper.getUserById(id);
     }
+
+    public List<User> getAllUser() {
+        return userMapper.getUser(new User());
+    }
 }

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.TargetMapper">
+    <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, `name`, target, `type`, `year`, user_id, group_id
+  </sql>
+
+
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Target" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_target
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="target != null">
+                `target`,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="year != null">
+                `year`,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="groupId != null">
+                group_id,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="target != null">
+                #{target},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="year != null">
+                #{year},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="groupId != null">
+                #{groupId},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateTarget" parameterType="com.zhongyi.invoice.entity.Target" >
+        update t_target
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="target != null">
+                `target` = #{target},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+            <if test="year != null">
+                `year` = #{year},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="groupId != null">
+                group_id = #{groupId},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteTarget">
+         DELETE FROM t_target where id = #{id}
+    </delete>
+
+    <select id="getTargetByNameAndYear" resultType="com.zhongyi.invoice.entity.Target">
+        select * FROM t_target where `year` = #{year} and user_id = #{userId}
+    </select>
+    <select id="getTarget" resultType="com.zhongyi.invoice.entity.Target">
+        select * FROM t_target
+        <where>
+            <if test="name != null and name !=''">
+                `name` = #{name}
+            </if>
+        </where>
+    </select>
+    <select id="getTargetById" resultType="com.zhongyi.invoice.entity.Target">
+        select * FROM t_target where id = #{id}
+    </select>
+
+</mapper>

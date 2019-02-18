@@ -1,0 +1,144 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="static/js/laydate/theme/default/laydate.css"/>-->
+    <title>创建应用</title>
+    <style>
+        body{padding: 20px;}
+        .demo-input{padding-left: 10px; height: 38px; min-width: 262px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+        .demo-footer{padding: 50px 0; color: #999; font-size: 14px;}
+        .demo-footer a{padding: 0 5px; color: #01AAED;}
+    </style>
+
+</head>
+<body>
+
+<div class="page-container" id="student-list">
+    <form action="" method="post" class="form form-horizontal" id="form-menu-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <select id="dep-select" class="select"></select>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>目标额度：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="target">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>年份：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" id="year"  class="demo-input" placeholder="请选择日期"  >
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-2">
+                <input style="width:100px" class="btn btn-primary radius" id="submit-btn" type="submit" value="提交">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/laydate/laydate.js"></script>
+<script>
+    laydate.render({
+        elem: '#year', //指定元素
+        type: 'year'
+    });
+    $(function () {
+        var type = $.cookie("type");
+        var url = type == 0 ? '/system/user/all' : '/system/group/all'
+        ajax({
+            url: url,
+            type: "get",
+            success: function (response) {
+                if (response.result === 0) {
+                    var options = '<option value="">请选择</option>';
+                    response.data.forEach(function (item) {
+                        options += '<option value="'+ item.id+ '">'+ item.name+ '</option></optgroup>'
+                    });
+                    $('#dep-select').html(options);
+                }
+            }
+        });
+
+        $('#submit-btn').click(function (e) {
+            e.preventDefault();
+            var uid = $('#dep-select option:selected').val();
+            var name = $('#dep-select option:selected').text();
+            var target = $('#target').val();
+            var year = $('#year').val();
+
+
+            if (!uid || uid == '') {
+                layer.msg('请选择小组或者人员', {icon: 2, time: 1000});
+                return;
+            } if (!year || year == '') {
+                layer.msg('请选择日期', {icon: 2, time: 1000});
+                return;
+            }if (!target || target == '') {
+                layer.msg('请选择目标', {icon: 2, time: 1000});
+                return;
+            }
+            var groupId = 0;
+            var userId = 0;
+            if (type == 0) {
+                userId = uid;
+            } else {
+                groupId = uid;
+            }
+
+
+
+
+
+            ajax({
+                url: "system/target",
+                type: "post",
+                data: {
+                    name: name,
+                    userId: userId,
+                    groupId: groupId,
+                    type: type,
+                    target: target,
+                    year: year
+                },
+                success: function (response) {
+                    if (response.result === 0) {
+                        layer.msg('添加成功');
+                        setTimeout(function () {
+                            parent.location.reload();
+                        }, 1500)
+                    }
+                }
+            });
+        });
+
+    });
+
+</script>
+</body>
+</html>
