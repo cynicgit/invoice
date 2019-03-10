@@ -17,5 +17,10 @@ public class InvoiceVO extends Invoice {
 
     private Integer Invoice;
     private Double receiveTotalInvoice;
+    private Double commonInvoiceAmount;
+    private Double commonNoTaxAmount;
+    private Double specialInvoiceAmount;
+    private Double specialNoTaxAmount;
     private String createLimitPart;
+
 }

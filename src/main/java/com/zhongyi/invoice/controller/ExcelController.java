@@ -135,86 +135,81 @@ public class ExcelController {
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
 
 
+        List<InvoiceVO> list = new ArrayList<>();
 
         //专票
-        List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专票".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
+        List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
 
         //普票
-        List<InvoiceVO> commonInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "普票".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
+        List<InvoiceVO> commonInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
-        List<InvoiceVO> specialList;
-        List<InvoiceVO> commonList;
         Double sumSpecialInvoiceAmount = null;
         Double sumSpecialNoTaxAmount = null;
         Double sumCommonInvoiceAmount = null;
         Double sumCommonNoTaxAmount = null;
         String path = null;
         File file;
+
+        sumSpecialInvoiceAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        //不含税金额
+        sumSpecialNoTaxAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+
+        sumCommonInvoiceAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        //不含税金额
+        sumCommonNoTaxAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+
+        InvoiceVO invoiceVO1 = new InvoiceVO();
         //按部门统计
         if (invoiceVO.getDepId() != null) {
             Map<String, List<InvoiceVO>> specialMap = specialInvoices.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
-            specialList = specialMap.get(String.valueOf(invoiceVO.getDepId()));
-            //含税金额
-            sumSpecialInvoiceAmount = specialList.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-            //不含税金额
-            sumSpecialNoTaxAmount = specialList.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
-            Map<String, List<InvoiceVO>> commonMap = commonInvoices.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
-            commonList = commonMap.get(String.valueOf(invoiceVO.getDepId()));
-            //含税金额
-            sumCommonInvoiceAmount = commonList.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-            //不含税金额
-            sumCommonNoTaxAmount = commonList.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+            list = getReceiptGatherStatistics(specialMap, "departmentName");
 
             path = "static/excel/receiptGatherDep.xlsx";
+            invoiceVO1.setDepartmentName("合计");
 
         }
 
 
         //按开票人
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> specialMap = specialInvoices.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            specialList = specialMap.get(String.valueOf(invoiceVO.getDepId()));
-            //含税金额
-            sumSpecialInvoiceAmount = specialList.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-            //不含税金额
-            sumSpecialNoTaxAmount = specialList.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+            Map<String, List<InvoiceVO>> contractUserMap = specialInvoices.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
 
-            Map<String, List<InvoiceVO>> commonMap = commonInvoices.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            commonList = commonMap.get(String.valueOf(invoiceVO.getDepId()));
-            //含税金额
-            sumCommonInvoiceAmount = commonList.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-            //不含税金额
-            sumCommonNoTaxAmount = commonList.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+            list = getReceiptGatherStatistics(contractUserMap, "contractUser");
 
             path = "static/excel/receiptGatherUser.xlsx";
-
+            invoiceVO1.setContractUser("合计");
         }
 
         //按发票性质
-        if (!StringUtils.isEmpty(invoiceVO.getInvoiceType()) && !"2".equals(invoiceVO.getInvoiceType())) {
-            //含税金额
-            sumCommonInvoiceAmount = "专票".equals(invoiceVO.getInvoiceType()) ?
-                    specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum() :
-                    commonInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-            //不含税金额
-            sumCommonNoTaxAmount = "专票".equals(invoiceVO.getInvoiceType()) ?
-                    specialInvoices.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum() :
-                    commonInvoices.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
-            path = "专票".equals(invoiceVO.getInvoiceType()) ? "static/excel/receiptGatherSpecial.xlsx" : "static/excel/receiptGatherCommon.xlsx";
-            //  file = ResourceUtils.getFile(path);
-
+        if (!StringUtils.isEmpty(invoiceVO.getInvoiceType())) {
+            path = "专".equals(invoiceVO.getInvoiceType()) ?
+                    "static/excel/receiptGatherSpecial.xlsx" : "static/excel/receiptGatherCommon.xlsx";
+            sumCommonInvoiceAmount = "专".equals(invoiceVO.getInvoiceType()) ?
+                    getInvoiceAmount(specialInvoices) : getInvoiceAmount(commonInvoices);
+            sumCommonNoTaxAmount = "专".equals(invoiceVO.getInvoiceType()) ?
+                    getNoTaxAmount(specialInvoices) : getNoTaxAmount(commonInvoices);
+            InvoiceVO invoiceVO2 = new InvoiceVO();
+            invoiceVO2.setInvoiceType(invoiceVO.getInvoiceType());
+            invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
+            invoiceVO2.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+            invoiceVO1.setInvoiceType("合计");
         }
 
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
-        map.put("list1", specialInvoices);
-        map.put("list2", commonInvoices);
-        map.put("sumSpecialInvoiceAmount", sumSpecialInvoiceAmount);
-        map.put("sumSpecialNoTaxAmount", sumSpecialNoTaxAmount);
-        map.put("sumCommonInvoiceAmount", sumCommonInvoiceAmount);
-        map.put("sumCommonNoTaxAmount", sumCommonNoTaxAmount);
-         System.out.println(1111);
+
+
+        invoiceVO1.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
+        invoiceVO1.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
+        invoiceVO1.setCommonInvoiceAmount(sumCommonInvoiceAmount);
+        invoiceVO1.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+        list.add(invoiceVO1);
+        map.put("list", list);
+//        map.put("sumSpecialInvoiceAmount", sumSpecialInvoiceAmount);
+//        map.put("sumSpecialNoTaxAmount", sumSpecialNoTaxAmount);
+//        map.put("sumCommonInvoiceAmount", sumCommonInvoiceAmount);
+//        map.put("sumCommonNoTaxAmount", sumCommonNoTaxAmount);
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
@@ -240,7 +235,7 @@ public class ExcelController {
 
         String path = "static/excel/receiptDetail.xlsx";
         invoiceVOS.forEach(invoiceVO1 -> {
-            String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit())?"企业":"政府";
+            String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit()) ? "企业" : "政府";
             invoiceVO1.setCreateLimitPart(createLimitPart);
         });
         //按部门
@@ -301,7 +296,7 @@ public class ExcelController {
 
         String path = "static/excel/receiptDetail.xlsx";
         invoiceVOS.forEach(invoiceVO1 -> {
-            String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit())?"企业":"政府";
+            String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit()) ? "企业" : "政府";
             invoiceVO1.setCreateLimitPart(createLimitPart);
         });
 
@@ -361,18 +356,21 @@ public class ExcelController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = null;
+        InvoiceVO invoiceVO1 = new InvoiceVO();
         //按项目负责人统计
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
-            list = getStatistics(map,"contractUser");
+            list = getPayedGatherStatistics(map, "contractUser");
             path = "static/excel/payedGatherConUser.xlsx";
+            invoiceVO1.setContractUser("合计");
         }
 
         //按开票单位统计
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            list = getStatistics(map,"invoiceOffice");
+            list = getPayedGatherStatistics(map, "invoiceOffice");
             path = "static/excel/payedGatherInvoiceOff.xlsx";
+            invoiceVO1.setInvoiceOffice("合计");
         }
 
         //按开票时间统计
@@ -383,21 +381,26 @@ public class ExcelController {
         //按信用期限统计
         if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
-            list = getStatistics(map,"creditLimit");
+            list = getPayedGatherStatistics(map, "creditLimit");
             path = "static/excel/payedGatherCreateLimit.xlsx";
+            invoiceVO1.setCreateLimitPart("合计");
+            invoiceVO1.setCreditLimit("");
         }
 
         //按部门统计
         if (invoiceVO.getDepId() != null) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
-            list = getStatistics(map,"departmentName");
+            list = getPayedGatherStatistics(map, "departmentName");
             path = "static/excel/payedGatherDep.xlsx";
+            invoiceVO1.setDepartmentName("合计");
         }
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
 
         mapParms.put("list", list);
+        invoiceVO1.setSumTotalInvoice(sumInvoice);
+        invoiceVO1.setReceiveTotalInvoice(sumInvoice);
         mapParms.put("sumInvoice", sumInvoice);
         mapParms.put("sumReceiveInvoice", sumReceivedAmount);
         Resource resource = new ClassPathResource(path);
@@ -422,6 +425,16 @@ public class ExcelController {
         }).sum();
     }
 
+
+    public Double getNoTaxAmount(List<InvoiceVO> list) {
+        return list.stream().mapToDouble(new ToDoubleFunction<InvoiceVO>() {
+            @Override
+            public double applyAsDouble(InvoiceVO value) {
+                return value.getNoTaxAmount();
+            }
+        }).sum();
+    }
+
     public Double getReceivedAmount(List<InvoiceVO> list) {
         return list.stream().mapToDouble(new ToDoubleFunction<InvoiceVO>() {
             @Override
@@ -434,24 +447,53 @@ public class ExcelController {
         }).sum();
     }
 
-    public List<InvoiceVO> getStatistics(Map<String, List<InvoiceVO>> map,String condition) {
+    public List<InvoiceVO> getReceiptGatherStatistics(Map<String, List<InvoiceVO>> map, String condition) {
         List<InvoiceVO> list = new ArrayList<>();
         map.forEach((key, list1) -> {
             log.info(key);
 
             InvoiceVO in = new InvoiceVO();
 
-            if ("creditLimit".equals(condition)){
+            if ("contractUser".equals(condition)) {
+                in.setContractUser(key);
+            } else if ("departmentName".equals(condition)) {
+                in.setDepartmentName(key);
+            }
 
+            List<InvoiceVO> specialList = list1.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
+            List<InvoiceVO> commonList = list1.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
 
-                String createLimitPart = "3个月".equals(key)?"企业":"政府";
+            Double specialInvoiceAmount = getInvoiceAmount(specialList);
+            in.setSpecialInvoiceAmount(specialInvoiceAmount);
+
+            Double specialNoTaxAmount = getNoTaxAmount(specialList);
+            in.setSpecialNoTaxAmount(specialNoTaxAmount);
+            Double commonInvoiceAmount = getInvoiceAmount(commonList);
+            in.setCommonInvoiceAmount(commonInvoiceAmount);
+            Double commonNoTaxAmount = getNoTaxAmount(commonList);
+            in.setCommonNoTaxAmount(commonNoTaxAmount);
+
+            list.add(in);
+        });
+        return list;
+    }
+
+    public List<InvoiceVO> getPayedGatherStatistics(Map<String, List<InvoiceVO>> map, String condition) {
+        List<InvoiceVO> list = new ArrayList<>();
+        map.forEach((key, list1) -> {
+            log.info(key);
+
+            InvoiceVO in = new InvoiceVO();
+
+            if ("creditLimit".equals(condition)) {
+                String createLimitPart = "3个月".equals(key) ? "企业" : "政府";
                 in.setCreateLimitPart(createLimitPart);
                 in.setCreditLimit(key);
-            }else if ("invoiceOffice".equals(condition)){
+            } else if ("invoiceOffice".equals(condition)) {
                 in.setInvoiceOffice(key);
-            }else if ("contractUser".equals(condition)){
+            } else if ("contractUser".equals(condition)) {
                 in.setContractUser(key);
-            }else if ("departmentName".equals(condition)){
+            } else if ("departmentName".equals(condition)) {
                 in.setDepartmentName(key);
             }
 
