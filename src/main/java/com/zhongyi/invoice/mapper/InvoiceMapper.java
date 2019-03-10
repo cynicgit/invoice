@@ -26,4 +26,12 @@ public interface InvoiceMapper {
     Invoice getInvoiceByTaskIdAndInvoiceNumber(@Param("taskId") String taskId, @Param("invoiceNumber") String invoiceNumber);
 
     List<InvoiceVO> selectNoReceiveAmount(InvoiceVO invoice);
+
+    List<InvoiceVO> selectReceiptGather(InvoiceVO invoiceVO);
+
+    List<InvoiceVO> selectReceiptDetail(InvoiceVO invoiceVO);
+
+    List<InvoiceVO> selectPayedDetail(InvoiceVO invoiceVO);
+
+    List<InvoiceVO> selectPayedGather(InvoiceVO invoiceVO);
 }

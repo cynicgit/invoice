@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class InvoiceService {
@@ -44,7 +45,7 @@ public class InvoiceService {
             }
             Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
             if (invoiceByTaskIdAndInvoiceNumber != null) {
-                invoiceNumberRepeat ++;
+                invoiceNumberRepeat++;
                 continue;
             }
             String departmentName = invoice.getDepartmentName();
@@ -89,5 +90,39 @@ public class InvoiceService {
             }
         });
         return invoiceVOS;
+    }
+
+    public List<InvoiceVO> receiptGatherStatistics(InvoiceVO invoiceVO) {
+        List<InvoiceVO> invoiceVOS = invoiceMapper.selectReceiptGather(invoiceVO);
+//        if ("2".equals(invoiceVO.getInvoiceType())) {
+//            List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> {
+//                return "0".equals(invoiceVO1.getInvoiceType());
+//            }).collect(Collectors.toList());
+//
+//            List<InvoiceVO> commonInvoices = invoiceVOS.stream().filter(invoiceVO1 -> {
+//                return "1".equals(invoiceVO1.getInvoiceType());
+//            }).collect(Collectors.toList());
+//        } else {
+//
+//        }
+
+        return invoiceVOS;
+    }
+
+    public List<InvoiceVO> exportExcelReceiptDetail(InvoiceVO invoiceVO) {
+        List<InvoiceVO> invoiceVOS = invoiceMapper.selectReceiptDetail(invoiceVO);
+        return invoiceVOS;
+
+    }
+
+    public List<InvoiceVO> exportExcelPayedDetail(InvoiceVO invoiceVO) {
+        List<InvoiceVO> invoiceVOS = invoiceMapper.selectPayedDetail(invoiceVO);
+        return invoiceVOS;
+
+    }
+
+    public List<InvoiceVO> exportExcelPayedGather(InvoiceVO invoiceVO) {
+
+       return invoiceMapper.selectPayedGather(invoiceVO);
     }
 }
