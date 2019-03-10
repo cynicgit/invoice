@@ -1,9 +1,6 @@
 package com.zhongyi.invoice.service;
 
-import com.zhongyi.invoice.entity.Department;
-import com.zhongyi.invoice.entity.Invoice;
-import com.zhongyi.invoice.entity.InvoiceVO;
-import com.zhongyi.invoice.entity.User;
+import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.mapper.DepartmentMapper;
 import com.zhongyi.invoice.mapper.InvoiceMapper;
 import com.zhongyi.invoice.mapper.UserMapper;
@@ -45,7 +42,7 @@ public class InvoiceService {
             }
             Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
             if (invoiceByTaskIdAndInvoiceNumber != null) {
-                invoiceNumberRepeat++;
+                invoiceNumberRepeat ++;
                 continue;
             }
             String departmentName = invoice.getDepartmentName();
@@ -82,14 +79,21 @@ public class InvoiceService {
 //        }
         List<InvoiceVO> invoiceVOS = invoiceMapper.selectNoReceiveAmount(invoice);
         invoiceVOS.forEach(i -> {
-            if (i.getInvoiceAmount() < 0) {
-                i.setInvoiceAmount(0.0);
-            }
             if (i.getReceivedAmount() < i.getInvoiceAmount()) {
                 i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             }
         });
         return invoiceVOS;
+    }
+
+    public List<ReceivableStaticsInvoice> getInvoices(String startDate, String endDate) {
+        List<ReceivableStaticsInvoice> invoices = invoiceMapper.getInvoices(startDate, endDate);
+        invoices.forEach(i -> {
+            if (i.getReceivedAmount() < i.getInvoiceAmount()) {
+                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
+            }
+        });
+        return invoices;
     }
 
     public List<InvoiceVO> receiptGatherStatistics(InvoiceVO invoiceVO) {

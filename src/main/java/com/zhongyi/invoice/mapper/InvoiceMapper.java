@@ -2,6 +2,7 @@ package com.zhongyi.invoice.mapper;
 
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
+import com.zhongyi.invoice.entity.ReceivableStaticsInvoice;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -34,4 +35,6 @@ public interface InvoiceMapper {
     List<InvoiceVO> selectPayedDetail(InvoiceVO invoiceVO);
 
     List<InvoiceVO> selectPayedGather(InvoiceVO invoiceVO);
+
+    List<ReceivableStaticsInvoice> getInvoices(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

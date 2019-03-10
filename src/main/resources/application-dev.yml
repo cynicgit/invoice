@@ -7,8 +7,8 @@ spring:
     druid:
       name: era
       url: jdbc:mysql://localhost:3306/zhongyi?characterEncoding=utf8&serverTimezone=Asia/Shanghai
-      username: root
-      password: juphoon
+      username: cynic
+      password: cynic
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
       initialSize: 5

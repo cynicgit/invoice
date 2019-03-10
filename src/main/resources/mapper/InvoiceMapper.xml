@@ -1,334 +1,344 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zhongyi.invoice.mapper.InvoiceMapper">
-
-    <resultMap id="BaseResultMap" type="com.zhongyi.invoice.entity.Invoice">
-        <constructor>
-            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-            <arg column="task_id" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="contract_number" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="invoice_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
-            <arg column="credit_type" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="credit_limit" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="invoice_number" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="invoice_office" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="department_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="dep_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-            <arg column="invoice_project" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="contract_amount" jdbcType="DOUBLE" javaType="java.lang.Double"/>
-            <arg column="invoice_amount" jdbcType="DOUBLE" javaType="java.lang.Double"/>
-            <arg column="no_tax_amount" jdbcType="DOUBLE" javaType="java.lang.Double"/>
-            <arg column="contract_user" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-            <arg column="invoice_nature" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="invoice_signatory" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="report_number" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="report_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
-            <arg column="received_date" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
-            <arg column="received_amount" jdbcType="DOUBLE" javaType="java.lang.Double"/>
-            <arg column="no_received_amount" jdbcType="DOUBLE" javaType="java.lang.Double"/>
-            <arg column="invoice_type" jdbcType="VARCHAR" javaType="java.lang.String"/>
+<mapper namespace="com.zhongyi.invoice.mapper.InvoiceMapper" >
+    <resultMap id="BaseResultMap" type="com.zhongyi.invoice.entity.Invoice" >
+        <constructor >
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="task_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="contract_number" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="invoice_date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="credit_type" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="credit_limit" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="invoice_number" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="invoice_office" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="department_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="dep_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="invoice_project" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="contract_amount" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="invoice_amount" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="no_tax_amount" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="contract_user" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="invoice_signatory" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="invoice_signatory_date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="report_number" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="report_date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="received_date" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="received_amount" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="no_received_amount" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="invoice_type" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="descprition" jdbcType="VARCHAR" javaType="java.lang.String" />
         </constructor>
     </resultMap>
-    <sql id="Base_Column_List">
-    id, task_id, contract_number, invoice_date, credit_type, credit_limit, invoice_number,
-    invoice_office, department_name, dep_id, invoice_project, contract_amount, invoice_amount,
-    no_tax_amount, contract_user, user_id, invoice_nature, invoice_signatory, report_number,
-    report_date, received_date, received_amount, no_received_amount, invoice_type
-  </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <sql id="Base_Column_List" >
+        id, task_id, contract_number, invoice_date, credit_type, credit_limit, invoice_number,
+        invoice_office, department_name, dep_id, invoice_project, contract_amount, invoice_amount,
+        no_tax_amount, contract_user, user_id, invoice_signatory, invoice_signatory_date,
+        report_number, report_date, received_date, received_amount, no_received_amount, invoice_type,
+        descprition
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from t_invoice
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_invoice
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-    <insert id="insert" parameterType="com.zhongyi.invoice.entity.Invoice">
-    insert into t_invoice (id, task_id, contract_number,
-    invoice_date, credit_type, credit_limit,
-    invoice_number, invoice_office, department_name,
-    dep_id, invoice_project, contract_amount,
-    invoice_amount, no_tax_amount, contract_user,
-    user_id, invoice_nature, invoice_signatory,
-    report_number, report_date, received_date,
-    received_amount, no_received_amount, invoice_type
-    )
-    values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=VARCHAR}, #{contractNumber,jdbcType=VARCHAR},
-    #{invoiceDate,jdbcType=TIMESTAMP}, #{creditType,jdbcType=VARCHAR}, #{creditLimit,jdbcType=VARCHAR},
-    #{invoiceNumber,jdbcType=VARCHAR}, #{invoiceOffice,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},
-    #{depId,jdbcType=INTEGER}, #{invoiceProject,jdbcType=VARCHAR}, #{contractAmount,jdbcType=DOUBLE},
-    #{invoiceAmount,jdbcType=DOUBLE}, #{noTaxAmount,jdbcType=DOUBLE}, #{contractUser,jdbcType=VARCHAR},
-    #{userId,jdbcType=INTEGER}, #{invoiceNature,jdbcType=VARCHAR}, #{invoiceSignatory,jdbcType=VARCHAR},
-    #{reportNumber,jdbcType=VARCHAR}, #{reportDate,jdbcType=TIMESTAMP}, #{receivedDate,jdbcType=TIMESTAMP},
-    #{receivedAmount,jdbcType=DOUBLE}, #{noReceivedAmount,jdbcType=DOUBLE}, #{invoiceType,jdbcType=VARCHAR}
-    )
-  </insert>
-    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Invoice">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+        delete from t_invoice
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.zhongyi.invoice.entity.Invoice" >
+        insert into t_invoice (id, task_id, contract_number,
+        invoice_date, credit_type, credit_limit,
+        invoice_number, invoice_office, department_name,
+        dep_id, invoice_project, contract_amount,
+        invoice_amount, no_tax_amount, contract_user,
+        user_id, invoice_signatory, invoice_signatory_date,
+        report_number, report_date, received_date,
+        received_amount, no_received_amount, invoice_type,
+        descprition)
+        values (#{id,jdbcType=INTEGER}, #{taskId,jdbcType=VARCHAR}, #{contractNumber,jdbcType=VARCHAR},
+        #{invoiceDate,jdbcType=TIMESTAMP}, #{creditType,jdbcType=VARCHAR}, #{creditLimit,jdbcType=VARCHAR},
+        #{invoiceNumber,jdbcType=VARCHAR}, #{invoiceOffice,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR},
+        #{depId,jdbcType=INTEGER}, #{invoiceProject,jdbcType=VARCHAR}, #{contractAmount,jdbcType=DOUBLE},
+        #{invoiceAmount,jdbcType=DOUBLE}, #{noTaxAmount,jdbcType=DOUBLE}, #{contractUser,jdbcType=VARCHAR},
+        #{userId,jdbcType=INTEGER}, #{invoiceSignatory,jdbcType=VARCHAR}, #{invoiceSignatoryDate,jdbcType=TIMESTAMP},
+        #{reportNumber,jdbcType=VARCHAR}, #{reportDate,jdbcType=TIMESTAMP}, #{receivedDate,jdbcType=TIMESTAMP},
+        #{receivedAmount,jdbcType=DOUBLE}, #{noReceivedAmount,jdbcType=DOUBLE}, #{invoiceType,jdbcType=VARCHAR},
+        #{descprition,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Invoice" >
         insert into t_invoice
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
                 id,
             </if>
-            <if test="taskId != null">
+            <if test="taskId != null" >
                 task_id,
             </if>
-            <if test="contractNumber != null">
+            <if test="contractNumber != null" >
                 contract_number,
             </if>
-            <if test="invoiceDate != null">
+            <if test="invoiceDate != null" >
                 invoice_date,
             </if>
-            <if test="creditType != null">
+            <if test="creditType != null" >
                 credit_type,
             </if>
-            <if test="creditLimit != null">
+            <if test="creditLimit != null" >
                 credit_limit,
             </if>
-            <if test="invoiceNumber != null">
+            <if test="invoiceNumber != null" >
                 invoice_number,
             </if>
-            <if test="invoiceOffice != null">
+            <if test="invoiceOffice != null" >
                 invoice_office,
             </if>
-            <if test="departmentName != null">
+            <if test="departmentName != null" >
                 department_name,
             </if>
-            <if test="depId != null">
+            <if test="depId != null" >
                 dep_id,
             </if>
-            <if test="invoiceProject != null">
+            <if test="invoiceProject != null" >
                 invoice_project,
             </if>
-            <if test="contractAmount != null">
+            <if test="contractAmount != null" >
                 contract_amount,
             </if>
-            <if test="invoiceAmount != null">
+            <if test="invoiceAmount != null" >
                 invoice_amount,
             </if>
-            <if test="noTaxAmount != null">
+            <if test="noTaxAmount != null" >
                 no_tax_amount,
             </if>
-            <if test="contractUser != null">
+            <if test="contractUser != null" >
                 contract_user,
             </if>
-            <if test="userId != null">
+            <if test="userId != null" >
                 user_id,
             </if>
-            <if test="invoiceNature != null">
-                invoice_nature,
-            </if>
-            <if test="invoiceSignatory != null">
+            <if test="invoiceSignatory != null" >
                 invoice_signatory,
             </if>
-            <if test="reportNumber != null">
+            <if test="invoiceSignatoryDate != null" >
+                invoice_signatory_date,
+            </if>
+            <if test="reportNumber != null" >
                 report_number,
             </if>
-            <if test="reportDate != null">
+            <if test="reportDate != null" >
                 report_date,
             </if>
-            <if test="receivedDate != null">
+            <if test="receivedDate != null" >
                 received_date,
             </if>
-            <if test="receivedAmount != null">
+            <if test="receivedAmount != null" >
                 received_amount,
             </if>
-            <if test="noReceivedAmount != null">
+            <if test="noReceivedAmount != null" >
                 no_received_amount,
             </if>
-            <if test="invoiceType != null">
+            <if test="invoiceType != null" >
                 invoice_type,
             </if>
+            <if test="descprition != null" >
+                descprition,
+            </if>
         </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
                 #{id,jdbcType=INTEGER},
             </if>
-            <if test="taskId != null">
+            <if test="taskId != null" >
                 #{taskId,jdbcType=VARCHAR},
             </if>
-            <if test="contractNumber != null">
+            <if test="contractNumber != null" >
                 #{contractNumber,jdbcType=VARCHAR},
             </if>
-            <if test="invoiceDate != null">
+            <if test="invoiceDate != null" >
                 #{invoiceDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="creditType != null">
+            <if test="creditType != null" >
                 #{creditType,jdbcType=VARCHAR},
             </if>
-            <if test="creditLimit != null">
+            <if test="creditLimit != null" >
                 #{creditLimit,jdbcType=VARCHAR},
             </if>
-            <if test="invoiceNumber != null">
+            <if test="invoiceNumber != null" >
                 #{invoiceNumber,jdbcType=VARCHAR},
             </if>
-            <if test="invoiceOffice != null">
+            <if test="invoiceOffice != null" >
                 #{invoiceOffice,jdbcType=VARCHAR},
             </if>
-            <if test="departmentName != null">
+            <if test="departmentName != null" >
                 #{departmentName,jdbcType=VARCHAR},
             </if>
-            <if test="depId != null">
+            <if test="depId != null" >
                 #{depId,jdbcType=INTEGER},
             </if>
-            <if test="invoiceProject != null">
+            <if test="invoiceProject != null" >
                 #{invoiceProject,jdbcType=VARCHAR},
             </if>
-            <if test="contractAmount != null">
+            <if test="contractAmount != null" >
                 #{contractAmount,jdbcType=DOUBLE},
             </if>
-            <if test="invoiceAmount != null">
+            <if test="invoiceAmount != null" >
                 #{invoiceAmount,jdbcType=DOUBLE},
             </if>
-            <if test="noTaxAmount != null">
+            <if test="noTaxAmount != null" >
                 #{noTaxAmount,jdbcType=DOUBLE},
             </if>
-            <if test="contractUser != null">
+            <if test="contractUser != null" >
                 #{contractUser,jdbcType=VARCHAR},
             </if>
-            <if test="userId != null">
+            <if test="userId != null" >
                 #{userId,jdbcType=INTEGER},
             </if>
-            <if test="invoiceNature != null">
-                #{invoiceNature,jdbcType=VARCHAR},
-            </if>
-            <if test="invoiceSignatory != null">
+            <if test="invoiceSignatory != null" >
                 #{invoiceSignatory,jdbcType=VARCHAR},
             </if>
-            <if test="reportNumber != null">
+            <if test="invoiceSignatoryDate != null" >
+                #{invoiceSignatoryDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reportNumber != null" >
                 #{reportNumber,jdbcType=VARCHAR},
             </if>
-            <if test="reportDate != null">
+            <if test="reportDate != null" >
                 #{reportDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="receivedDate != null">
+            <if test="receivedDate != null" >
                 #{receivedDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="receivedAmount != null">
+            <if test="receivedAmount != null" >
                 #{receivedAmount,jdbcType=DOUBLE},
             </if>
-            <if test="noReceivedAmount != null">
+            <if test="noReceivedAmount != null" >
                 #{noReceivedAmount,jdbcType=DOUBLE},
             </if>
-            <if test="invoiceType != null">
+            <if test="invoiceType != null" >
                 #{invoiceType,jdbcType=VARCHAR},
+            </if>
+            <if test="descprition != null" >
+                #{descprition,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.zhongyi.invoice.entity.Invoice">
+    <update id="updateByPrimaryKeySelective" parameterType="com.zhongyi.invoice.entity.Invoice" >
         update t_invoice
-        <set>
-            <if test="taskId != null">
+        <set >
+            <if test="taskId != null" >
                 task_id = #{taskId,jdbcType=VARCHAR},
             </if>
-            <if test="contractNumber != null">
+            <if test="contractNumber != null" >
                 contract_number = #{contractNumber,jdbcType=VARCHAR},
             </if>
-            <if test="invoiceDate != null">
+            <if test="invoiceDate != null" >
                 invoice_date = #{invoiceDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="creditType != null">
+            <if test="creditType != null" >
                 credit_type = #{creditType,jdbcType=VARCHAR},
             </if>
-            <if test="creditLimit != null">
+            <if test="creditLimit != null" >
                 credit_limit = #{creditLimit,jdbcType=VARCHAR},
             </if>
-            <if test="invoiceNumber != null">
+            <if test="invoiceNumber != null" >
                 invoice_number = #{invoiceNumber,jdbcType=VARCHAR},
             </if>
-            <if test="invoiceOffice != null">
+            <if test="invoiceOffice != null" >
                 invoice_office = #{invoiceOffice,jdbcType=VARCHAR},
             </if>
-            <if test="departmentName != null">
+            <if test="departmentName != null" >
                 department_name = #{departmentName,jdbcType=VARCHAR},
             </if>
-            <if test="depId != null">
+            <if test="depId != null" >
                 dep_id = #{depId,jdbcType=INTEGER},
             </if>
-            <if test="invoiceProject != null">
+            <if test="invoiceProject != null" >
                 invoice_project = #{invoiceProject,jdbcType=VARCHAR},
             </if>
-            <if test="contractAmount != null">
+            <if test="contractAmount != null" >
                 contract_amount = #{contractAmount,jdbcType=DOUBLE},
             </if>
-            <if test="invoiceAmount != null">
+            <if test="invoiceAmount != null" >
                 invoice_amount = #{invoiceAmount,jdbcType=DOUBLE},
             </if>
-            <if test="noTaxAmount != null">
+            <if test="noTaxAmount != null" >
                 no_tax_amount = #{noTaxAmount,jdbcType=DOUBLE},
             </if>
-            <if test="contractUser != null">
+            <if test="contractUser != null" >
                 contract_user = #{contractUser,jdbcType=VARCHAR},
             </if>
-            <if test="userId != null">
+            <if test="userId != null" >
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
-            <if test="invoiceNature != null">
-                invoice_nature = #{invoiceNature,jdbcType=VARCHAR},
-            </if>
-            <if test="invoiceSignatory != null">
+            <if test="invoiceSignatory != null" >
                 invoice_signatory = #{invoiceSignatory,jdbcType=VARCHAR},
             </if>
-            <if test="reportNumber != null">
+            <if test="invoiceSignatoryDate != null" >
+                invoice_signatory_date = #{invoiceSignatoryDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reportNumber != null" >
                 report_number = #{reportNumber,jdbcType=VARCHAR},
             </if>
-            <if test="reportDate != null">
+            <if test="reportDate != null" >
                 report_date = #{reportDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="receivedDate != null">
+            <if test="receivedDate != null" >
                 received_date = #{receivedDate,jdbcType=TIMESTAMP},
             </if>
-            <if test="receivedAmount != null">
+            <if test="receivedAmount != null" >
                 received_amount = #{receivedAmount,jdbcType=DOUBLE},
             </if>
-            <if test="noReceivedAmount != null">
+            <if test="noReceivedAmount != null" >
                 no_received_amount = #{noReceivedAmount,jdbcType=DOUBLE},
             </if>
-            <if test="invoiceType != null">
+            <if test="invoiceType != null" >
                 invoice_type = #{invoiceType,jdbcType=VARCHAR},
+            </if>
+            <if test="descprition != null" >
+                descprition = #{descprition,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.zhongyi.invoice.entity.Invoice">
-    update t_invoice
-    set task_id = #{taskId,jdbcType=VARCHAR},
-    contract_number = #{contractNumber,jdbcType=VARCHAR},
-    invoice_date = #{invoiceDate,jdbcType=TIMESTAMP},
-    credit_type = #{creditType,jdbcType=VARCHAR},
-    credit_limit = #{creditLimit,jdbcType=VARCHAR},
-    invoice_number = #{invoiceNumber,jdbcType=VARCHAR},
-    invoice_office = #{invoiceOffice,jdbcType=VARCHAR},
-    department_name = #{departmentName,jdbcType=VARCHAR},
-    dep_id = #{depId,jdbcType=INTEGER},
-    invoice_project = #{invoiceProject,jdbcType=VARCHAR},
-    contract_amount = #{contractAmount,jdbcType=DOUBLE},
-    invoice_amount = #{invoiceAmount,jdbcType=DOUBLE},
-    no_tax_amount = #{noTaxAmount,jdbcType=DOUBLE},
-    contract_user = #{contractUser,jdbcType=VARCHAR},
-    user_id = #{userId,jdbcType=INTEGER},
-    invoice_nature = #{invoiceNature,jdbcType=VARCHAR},
-    invoice_signatory = #{invoiceSignatory,jdbcType=VARCHAR},
-    report_number = #{reportNumber,jdbcType=VARCHAR},
-    report_date = #{reportDate,jdbcType=TIMESTAMP},
-    received_date = #{receivedDate,jdbcType=TIMESTAMP},
-    received_amount = #{receivedAmount,jdbcType=DOUBLE},
-    no_received_amount = #{noReceivedAmount,jdbcType=DOUBLE},
-    invoice_type = #{invoiceType,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <update id="updateByPrimaryKey" parameterType="com.zhongyi.invoice.entity.Invoice" >
+        update t_invoice
+        set task_id = #{taskId,jdbcType=VARCHAR},
+        contract_number = #{contractNumber,jdbcType=VARCHAR},
+        invoice_date = #{invoiceDate,jdbcType=TIMESTAMP},
+        credit_type = #{creditType,jdbcType=VARCHAR},
+        credit_limit = #{creditLimit,jdbcType=VARCHAR},
+        invoice_number = #{invoiceNumber,jdbcType=VARCHAR},
+        invoice_office = #{invoiceOffice,jdbcType=VARCHAR},
+        department_name = #{departmentName,jdbcType=VARCHAR},
+        dep_id = #{depId,jdbcType=INTEGER},
+        invoice_project = #{invoiceProject,jdbcType=VARCHAR},
+        contract_amount = #{contractAmount,jdbcType=DOUBLE},
+        invoice_amount = #{invoiceAmount,jdbcType=DOUBLE},
+        no_tax_amount = #{noTaxAmount,jdbcType=DOUBLE},
+        contract_user = #{contractUser,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=INTEGER},
+        invoice_signatory = #{invoiceSignatory,jdbcType=VARCHAR},
+        invoice_signatory_date = #{invoiceSignatoryDate,jdbcType=TIMESTAMP},
+        report_number = #{reportNumber,jdbcType=VARCHAR},
+        report_date = #{reportDate,jdbcType=TIMESTAMP},
+        received_date = #{receivedDate,jdbcType=TIMESTAMP},
+        received_amount = #{receivedAmount,jdbcType=DOUBLE},
+        no_received_amount = #{noReceivedAmount,jdbcType=DOUBLE},
+        invoice_type = #{invoiceType,jdbcType=VARCHAR},
+        descprition = #{descprition,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
 
     <select id="getInvoiceByTaskIdAndInvoiceNumber" resultType="com.zhongyi.invoice.entity.Invoice">
-        SELECT
-        <include refid="Base_Column_List"/>
+        SELECT <include refid="Base_Column_List"/>
         FROM t_invoice
         WHERE task_id = #{taskId} and invoice_number = #{invoiceNumber}
     </select>
     <select id="selectNoReceiveAmount" resultType="com.zhongyi.invoice.entity.InvoiceVO">
-        SELECT
-        <include refid="Base_Column_List"/>
+        SELECT <include refid="Base_Column_List"/>
         FROM t_invoice
         where (received_amount is null OR received_amount = 0 OR received_amount &lt; invoice_amount)
         <if test="depId != null">
@@ -351,6 +361,12 @@
         </if>
 
 
+
+    </select>
+    <select id="getInvoices" resultType="com.zhongyi.invoice.entity.ReceivableStaticsInvoice">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_invoice
+        WHERE  invoice_date >= #{startDate} and invoice_date &lt;= #{endDate}
     </select>
     <select id="selectReceiptGather" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         SELECT
@@ -373,8 +389,8 @@
                 and invoice_date &lt;= #{endDate}
             </if>
         </where>
-
     </select>
+
     <select id="selectReceiptDetail" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         SELECT
         <include refid="Base_Column_List"/>
