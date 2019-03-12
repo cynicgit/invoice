@@ -8,6 +8,7 @@ import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.InvoiceService;
+import com.zhongyi.invoice.utils.DateUtils;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -26,10 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
@@ -161,9 +159,9 @@ public class ExcelController {
         InvoiceVO invoiceVO1 = new InvoiceVO();
         //按部门统计
         if (invoiceVO.getDepId() != null) {
-            Map<String, List<InvoiceVO>> specialMap = specialInvoices.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
+            Map<String, List<InvoiceVO>> depMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
 
-            list = getReceiptGatherStatistics(specialMap, "departmentName");
+            list = getReceiptGatherStatistics(depMap, "departmentName");
 
             path = "static/excel/receiptGatherDep.xlsx";
             invoiceVO1.setDepartmentName("合计");
@@ -173,7 +171,7 @@ public class ExcelController {
 
         //按开票人
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> contractUserMap = specialInvoices.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
+            Map<String, List<InvoiceVO>> contractUserMap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
 
             list = getReceiptGatherStatistics(contractUserMap, "contractUser");
 
@@ -193,7 +191,27 @@ public class ExcelController {
             invoiceVO2.setInvoiceType(invoiceVO.getInvoiceType());
             invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
             invoiceVO2.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+            list.add(invoiceVO2);
             invoiceVO1.setInvoiceType("合计");
+        }
+
+        if (!StringUtils.isEmpty(invoiceVO.getStartDate()) && !StringUtils.isEmpty(invoiceVO.getEndDate())) {
+            invoiceVOS.forEach(invoiceVO2 -> {
+                String dateString = DateUtils.date2String(invoiceVO2.getInvoiceDate());
+                invoiceVO2.setInvoiceDateTime(dateString);
+            });
+            Map<String, List<InvoiceVO>> invoiceDateTimemap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceDateTime));
+            list = getReceiptGatherStatistics(invoiceDateTimemap, "invoiceDateTime");
+            path = "static/excel/receiptGatherTime.xlsx";
+            invoiceVO1.setInvoiceDateTime("合计");
+
+//            InvoiceVO invoiceVO2 = new InvoiceVO();
+//            invoiceVO2.setInvoiceDateTime(invoiceVO.getStartDate() + "-" + invoiceVO.getEndDate());
+//            invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
+//            invoiceVO2.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
+//            invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
+//            invoiceVO2.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+//            list.add(invoiceVO2);
         }
 
         Resource resource = new ClassPathResource(path);
@@ -240,33 +258,30 @@ public class ExcelController {
         });
         //按部门
         if (invoiceVO.getDepId() != null) {
+            path = "static/excel/receiptDetailDep.xlsx";
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
             invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
         }
         //按开票单位
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+            invoiceVOS = map.get(String.valueOf(invoiceVO.getInvoiceOffice()));
         }
 
         //按项目负责人
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+            invoiceVOS = map.get(String.valueOf(invoiceVO.getContractUser()));
 
         }
 
         //按发票类型
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceType()) && !"2".equals(invoiceVO.getInvoiceType())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceType));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+            invoiceVOS = map.get(String.valueOf(invoiceVO.getInvoiceType()));
 
         }
 
-
-//        ExportParams exportParams = new ExportParams();
-//        exportParams.setType(ExcelType.XSSF);
-//        EasyPoiUtils.defaultExport(invoiceVOS, Invoice.class, "xxx.xlsx", response, exportParams);
 
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
@@ -294,7 +309,7 @@ public class ExcelController {
     public void exportExcelexportExcelPayed(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
 
-        String path = "static/excel/receiptDetail.xlsx";
+        String path = "static/excel/payedGatherDetail.xlsx";
         invoiceVOS.forEach(invoiceVO1 -> {
             String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit()) ? "企业" : "政府";
             invoiceVO1.setCreateLimitPart(createLimitPart);
@@ -308,20 +323,20 @@ public class ExcelController {
         //按开票单位
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+            invoiceVOS = map.get(invoiceVO.getInvoiceOffice());
         }
 
         //按项目负责人
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+            invoiceVOS = map.get(invoiceVO.getContractUser());
 
         }
 
         //按信用日期
         if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+            invoiceVOS = map.get(invoiceVO.getCreditLimit());
 
         }
 
@@ -359,7 +374,7 @@ public class ExcelController {
         InvoiceVO invoiceVO1 = new InvoiceVO();
         //按项目负责人统计
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
             list = getPayedGatherStatistics(map, "contractUser");
             path = "static/excel/payedGatherConUser.xlsx";
             invoiceVO1.setContractUser("合计");
@@ -375,7 +390,22 @@ public class ExcelController {
 
         //按开票时间统计
         if (!StringUtils.isEmpty(invoiceVO.getStartDate()) && !StringUtils.isEmpty(invoiceVO.getEndDate())) {
+            invoiceVOS.forEach(invoiceVO2 -> {
+                String dateString = DateUtils.date2String(invoiceVO2.getInvoiceDate());
+                invoiceVO2.setInvoiceDateTime(dateString);
+            });
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceDateTime));
+            list = getPayedGatherStatistics(map, "invoiceDateTime");
+            path = "static/excel/payedGatherInvoiceOff.xlsx";
+            invoiceVO1.setInvoiceDateTime("合计");
 
+//            InvoiceVO invoiceVO2 = new InvoiceVO();
+//            invoiceVO2.setInvoiceDateTime(invoiceVO.getStartDate() + "-" + invoiceVO.getEndDate());
+//            invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
+//            invoiceVO2.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
+//            invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
+//            invoiceVO2.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+//            list.add(invoiceVO2);
         }
 
         //按信用期限统计
@@ -389,7 +419,7 @@ public class ExcelController {
 
         //按部门统计
         if (invoiceVO.getDepId() != null) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
             list = getPayedGatherStatistics(map, "departmentName");
             path = "static/excel/payedGatherDep.xlsx";
             invoiceVO1.setDepartmentName("合计");
@@ -397,12 +427,11 @@ public class ExcelController {
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
-
+        invoiceVO1.setTotalInvoice(sumInvoice);
+        invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
+        list.add(invoiceVO1);
         mapParms.put("list", list);
-        invoiceVO1.setSumTotalInvoice(sumInvoice);
-        invoiceVO1.setReceiveTotalInvoice(sumInvoice);
-        mapParms.put("sumInvoice", sumInvoice);
-        mapParms.put("sumReceiveInvoice", sumReceivedAmount);
+
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
@@ -458,6 +487,8 @@ public class ExcelController {
                 in.setContractUser(key);
             } else if ("departmentName".equals(condition)) {
                 in.setDepartmentName(key);
+            }else if ("invoiceDateTime".equals(condition)){
+                in.setInvoiceDateTime(key);
             }
 
             List<InvoiceVO> specialList = list1.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
@@ -495,6 +526,8 @@ public class ExcelController {
                 in.setContractUser(key);
             } else if ("departmentName".equals(condition)) {
                 in.setDepartmentName(key);
+            }else if ("invoiceDateTime".equals(condition)){
+                in.setInvoiceDateTime(key);
             }
 
             Double invoiceAmount = getInvoiceAmount(list1);

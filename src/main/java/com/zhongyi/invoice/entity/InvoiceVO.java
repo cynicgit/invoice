@@ -15,12 +15,12 @@ public class InvoiceVO extends Invoice {
     private Double noReceiveTotalInvoice;
     private Double sumNoReceiveTotalInvoice;
 
-    private Integer Invoice;
     private Double receiveTotalInvoice;
     private Double commonInvoiceAmount;
     private Double commonNoTaxAmount;
     private Double specialInvoiceAmount;
     private Double specialNoTaxAmount;
     private String createLimitPart;
+    private String invoiceDateTime;
 
 }
