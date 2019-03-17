@@ -11,8 +11,13 @@ import java.util.Date;
 public class DateUtils {
 
     public static String date2String(Date date){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
         return  formatter.format(date);
     }
 
+    public static void main(String[] args){
+
+        Date date = new Date();
+         System.out.println(date2String(date));
+    }
 }

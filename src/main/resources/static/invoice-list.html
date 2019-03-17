@@ -1,0 +1,214 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <title>发票详单</title>
+    <style>
+        .title-width {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>发票详单 <span
+        class="c-gray en">&gt;</span>发票详单<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                            href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="student-list">
+    <div class="cl pd-5 bg-1 bk-gray mt-20 skin-minimal">
+        <div class="row cl">
+
+            <!--<label class="form-label  col-sm-2" style="width: 130px">CoreNetId：</label>-->
+            <!--<div class="formControls  col-sm-9" style="width: 150px">-->
+                <!--<input type="text" class="input-text" placeholder="" name="email" id="app-confAccountPrefix">-->
+            <!--</div>-->
+            <!--<button id="search-btn" class="btn btn-primary-outline radius" style="width:100px"><i class="Hui-iconfont">&#xe665;</i>查询-->
+            <!--</button>-->
+            <button id="add-btn" class="btn btn-primary-outline radius" onclick="addInvoice()">添加账单</button>
+            <span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
+        </div>
+
+    </div>
+    <div class="mt-20">
+        <table class="table table-bordered table-border table-hover table-bg " id="admin-table">
+            <thead>
+            <tr class="text-c">
+                <th class="title-width">任务单号</th>
+                <th class="title-width">合同号</th>
+                <th class="title-width">开票日期</th>
+                <th class="title-width">信用类别</th>
+                <th class="title-width">信用期限</th>
+                <th class="title-width">发票类型</th>
+                <th class="title-width">发票号</th>
+                <th class="title-width" width="150">开票单位</th>
+                <th class="title-width" width="100">所属部门</th>
+                <th class="title-width" width="150">项目</th>
+                <th class="title-width" width="150">合同金额</th>
+                <th class="title-width" width="100">发票金额</th>
+                <th class="title-width" width="100">项目负责人</th>
+                <th class="title-width" width="100">签收人</th>
+                <th class="title-width" width="180">签收日期</th>
+                <th class="title-width" width="150">报告号</th>
+                <th class="title-width" width="150">报告日期</th>
+                <th class="title-width" width="100">回款日期</th>
+                <th class="title-width" width="150">回款金额</th>
+                <th class="title-width" width="100">未到账</th>
+                <th class="title-width" width="100">操作</th>
+            </tr>
+            </thead>
+            <tbody id="meeting-tbody" class="text-c">
+            </tbody>
+        </table>
+        <div class="pagination r mt-20" id="pagination"></div>
+        <div class="nodata" id="nodata">
+            <img src="static/images/nodata.svg" alt="">
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript">
+
+    var isPageInit = false;
+    searchPara = {
+        pageSize: 20,
+        pageNum: 1,
+    };
+
+    function getData(searchPara) {
+        $('#pagination').hide();
+        ajax({
+            url: 'invoice/page',
+            data: searchPara,
+            success: function (response) {
+                var data = response.data;
+                console.log(data);
+                if (data.total > 0) {
+                    renderTable(data);
+                } else {
+                    showNodata()
+                }
+            }
+        });
+    }
+
+    function renderTable(data) {
+        $('#nodata').hide();
+        var list = data.list,
+            trs = '';
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+            trs += '<tr>' +
+                '<td class="ellipsis-td">' + item.taskId + '</td>' +
+                '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceDate + '</td>' +
+                '<td class="ellipsis-td">' + item.creditType + '</td>' +
+                '<td class="ellipsis-td">' + item.creditLimit + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceType + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceNumber + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceOffice + '</td>' +
+                '<td class="ellipsis-td">' + item.departmentName + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceProject + '</td>' +
+                '<td class="ellipsis-td">' + item.contractAmount + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceAmount + '</td>' +
+                '<td class="ellipsis-td">' + item.noTaxAmount + '</td>' +
+                '<td class="ellipsis-td">' + item.contractUser + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceSignatory + '</td>' +
+                '<td class="ellipsis-td">' + item.invoiceSignatoryDate + '</td>' +
+                '<td class="ellipsis-td">' + item.reportNumber + '</td>' +
+                '<td class="ellipsis-td">' + item.reportDate + '</td>' +
+                '<td class="ellipsis-td">' + item.receivedDate + '</td>' +
+                '<td class="ellipsis-td">' + item.receivedAmount + '</td>' +
+                '<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
+                '<td>'+ '<button onclick="getInvoice(\''+item.id + '\')" class="btn btn-secondary-outline radius">'+
+                '<i class="Hui-iconfont"></i>修改'+
+                '<button onclick="deleteInvoice(\''+item.id + '\')" class="btn btn-secondary-outline radius">'+
+                '<i class="Hui-iconfont"></i>删除'
+                + '</td>'+'<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
+                '</tr>';
+        }
+        $('#meeting-tbody').html(trs);
+        $('#data-num').text(data.total);
+        if (data.total > searchPara.pageSize) {
+            $('#pagination').show()
+            if (!isPageInit) {
+
+                var pages = Math.ceil(data.total / searchPara.pageSize)
+                laypage({
+                    cont: 'pagination',
+                    curr: 1,
+                    pages: pages,
+                    groups: 5,
+                    jump: function (obj, first) {
+                        if (!first) {
+                            searchPara.pageNum = obj.curr
+                            getData(searchPara)
+                        }
+                    }
+                })
+            }
+        }
+        isPageInit = true;
+    }
+
+    $(function () {
+        searchPara.pageNum = 1;
+        getData(searchPara);
+    });
+
+    function getInvoice(id) {
+        $.cookie("invoice_id", id);
+        layer_show('发票详情', 'invoice-update.html', '', '1000');
+    }
+
+    function deleteInvoice(id) {
+        ajax({
+            url: "invoice/" + id,
+            type: "delete",
+            success: function (response) {
+                if (response.code == 1) {
+                    layer.msg('删除成功');
+                    initData();
+                } else {
+                    layer.open({
+                        type: 0,
+                        closeBtn: 0,
+                        icon: 7,
+                        title: '出现错误',
+                        content: response.error
+                    })
+                }
+            }
+        });
+    }
+
+    function addInvoice() {
+        layer_show('添加发票', 'invoice-add.html', '', '1000');
+    }
+
+</script>
+
+</html>

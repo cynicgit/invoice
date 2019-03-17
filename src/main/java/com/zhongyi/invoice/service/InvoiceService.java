@@ -1,5 +1,7 @@
 package com.zhongyi.invoice.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.mapper.DepartmentMapper;
 import com.zhongyi.invoice.mapper.InvoiceMapper;
@@ -128,5 +130,41 @@ public class InvoiceService {
     public List<InvoiceVO> exportExcelPayedGather(InvoiceVO invoiceVO) {
 
        return invoiceMapper.selectPayedGather(invoiceVO);
+    }
+
+    public InvoiceOutputDTO invoiceList(Integer pageSize, Integer pageNum) {
+        InvoiceOutputDTO invoiceOutputDTO = new InvoiceOutputDTO();
+        PageHelper.startPage(pageNum, pageSize);
+        List<InvoiceVO> list = invoiceMapper.listInvoices();
+        PageInfo<InvoiceVO> pageInfo = new PageInfo<>(list);
+        invoiceOutputDTO.setPage(pageInfo.getPages());
+        invoiceOutputDTO.setList(pageInfo.getList());
+        invoiceOutputDTO.setHasNext(pageInfo.isIsLastPage());
+        invoiceOutputDTO.setTotal(pageInfo.getTotal());
+
+        return invoiceOutputDTO;
+    }
+
+    public void saveInvoice(Invoice invoice) {
+
+        invoiceMapper.insertSelective(invoice);
+    }
+
+    public void updateInvoice(Invoice invoice) {
+        invoiceMapper.updateByPrimaryKey(invoice);
+    }
+
+    public Invoice findById(Integer id) {
+
+        return invoiceMapper.selectByPrimaryKey(id);
+    }
+
+    public void deleteInvoice(Integer id) {
+        invoiceMapper.deleteByPrimaryKey(id);
+    }
+
+    public List<InvoiceVO> receiptGatherYearStatistics(InvoiceVO invoiceVO) {
+
+       return invoiceMapper.listYearInvoices();
     }
 }

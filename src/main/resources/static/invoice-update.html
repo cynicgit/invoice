@@ -1,0 +1,349 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <title>添加发票</title>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+<div class="page-container" id="student-list">
+    <form action="" method="post" class="form form-horizontal" id="form-menu-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="taskId">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="contractNumber">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票日期：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>信用类别：</label>
+            <div>
+                <div class="radio-box">
+                    <input name="target" type="radio" id="company" value="企业" checked>
+                    <label for="company">企业</label>
+                </div>
+                <div class="radio-box">
+                    <input name="target" type="radio" id="government" value="政府">
+                    <label for="government">政府</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>信用期限：</label>
+            <div>
+                <div class="radio-box">
+                    <input name="time" type="radio" id="three-radio" value="3个月" checked>
+                    <label for="three-radio">3个月</label>
+                </div>
+                <div class="radio-box">
+                    <input name="time" type="radio" id="six-radio" value="6个月">
+                    <label for="six-radio">6个月</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>发票类型：</label>
+            <div>
+                <div class="radio-box">
+                    <input name="type" type="radio" id="ordinary" value="普" checked>
+                    <label for="ordinary">普</label>
+                </div>
+                <div class="radio-box">
+                    <input name="sendContentType" type="radio" id="special" value="专">
+                    <label for="special">专</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票单位：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="depId" name="depId" class="select">
+                    <option value="">请选择</option>
+				</select>
+				</span></div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同金额：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票金额：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="userId" name="userId" class="select">
+                    <option value="">请选择</option>
+				</select>
+				</span></div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 签收人：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 签收日期：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 报告号：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 报告日期：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="reportDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 回款金额：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 回款日期：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 未到账：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 备注：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="descprition">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <div class="col-9 col-offset-2">
+                <input style="width:100px" class="btn btn-primary radius" id="submit-btn" type="submit" value="提交">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script>
+
+    var id = $.cookie("invoice_id");
+    $(function () {
+        getInvoice();
+    });
+
+    function getInvoice(){
+
+        ajax({
+            url: 'invoice/'+id,
+            type: 'get',
+            data:{},
+            success: function(res){
+                if(res.code === 1){
+                    console.log(res);
+                    $('#taskId').val(res.data.taskId);
+                    $('#contractNumber').val(res.data.contractNumber);
+                    $("input[name='target'][value=" + response.data.creditType + "]").prop("checked", "checked");
+                    $("input[name='time'][value=" + response.data.creditLimit + "]").prop("checked", "checked");
+                    $("input[name='type'][value=" + response.data.invoiceType + "]").prop("checked", "checked");
+                    $('#invoiceOffice').val(res.data.invoiceOffice);
+                    $("#depId").find("option[value=" + response.data.depId + "]").attr("selected", true);
+                    $('#invoiceProject').val(res.data.invoiceProject);
+                    $('#contractAmount').val(res.data.contractAmount);
+                    $('#invoiceAmount').val(res.data.invoiceAmount);
+                    $("#userId").find("option[value=" + response.data.userId + "]").attr("selected", true);
+                    $('#invoiceSignatory').val(res.data.invoiceSignatory);
+                    $('#invoiceSignatoryDate').val(res.data.invoiceSignatoryDate);
+                    $('#reportNumber').val(res.data.reportNumber);
+                    $('#reportDate').val(res.data.reportDate);
+                    $('#receivedAmount').val(res.data.receivedAmount);
+                    $('#receivedDate').val(res.data.receivedAmount);
+                    $('#noReceivedAmount').val(res.data.receivedAmount);
+                    $('#descprition').val(res.data.receivedAmount);
+
+                }else if(res.code === 0){
+                    layer.msg(res.error);
+                }
+            }
+        })
+    };
+
+
+    $('#submit-btn').click(function (e) {
+        e.preventDefault();
+
+        var taskId = $('#taskId').val(),
+            contractNumber = $('#contractNumber').val(),
+            invoiceDate = $("#invoiceDate").val(),
+            target = $("input[name='target']:checked").val(),
+            time = $("input[name='time']:checked").val()
+            depId = $("#depId").val(),
+            invoiceProject = $("#invoiceProject").val(),
+            contractAmount = $("#contractAmount").val(),
+            invoiceAmount = $("#invoiceAmount").val(),
+            userId = $("#userId").val(),
+            invoiceSignatory = $("#invoiceSignatory").val(),
+            invoiceSignatoryDate = $("#invoiceSignatoryDate").val(),
+            reportNumber = $("#reportNumber").val(),
+            reportDate = $("#reportDate").val(),
+            receivedAmount = $("#receivedAmount").val(),
+            receivedDate = $("#receivedDate").val(),
+            noReceivedAmount = $("#noReceivedAmount").val(),
+            descprition = $("#descprition").val();
+
+        ajax
+        ({
+            url: 'invoice',
+            type: 'put',
+            data: {
+                id:id,
+                taskId:taskId,
+                contractNumber:contractNumber,
+                invoiceDate:invoiceDate,
+                target:target,
+                time:time,
+                taskId:taskId,
+                depId:depId,
+                invoiceProject:invoiceProject,
+                contractAmount:contractAmount,
+                invoiceAmount:invoiceAmount,
+                userId:userId,
+                invoiceSignatory:invoiceSignatory,
+                invoiceSignatoryDate:invoiceSignatoryDate,
+                reportNumber:reportNumber,
+                reportDate:reportDate,
+                receivedAmount:receivedAmount,
+                receivedDate:receivedDate,
+                noReceivedAmount:noReceivedAmount,
+                descprition:descprition,
+            },
+            success: function (res) {
+                if (res.code === 1) {
+                    layer.msg('更新成功');
+                    setTimeout(function () {
+                        parent.location.reload();
+                    }, 1500)
+                } else if (res.code === 0) {
+                    layer.msg(res.error);
+                }
+            }
+        })
+
+    })
+
+</script>
+</body>
+</html>

@@ -469,4 +469,14 @@
         </where> -->
 
     </select>
+    <select id="listInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_invoice
+    </select>
+    <select id="listYearInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
+        select
+        <include refid="Base_Column_List"/>
+         from `t_invoice` where YEAR(invoice_date)=YEAR(NOW());
+    </select>
 </mapper>

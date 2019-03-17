@@ -37,4 +37,7 @@ public interface InvoiceMapper {
     List<InvoiceVO> selectPayedGather(InvoiceVO invoiceVO);
 
     List<ReceivableStaticsInvoice> getInvoices(@Param("startDate") String startDate, @Param("endDate") String endDate);
+
+    List<InvoiceVO> listInvoices();
+    List<InvoiceVO> listYearInvoices();
 }

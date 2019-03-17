@@ -340,9 +340,6 @@ public class ExcelController {
 
         }
 
-//        ExportParams exportParams = new ExportParams();
-//        exportParams.setType(ExcelType.XSSF);
-//        EasyPoiUtils.defaultExport(invoiceVOS, Invoice.class, "xxx.xlsx", response, exportParams);
 
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
