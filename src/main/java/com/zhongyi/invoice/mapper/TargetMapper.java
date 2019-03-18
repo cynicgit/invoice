@@ -16,7 +16,7 @@ public interface TargetMapper {
 
     int insertSelective(Target target);
 
-    Target getTargetByNameAndYear(@Param("userId") Integer userId, @Param("year") Date year);
+    Target getTargetByNameAndYear(@Param("name") String name, @Param("year") String year);
 
     int updateTarget(Target target);
 
@@ -25,4 +25,8 @@ public interface TargetMapper {
     Target getTargetById(@Param("id") Integer id);
 
     int deleteTarget(@Param("id") Integer id);
+
+    List<Target> getAllUserTarget(@Param("year") String year);
+
+    List<Target> getAllGroupTarget(@Param("year") String year);
 }

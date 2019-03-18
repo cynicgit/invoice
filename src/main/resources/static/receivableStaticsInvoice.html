@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="lib/html5shiv.js"></script>
+	<script type="text/javascript" src="lib/respond.min.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+	<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/main.css">
+	<title>用户管理</title>
+	<link rel="stylesheet" href="lib/laypage/1.2/skin/laypage.css">
+	<link rel="stylesheet" href="static/css/tax.css">
+	<style>
+		body{padding: 20px;}
+		.demo-input{padding-left: 10px; height: 38px; min-width: 262px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+		.demo-footer{padding: 50px 0; color: #999; font-size: 14px;}
+		.demo-footer a{padding: 0 5px; color: #01AAED;}
+	</style>
+</head>
+<body>
+
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 开票统计 <span class="c-gray en">&gt;</span> 应收账款<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="student-list">
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+		<input type="text" id="startDate" class="demo-input" readonly>
+		<input type="text" id="endDate" class="demo-input" readonly>
+		<button id="search-btn" class="btn btn-primary-outline radius"  onclick="detailExport()">应收账款账龄分析明细</button>
+		<button id="add-btn" class="btn btn-primary-outline radius" onclick="summaryExport()">应收账款账龄分析汇总</button>
+	</div>
+
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript"  src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="static/laydate/laydate.js"></script>
+<script type="text/javascript" src="lib/echarts.common.min.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+
+	<script type="text/javascript">
+        laydate.render({
+            elem: '#startDate' //指定元素
+        });
+		laydate.render({
+            elem: '#endDate' //指定元素
+        });
+
+
+		function detailExport() {
+			var startDate = $('#startDate').val();
+			var endDate = $('#endDate').val();
+			if (!startDate || startDate == '') {
+                layer.msg('请选择开始时间', {icon: 2, time: 1000});
+			}
+            if (!endDate || endDate == '') {
+                layer.msg('请选择结束时间', {icon: 2, time: 1000});
+            }
+
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            if (start.getMilliseconds() > end.getMilliseconds()) {
+                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+			}
+
+			window.location.href = "/receivable_statics_invoice?startDate="+startDate + "&endDate=" + endDate;
+        }
+
+
+		function summaryExport() {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            if (!startDate || startDate == '') {
+                layer.msg('请选择开始时间', {icon: 2, time: 1000});
+            }
+            if (!endDate || endDate == '') {
+                layer.msg('请选择结束时间', {icon: 2, time: 1000});
+            }
+
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            if (start.getMilliseconds() > end.getMilliseconds()) {
+                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+            }
+
+            window.location.href = "/receivable_statics_invoice_summary?startDate="+startDate + "&endDate=" + endDate;
+
+        }
+
+
+
+	</script>
+</body>
+</html>

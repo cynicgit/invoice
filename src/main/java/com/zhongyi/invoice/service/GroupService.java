@@ -54,10 +54,10 @@ public class GroupService {
         groupMapper.deleteMemberByGroupId(id);
     }
 
-    public PageInfo<Group> getGroup(Integer pageNum, Integer pageSize, String name) {
-        PageHelper.startPage(pageNum, pageSize);
+    public List<Group> getGroup(String name) {
+     //   PageHelper.startPage(pageNum, pageSize);
         List<Group> list = groupMapper.getGroup(name);
-        return new PageInfo<>(list);
+        return list;
     }
 
     public Group getGroupById(Integer id) {
@@ -66,5 +66,9 @@ public class GroupService {
 
     public List<Integer> getGroupMember() {
         return groupMapper.getGroupMember();
+    }
+
+    public List<Group> getGroupAll() {
+        return groupMapper.getGroupAll();
     }
 }

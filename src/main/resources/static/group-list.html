@@ -86,10 +86,9 @@
                     var status = response.result
                     if(status === 0){
                         var data = response.data
-                        if(data.total > 0 && data.list.length > 0){
+                        if(data.length > 0){
                             showTable(data)
-                        } else if (data.list.length === 0 && searchPara.pageNum > 1) {
-                            searchPara.pageNum = 1
+                        } else if (data.length === 0) {
 							initData()
 						} else {
                             showNodata()
@@ -144,7 +143,7 @@
         function showTable(data){
             $('#nodata').hide()
 
-            var list = data.list
+            var list = data
 
             var trs = ''
             $('#user-tbody').children().remove()
@@ -182,25 +181,25 @@
             $('#user-tbody').append(trs)
 
             $('#data-num').text(data.total)
-            if(data.total > searchPara.pageSize){
-                $('#pagination').show()
-                if(!isPageInit){
-
-                    var pages = Math.ceil(data.total/searchPara.pageSize)
-                    laypage({
-                        cont: 'pagination',
-                        curr: 1,
-                        pages: pages,
-                        groups: 5,
-                        jump: function(obj,first) {
-                            if(!first){
-                                searchPara.pageNum = obj.curr
-                                getData(searchPara)
-                            }
-                        }
-                    })
-                }
-            }
+//            if(data.total > searchPara.pageSize){
+//                $('#pagination').show()
+//                if(!isPageInit){
+//
+//                    var pages = Math.ceil(data.total/searchPara.pageSize)
+//                    laypage({
+//                        cont: 'pagination',
+//                        curr: 1,
+//                        pages: pages,
+//                        groups: 5,
+//                        jump: function(obj,first) {
+//                            if(!first){
+//                                searchPara.pageNum = obj.curr
+//                                getData(searchPara)
+//                            }
+//                        }
+//                    })
+//                }
+//            }
             isPageInit = true
         }
         $(function(){

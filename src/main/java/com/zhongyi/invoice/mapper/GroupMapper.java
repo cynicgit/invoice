@@ -34,4 +34,6 @@ public interface GroupMapper {
 
     List<Integer> getGroupMember();
 
+    List<Group> getGroupAll();
+
 }
