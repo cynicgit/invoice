@@ -119,7 +119,6 @@ public class PayedController {
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
             invoiceVOS = map.get(invoiceVO.getContractUser());
-
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
@@ -142,15 +141,23 @@ public class PayedController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = "static/excel/payedGatherInvoiceOff.xlsx";
-        InvoiceVO invoiceVO1 = new InvoiceVO();
-        if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            list = getPayedGatherStatistics(map, "invoiceOffice");
-            invoiceVO1.setInvoiceOffice("合计");
-        }
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+
+        InvoiceVO invoiceVO1 = new InvoiceVO();
+        if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
+            list = getPayedGatherStatistics(map, "invoiceOffice");
+
+        }else {
+            InvoiceVO invoiceVO2 = new InvoiceVO();
+            invoiceVO2.setInvoiceOffice(invoiceVO.getInvoiceOffice());
+            invoiceVO2.setTotalInvoice(sumInvoice);
+            invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
+            list.add(invoiceVO2);
+        }
+        invoiceVO1.setInvoiceOffice("合计");
         invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
         list.add(invoiceVO1);
@@ -175,15 +182,22 @@ public class PayedController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = "static/excel/payedGatherConUser.xlsx";
-        InvoiceVO invoiceVO1 = new InvoiceVO();
-        if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            list = getPayedGatherStatistics(map, "contractUser");
-            invoiceVO1.setContractUser("合计");
-        }
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+
+        InvoiceVO invoiceVO1 = new InvoiceVO();
+        if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
+            list = getPayedGatherStatistics(map, "contractUser");
+        }else {
+            InvoiceVO invoiceVO2 = new InvoiceVO();
+            invoiceVO2.setContractUser(invoiceVO.getContractUser());
+            invoiceVO2.setTotalInvoice(sumInvoice);
+            invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
+            list.add(invoiceVO2);
+        }
+        invoiceVO1.setContractUser("合计");
         invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
         list.add(invoiceVO1);
@@ -303,18 +317,27 @@ public class PayedController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
-        String path = null;
-        InvoiceVO invoiceVO1 = new InvoiceVO();
-        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
-            list = getPayedGatherStatistics(map, "creditLimit");
-            path = "static/excel/payedGatherCreateLimit.xlsx";
-            invoiceVO1.setCreateLimitPart("合计");
-            invoiceVO1.setCreditLimit("");
-        }
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+
+        String path = null;
+        InvoiceVO invoiceVO1 = new InvoiceVO();
+        if (StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
+            list = getPayedGatherStatistics(map, "creditLimit");
+            path = "static/excel/payedGatherCreateLimit.xlsx";
+        }else {
+            InvoiceVO invoiceVO2 = new InvoiceVO();
+            invoiceVO2.setCreateLimitPart(invoiceVO.getCreditLimit());
+            String createLimitPart = "3个月".equals(invoiceVO.getCreditLimit()) ? "企业" : "政府";
+            invoiceVO2.setCreateLimitPart(createLimitPart);
+            invoiceVO2.setTotalInvoice(sumInvoice);
+            invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
+            list.add(invoiceVO2);
+        }
+        invoiceVO1.setCreateLimitPart("合计");
+        invoiceVO1.setCreditLimit("");
         invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
         list.add(invoiceVO1);

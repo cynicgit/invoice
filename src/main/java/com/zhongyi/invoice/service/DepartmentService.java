@@ -68,4 +68,9 @@ public class DepartmentService {
         });
         return pList;
     }
+
+    public List<Department> allDep() {
+
+        return  departmentMapper.getDep(null);
+    }
 }

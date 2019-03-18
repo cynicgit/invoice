@@ -16,6 +16,8 @@
     <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" media="all">
+
     <title>添加发票</title>
     <style type="text/css">
     </style>
@@ -30,10 +32,19 @@
                 <input type="text" class="input-text" value="" placeholder="" id="taskId">
             </div>
         </div>
+
+        <!--<div class="row cl">-->
+        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<input type="text" class="input-text" value="" placeholder="" id="contractNumber">-->
+        <!--</div>-->
+        <!--</div>-->
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="contractNumber">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="contractNumber">
+                </div>
             </div>
         </div>
 
@@ -41,7 +52,8 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceDate">-->
+                    <input type="text" class="layui-input" id="invoiceDate">
                 </div>
             </div>
         </div>
@@ -157,7 +169,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">
+                    <input type="text" class="layui-input" id="invoiceSignatoryDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">-->
                 </div>
             </div>
         </div>
@@ -177,7 +190,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="reportDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="reportDate">-->
+                    <input type="text" class="layui-input" id="reportDate">
                 </div>
             </div>
         </div>
@@ -197,7 +211,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="receivedDate">-->
+                    <input type="text" class="layui-input" id="receivedDate">
                 </div>
             </div>
         </div>
@@ -238,26 +253,114 @@
 <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/layui/layui.js"></script>
 <script>
+
+    var receivedDate = null;
+    var reportDate = null;
+    var invoiceSignatoryDate = null;
+    var invoiceDate = null;
+    $(function () {
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#receivedDate',
+                type: 'date',
+                done: function (value, date) {
+                    receivedDate = date;
+                }
+            });
+            laydate.render({
+                elem: '#reportDate',
+                type: 'date',
+                done: function (value, date) {
+                    reportDate = date;
+                }
+            });
+            laydate.render({
+                elem: '#invoiceSignatoryDate',
+                type: 'date',
+                done: function (value, date) {
+                    invoiceSignatoryDate = date;
+                }
+            });
+            laydate.render({
+                elem: '#invoiceDate',
+                type: 'date',
+                done: function (value, date) {
+                    invoiceDate = date;
+                }
+            });
+        });
+
+        getDep();
+        getUser();
+    });
+
+
+    function getUser() {
+        ajax
+        ({
+            url: '/system/user/all',
+            success: function (res) {
+                if (res.result === 0) {
+                    showUser(res.data);
+                } else if (res.result === 1) {
+                    layer.msg(res.error);
+                }
+            }
+        })
+    }
+
+    function getDep() {
+        ajax
+        ({
+            url: '/system/dep/all',
+            success: function (res) {
+                if (res.result === 0) {
+                    showDep(res.data);
+                } else if (res.result === 1) {
+                    layer.msg(res.error);
+                }
+            }
+        })
+    }
+
+    function showDep(list) {
+        for (var i = 0; i < list.length; i++) {
+            $('#depId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
+        }
+        // $('#depId').searchableSelect();
+    }
+
+
+    function showUser(list) {
+        for (var i = 0; i < list.length; i++) {
+            $('#userId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
+        }
+        // $('#userId').searchableSelect();
+    }
+
     $('#submit-btn').click(function (e) {
         e.preventDefault();
 
         var taskId = $('#taskId').val(),
             contractNumber = $('#contractNumber').val(),
-            invoiceDate = $("#invoiceDate").val(),
+            invoiceDate = invoiceDate,
             target = $("input[name='target']:checked").val(),
             time = $("input[name='time']:checked").val(),
             depId = $("#depId").val(),
+            departmentName = $("#depId").html(),
             invoiceProject = $("#invoiceProject").val(),
             contractAmount = $("#contractAmount").val(),
             invoiceAmount = $("#invoiceAmount").val(),
             userId = $("#userId").val(),
             invoiceSignatory = $("#invoiceSignatory").val(),
-            invoiceSignatoryDate = $("#invoiceSignatoryDate").val(),
+            invoiceSignatoryDate = invoiceSignatoryDate,
             reportNumber = $("#reportNumber").val(),
-            reportDate = $("#reportDate").val(),
+            reportDate = reportDate,
             receivedAmount = $("#receivedAmount").val(),
-            receivedDate = $("#receivedDate").val(),
+            receivedDate = receivedDate,
             noReceivedAmount = $("#noReceivedAmount").val(),
             descprition = $("#descprition").val();
 
@@ -266,25 +369,26 @@
             url: 'invoice',
             type: 'post',
             data: {
-                taskId:taskId,
-                contractNumber:contractNumber,
-                invoiceDate:invoiceDate,
-                target:target,
-                time:time,
-                taskId:taskId,
-                depId:depId,
-                invoiceProject:invoiceProject,
-                contractAmount:contractAmount,
-                invoiceAmount:invoiceAmount,
-                userId:userId,
-                invoiceSignatory:invoiceSignatory,
-                invoiceSignatoryDate:invoiceSignatoryDate,
-                reportNumber:reportNumber,
-                reportDate:reportDate,
-                receivedAmount:receivedAmount,
-                receivedDate:receivedDate,
-                noReceivedAmount:noReceivedAmount,
-                descprition:descprition,
+                taskId: taskId,
+                contractNumber: contractNumber,
+                invoiceDate: invoiceDate,
+                target: target,
+                time: time,
+                taskId: taskId,
+                depId: depId,
+                departmentName: departmentName,
+                invoiceProject: invoiceProject,
+                contractAmount: contractAmount,
+                invoiceAmount: invoiceAmount,
+                userId: userId,
+                invoiceSignatory: invoiceSignatory,
+                invoiceSignatoryDate: invoiceSignatoryDate,
+                reportNumber: reportNumber,
+                reportDate: reportDate,
+                receivedAmount: receivedAmount,
+                receivedDate: receivedDate,
+                noReceivedAmount: noReceivedAmount,
+                descprition: descprition,
             },
             success: function (res) {
                 if (res.code === 1) {

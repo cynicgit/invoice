@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" media="all">
     <title>添加发票</title>
     <style type="text/css">
     </style>
@@ -41,7 +42,8 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceDate">-->
+                    <input type="text" class="layui-input" id="invoiceDate">
                 </div>
             </div>
         </div>
@@ -157,7 +159,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">-->
+                    <input type="text" class="layui-input" id="invoiceSignatoryDate">
                 </div>
             </div>
         </div>
@@ -177,7 +180,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="reportDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="reportDate">-->
+                    <input type="text" class="layui-input" id="reportDate">
                 </div>
             </div>
         </div>
@@ -197,7 +201,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedDate">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="receivedDate">-->
+                    <input type="text" class="layui-input" id="receivedDate">
                 </div>
             </div>
         </div>
@@ -238,7 +243,11 @@
 <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/layui/layui.js"></script>
 <script>
+
+
+
 
     var id = $.cookie("invoice_id");
     $(function () {
@@ -252,8 +261,28 @@
             type: 'get',
             data:{},
             success: function(res){
-                if(res.code === 1){
+                if(res.result === 0){
                     console.log(res);
+                    layui.use('laydate', function () {
+                        var laydate = layui.laydate;
+                        laydate.render({
+                            elem: '#receivedDate',
+                            value: dateFormat(res.data.receivedDate)
+                        });
+                        laydate.render({
+                            elem: '#reportDate',
+                            value: dateFormat(res.data.reportDate)
+                        });
+                        laydate.render({
+                            elem: '#invoiceSignatoryDate',
+                            value:dateFormat(res.data.invoiceSignatoryDate)
+
+                        });
+                        laydate.render({
+                            elem: '#invoiceDate',
+                            value: dateFormat(res.data.invoiceDate)
+                        });
+                    });
                     $('#taskId').val(res.data.taskId);
                     $('#contractNumber').val(res.data.contractNumber);
                     $("input[name='target'][value=" + response.data.creditType + "]").prop("checked", "checked");
@@ -268,9 +297,9 @@
                     $('#invoiceSignatory').val(res.data.invoiceSignatory);
                     $('#invoiceSignatoryDate').val(res.data.invoiceSignatoryDate);
                     $('#reportNumber').val(res.data.reportNumber);
-                    $('#reportDate').val(res.data.reportDate);
+                   // $('#reportDate').val(res.data.reportDate);
                     $('#receivedAmount').val(res.data.receivedAmount);
-                    $('#receivedDate').val(res.data.receivedAmount);
+                   // $('#receivedDate').val(res.data.receivedAmount);
                     $('#noReceivedAmount').val(res.data.receivedAmount);
                     $('#descprition').val(res.data.receivedAmount);
 

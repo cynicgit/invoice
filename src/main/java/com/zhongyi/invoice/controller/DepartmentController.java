@@ -58,4 +58,10 @@ public class DepartmentController {
         return ZYResponse.success(pageInfo);
     }
 
+    @GetMapping("/all")
+    public ZYResponse allDep() {
+        List<Department> allDep = departmentService.allDep();
+        return ZYResponse.success(allDep);
+    }
+
 }

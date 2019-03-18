@@ -447,7 +447,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_invoice
-     <!--   <where>
+        <where>
             <if test="contractUser != null and contractUser != ''">
                 and contract_user = #{contractUser}
             </if>
@@ -466,13 +466,16 @@
             <if test="endDate != null and endDate != ''">
                 and invoice_date &lt;= #{endDate}
             </if>
-        </where> -->
+        </where>
 
     </select>
     <select id="listInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_invoice
+        SELECT ti.id, ti.task_id, ti.contract_number, ti.invoice_date, ti.credit_type, ti.credit_limit, ti.invoice_number,
+        ti.invoice_office, ti.department_name, ti.dep_id, ti.invoice_project, ti.contract_amount, ti.invoice_amount,
+        ti.no_tax_amount, ti.contract_user, ti.user_id, tu.name as invoice_signatory, ti.invoice_signatory_date,
+        ti.report_number, ti.report_date, ti.received_date, ti.received_amount, ti.no_received_amount, ti.invoice_type,
+        ti.descprition
+        FROM t_invoice ti left join t_user tu on ti.user_id = tu.id
     </select>
     <select id="listYearInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         select

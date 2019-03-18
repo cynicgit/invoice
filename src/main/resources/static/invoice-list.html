@@ -17,6 +17,8 @@
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
     <link rel="stylesheet" type="text/css" href="static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" media="all">
+
     <title>发票详单</title>
     <style>
         .title-width {
@@ -33,14 +35,29 @@
 <div class="page-container" id="student-list">
     <div class="cl pd-5 bg-1 bk-gray mt-20 skin-minimal">
         <div class="row cl">
+            <div class="formControls  col-sm-9" style="width: 150px">
+                <input type="text" class="input-text" placeholder="" name="email" id="condition">
+            </div>
+            <!--<input type="text" class="layui-input" placeholder="" name="sdate" id="sdate">-->
+            <!--<input type="text" class="layui-input" placeholder="" name="edate" id="edate">-->
+            <div class="layui-inline">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="sdate">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">结束时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="edate">
+                </div>
+            </div>
 
-            <!--<label class="form-label  col-sm-2" style="width: 130px">CoreNetId：</label>-->
-            <!--<div class="formControls  col-sm-9" style="width: 150px">-->
-                <!--<input type="text" class="input-text" placeholder="" name="email" id="app-confAccountPrefix">-->
-            <!--</div>-->
-            <!--<button id="search-btn" class="btn btn-primary-outline radius" style="width:100px"><i class="Hui-iconfont">&#xe665;</i>查询-->
-            <!--</button>-->
+            <button id="search-btn" class="btn btn-primary-outline radius" style="width:100px">查询
+            </button>
             <button id="add-btn" class="btn btn-primary-outline radius" onclick="addInvoice()">添加账单</button>
+            <button id="export-repeict" class="btn btn-primary-outline radius" onclick="exportRepeictDetail()">导出发票明细</button>
+            <button id="export-payed" class="btn btn-primary-outline radius" onclick="exportPayedDetail()">导出已回款明细</button>
             <span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
         </div>
 
@@ -61,6 +78,7 @@
                 <th class="title-width" width="150">项目</th>
                 <th class="title-width" width="150">合同金额</th>
                 <th class="title-width" width="100">发票金额</th>
+                <th class="title-width" width="100">不含税金额</th>
                 <th class="title-width" width="100">项目负责人</th>
                 <th class="title-width" width="100">签收人</th>
                 <th class="title-width" width="180">签收日期</th>
@@ -90,12 +108,15 @@
 <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/layui/layui.js"></script>
 <script type="text/javascript">
 
     var isPageInit = false;
     searchPara = {
         pageSize: 20,
         pageNum: 1,
+        sdate: null,
+        edate: null
     };
 
     function getData(searchPara) {
@@ -124,7 +145,7 @@
             trs += '<tr>' +
                 '<td class="ellipsis-td">' + item.taskId + '</td>' +
                 '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
-                '<td class="ellipsis-td">' + item.invoiceDate + '</td>' +
+                '<td class="ellipsis-td">' + dateFormat(item.invoiceDate) + '</td>' +
                 '<td class="ellipsis-td">' + item.creditType + '</td>' +
                 '<td class="ellipsis-td">' + item.creditLimit + '</td>' +
                 '<td class="ellipsis-td">' + item.invoiceType + '</td>' +
@@ -137,17 +158,16 @@
                 '<td class="ellipsis-td">' + item.noTaxAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.contractUser + '</td>' +
                 '<td class="ellipsis-td">' + item.invoiceSignatory + '</td>' +
-                '<td class="ellipsis-td">' + item.invoiceSignatoryDate + '</td>' +
+                '<td class="ellipsis-td">' + dateFormat(item.invoiceSignatoryDate) + '</td>' +
                 '<td class="ellipsis-td">' + item.reportNumber + '</td>' +
-                '<td class="ellipsis-td">' + item.reportDate + '</td>' +
-                '<td class="ellipsis-td">' + item.receivedDate + '</td>' +
+                '<td class="ellipsis-td">' + dateFormat(item.reportDate) + '</td>' +
+                '<td class="ellipsis-td">' + dateFormat(item.receivedDate) + '</td>' +
                 '<td class="ellipsis-td">' + item.receivedAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
                 '<td>'+ '<button onclick="getInvoice(\''+item.id + '\')" class="btn btn-secondary-outline radius">'+
                 '<i class="Hui-iconfont"></i>修改'+
                 '<button onclick="deleteInvoice(\''+item.id + '\')" class="btn btn-secondary-outline radius">'+
-                '<i class="Hui-iconfont"></i>删除'
-                + '</td>'+'<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
+                '<i class="Hui-iconfont"></i>删除'+
                 '</tr>';
         }
         $('#meeting-tbody').html(trs);
@@ -175,6 +195,25 @@
     }
 
     $(function () {
+        // layui.use('laydate', function(){
+        //     var laydate = layui.laydate;
+        //
+        //     //执行一个laydate实例
+        //     laydate.render({
+        //         elem: '#sdate' //指定元素
+        //     });
+        // });
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#sdate',
+                type: 'datetime'
+            });
+            laydate.render({
+                elem: '#edate',
+                type: 'datetime'
+            });
+        });
         searchPara.pageNum = 1;
         getData(searchPara);
     });
@@ -207,6 +246,30 @@
 
     function addInvoice() {
         layer_show('添加发票', 'invoice-add.html', '', '1000');
+    }
+
+    function exportRepeictDetail() {
+        ajax({
+            url: "receipt/detail/depId",
+            data: data,
+            success: function (response) {
+                if (response.code == 1) {
+                    layer.msg('导出成功');
+                } else {
+                    layer.open({
+                        type: 0,
+                        closeBtn: 0,
+                        icon: 7,
+                        title: '出现错误',
+                        content: response.error
+                    })
+                }
+            }
+        });
+    }
+
+    function exportPayedDetail() {
+
     }
 
 </script>

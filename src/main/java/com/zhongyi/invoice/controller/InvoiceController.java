@@ -23,7 +23,7 @@ public class InvoiceController {
     private InvoiceService invoiceService;
 
     @GetMapping("/page")
-    public ZYResponse invoiceList(Integer pageSize,Integer pageNum){
+    public ZYResponse invoiceList(@RequestParam(defaultValue = "20") Integer pageSize,@RequestParam(defaultValue = "1")Integer pageNum){
         InvoiceOutputDTO invoiceOutputDTO = invoiceService.invoiceList(pageSize, pageNum);
         return ZYResponse.success(invoiceOutputDTO);
 
