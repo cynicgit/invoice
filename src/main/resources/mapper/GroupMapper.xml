@@ -81,5 +81,8 @@
     <select id="getGroupMember" resultType="java.lang.Integer">
         select user_id FROM t_group_member
     </select>
+    <select id="getGroupAll" resultType="com.zhongyi.invoice.entity.Group">
+        SELECT <include refid="Base_Column_List"/> FROM  t_group
+    </select>
 
 </mapper>

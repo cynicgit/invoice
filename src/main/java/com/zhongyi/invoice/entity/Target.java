@@ -1,5 +1,6 @@
 package com.zhongyi.invoice.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,7 @@ public class Target {
 
     private Integer type;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date year;
+    private String year;
 
     private Integer userId;
 

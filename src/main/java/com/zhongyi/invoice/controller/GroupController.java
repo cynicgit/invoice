@@ -36,7 +36,7 @@ public class GroupController {
 
     @GetMapping
     public ZYResponse getGroup(Integer pageNum, Integer pageSize, String name) throws Exception {
-        PageInfo<Group> pageInfo = groupService.getGroup(pageNum, pageSize, name);
+        List<Group> pageInfo = groupService.getGroup( name);
         return ZYResponse.success(pageInfo);
     }
     @GetMapping("/member")
@@ -48,6 +48,12 @@ public class GroupController {
     @GetMapping("/{id}")
     public ZYResponse getGroup(@PathVariable Integer id) throws Exception {
         Group group = groupService.getGroupById(id);
+        return ZYResponse.success(group);
+    }
+
+    @GetMapping("/all")
+    public ZYResponse getGroupAll() throws Exception {
+        List<Group> group = groupService.getGroupAll();
         return ZYResponse.success(group);
     }
 

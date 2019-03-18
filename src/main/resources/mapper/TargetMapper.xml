@@ -87,7 +87,7 @@
     </delete>
 
     <select id="getTargetByNameAndYear" resultType="com.zhongyi.invoice.entity.Target">
-        select * FROM t_target where `year` = #{year} and user_id = #{userId}
+        select * FROM t_target where `year` = #{year} and `name` = #{name}
     </select>
     <select id="getTarget" resultType="com.zhongyi.invoice.entity.Target">
         select * FROM t_target
@@ -99,6 +99,12 @@
     </select>
     <select id="getTargetById" resultType="com.zhongyi.invoice.entity.Target">
         select * FROM t_target where id = #{id}
+    </select>
+    <select id="getAllUserTarget" resultType="com.zhongyi.invoice.entity.Target">
+        select * FROM t_target where `type` = 0 and `year` = #{year}
+    </select>
+    <select id="getAllGroupTarget" resultType="com.zhongyi.invoice.entity.Target">
+        select * FROM t_target where `type` = 1 and `year` = #{year}
     </select>
 
 </mapper>

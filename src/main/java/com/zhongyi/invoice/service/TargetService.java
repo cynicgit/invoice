@@ -17,7 +17,7 @@ public class TargetService {
     private TargetMapper targetMapper;
 
     public void addTarget(Target target) throws Exception {
-        Target t = targetMapper.getTargetByNameAndYear(target.getUserId(), target.getYear());
+        Target t = targetMapper.getTargetByNameAndYear(target.getName(), target.getYear());
         if (t != null) {
             throw new Exception("已存在");
         }
@@ -41,5 +41,14 @@ public class TargetService {
 
     public void deleteTarget(Integer id) {
         targetMapper.deleteTarget(id);
+    }
+
+
+    public List<Target> getAllUserTarget(String year) {
+        return targetMapper.getAllUserTarget(year);
+    }
+
+    public List<Target> getAllGroupTarget(String year) {
+        return targetMapper.getAllGroupTarget(year);
     }
 }
