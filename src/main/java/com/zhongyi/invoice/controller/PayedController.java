@@ -247,7 +247,7 @@ public class PayedController {
 //                "attachment;filename=" + URLEncoder.encode("已回款汇总按部门统计.xlsx", "UTF-8"));
 //        workbook.write(response.getOutputStream());
 
-        String path = "static/excel/payedGatherDep.xlsx";
+        String path = "D:\\excel\\excel\\payedGatherDep.xlsx";
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
 
 
@@ -303,7 +303,8 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setColForEach(true);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, value);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");

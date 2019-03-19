@@ -55,4 +55,8 @@ public class UserService {
     public List<User> getAllUser() {
         return userMapper.getUser(new User());
     }
+
+    public User getUserByName(String name) {
+        return userMapper.getUserByName(name);
+    }
 }

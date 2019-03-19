@@ -327,11 +327,6 @@
 			</div>
 		</div>
 		<button id="login-btn" class="btn btn-primary radius btn-block size-L">登录 </button>
-		<div class="row cl" >
-			<div class="remember-password-box col-md-4">
-				<input type="checkbox" id="remember-me" ><label for="remember-me">记住我</label>
-			</div>
-		</div>
 	</form>
 </body>
 <script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -365,24 +360,22 @@
  		    console.log($.md5(password))
  		    console.log($("#remember-me").prop('checked'))
  			ajax({
- 				url: 'authentication/form',
+ 				url: '/login',
  				type: 'post',
  				timeout: 10*1000,
  				data: {
-	 				'username': username,
-	 				'password': $.md5(password),
-                    'remember-me': $("#remember-me").prop('checked')
+	 				'name': username,
+	 				'password': $.md5(password)
 	 			},
  				success: function(response) {
 		 			if(response.result === 0){
 		 				var data = response.data;
-		 				$.cookie('role', data.role);
-		 				$.cookie('username', data.name);
-		 				$.cookie('phone', data.phone);
+		 				$.cookie('username', username);
+		 				$.cookie('type', data.type);
 						window.location.href = "/index.html"
 		 			} else if(response.result === 1){
 		 				layer.closeAll();
-		 				var errorMsg = response.error;
+		 				var errorMsg = response.data;
 		 				layer.msg(errorMsg);
 		 				$('#password').val('');
 		 				if(errorMsg === '密码错误'){

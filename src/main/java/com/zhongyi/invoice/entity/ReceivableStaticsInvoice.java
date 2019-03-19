@@ -13,5 +13,7 @@ public class ReceivableStaticsInvoice extends Invoice {
     private String limitAmount2;
     private String limitAmount3;
     private String limitAmount4;
+    private String limitAmount5;
+    private String limitAmount6;
 
 }

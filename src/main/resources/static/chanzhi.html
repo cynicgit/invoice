@@ -33,8 +33,8 @@
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
 		<input type="text" id="startDate" width="100px" class="demo-input" readonly placeholder="请选择开始日期">
 		<input type="text" id="endDate" width="100px" class="demo-input" placeholder="请选择结束日期" readonly>
-		<button id="search-btn" class="btn btn-primary-outline radius"  onclick="detailExport()">应收账款账龄分析明细</button>
-		<button id="add-btn" class="btn btn-primary-outline radius" onclick="summaryExport()">应收账款账龄分析汇总</button>
+		<button id="search-btn" class="btn btn-primary-outline radius"  onclick="detailExport()">人员产值</button>
+		<button id="add-btn" class="btn btn-primary-outline radius" onclick="summaryExport()">部门产值</button>
 	</div>
 
 </div>
@@ -75,7 +75,7 @@
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
 			}
 
-			window.location.href = "/receivable_statics_invoice?startDate="+startDate + "&endDate=" + endDate;
+			window.location.href = "/system/chanzhi/user?startDate="+startDate + "&endDate=" + endDate;
         }
 
 
@@ -97,7 +97,7 @@
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
 
-            window.location.href = "/receivable_statics_invoice_summary?startDate="+startDate + "&endDate=" + endDate;
+            window.location.href = "/system/chanzhi/dep?startDate="+startDate + "&endDate=" + endDate;
 
         }
 
