@@ -129,7 +129,8 @@ public class ReceiptController {
     }
 
     @GetMapping("/gather/dep")
-    public void receiptGatherByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptGatherByDepId(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
 
@@ -211,7 +212,8 @@ public class ReceiptController {
 
 
     @GetMapping("/gather/contractUser")
-    public void receiptGatherByContractUser(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptGatherByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
@@ -283,7 +285,8 @@ public class ReceiptController {
 
 
     @GetMapping("/gather/invoiceType")
-    public void receiptGatherByInvoiceType(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptGatherByInvoiceType(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
@@ -424,7 +427,8 @@ public class ReceiptController {
     }
 
     @GetMapping("/gather/invoiceOffice")
-    public void receiptGatherByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptGatherByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
 

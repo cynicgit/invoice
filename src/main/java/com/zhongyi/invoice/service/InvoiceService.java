@@ -132,8 +132,8 @@ public class InvoiceService {
        return invoiceMapper.selectPayedGather(invoiceVO);
     }
 
-    public InvoiceOutputDTO invoiceList(Integer pageSize, Integer pageNum) {
-        InvoiceOutputDTO invoiceOutputDTO = new InvoiceOutputDTO();
+    public BasePageOutputDTO invoiceList(Integer pageSize, Integer pageNum) {
+        BasePageOutputDTO invoiceOutputDTO = new BasePageOutputDTO();
         PageHelper.startPage(pageNum, pageSize);
         List<InvoiceVO> list = invoiceMapper.listInvoices();
         PageInfo<InvoiceVO> pageInfo = new PageInfo<>(list);

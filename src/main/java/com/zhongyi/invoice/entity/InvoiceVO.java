@@ -27,5 +27,6 @@ public class InvoiceVO extends Invoice {
     private Double specialNoTaxAmount;
     private String createLimitPart;
     private String invoiceDateTime;
-
+    private Long startTime;
+    private Long endTime;
 }

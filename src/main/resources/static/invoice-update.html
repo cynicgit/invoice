@@ -28,13 +28,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="taskId">
+                <input type="text" class="input-text" value="" placeholder="" id="taskId" disabled>
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="contractNumber">
+                <input type="text" class="input-text" value="" placeholder="" id="contractNumber" disabled>
             </div>
         </div>
 
@@ -94,7 +94,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票单位：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice" disabled>
                 </div>
             </div>
         </div>
@@ -112,7 +112,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject" disabled>
                 </div>
             </div>
         </div>
@@ -121,7 +121,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount" disabled>
                 </div>
             </div>
         </div>
@@ -130,7 +130,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount" disabled>
                 </div>
             </div>
         </div>
@@ -149,7 +149,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory" disabled>
                 </div>
             </div>
         </div>
@@ -170,7 +170,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber">
+                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber" disabled>
                 </div>
             </div>
         </div>
@@ -191,7 +191,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" disabled>
                 </div>
             </div>
         </div>
@@ -212,7 +212,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount" disabled>
                 </div>
             </div>
         </div>
@@ -257,7 +257,7 @@
     function getInvoice(){
 
         ajax({
-            url: 'invoice/'+id,
+            url: 'invoice?id='+id,
             type: 'get',
             data:{},
             success: function(res){
@@ -285,15 +285,15 @@
                     });
                     $('#taskId').val(res.data.taskId);
                     $('#contractNumber').val(res.data.contractNumber);
-                    $("input[name='target'][value=" + response.data.creditType + "]").prop("checked", "checked");
-                    $("input[name='time'][value=" + response.data.creditLimit + "]").prop("checked", "checked");
-                    $("input[name='type'][value=" + response.data.invoiceType + "]").prop("checked", "checked");
+                    $("input[name='target'][value=" + res.data.creditType + "]").prop("checked", "checked");
+                    $("input[name='time'][value=" + res.data.creditLimit + "]").prop("checked", "checked");
+                    $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");
                     $('#invoiceOffice').val(res.data.invoiceOffice);
-                    $("#depId").find("option[value=" + response.data.depId + "]").attr("selected", true);
+                    $("#depId").find("option[value=" + res.data.depId + "]").attr("selected", true);
                     $('#invoiceProject').val(res.data.invoiceProject);
                     $('#contractAmount').val(res.data.contractAmount);
                     $('#invoiceAmount').val(res.data.invoiceAmount);
-                    $("#userId").find("option[value=" + response.data.userId + "]").attr("selected", true);
+                    $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
                     $('#invoiceSignatory').val(res.data.invoiceSignatory);
                     $('#invoiceSignatoryDate').val(res.data.invoiceSignatoryDate);
                     $('#reportNumber').val(res.data.reportNumber);

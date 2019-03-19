@@ -1,6 +1,7 @@
 package com.zhongyi.invoice.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Group;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.GroupService;
@@ -16,6 +17,7 @@ public class GroupController {
     @Autowired
     private GroupService groupService;
 
+    @OperateLog("添加分组")
     @PostMapping
     public ZYResponse addGroup(@RequestBody Group group) throws Exception {
         groupService.addGroup(group);

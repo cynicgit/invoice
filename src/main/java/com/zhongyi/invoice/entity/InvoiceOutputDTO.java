@@ -10,8 +10,8 @@ import java.util.List;
  * Created by huguanghui on 2019/3/12.
  * @Description:
  */
-@Setter
-@Getter
-public class InvoiceOutputDTO extends BasePageOutputDTO {
-    private List<InvoiceVO> list;
-}
+//@Setter
+//@Getter
+//public class InvoiceOutputDTO extends BasePageOutputDTO {
+//    private List<InvoiceVO> list;
+//}

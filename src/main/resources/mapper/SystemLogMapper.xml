@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.SystemLogMapper">
+
+ <select id="findAll" resultType="com.zhongyi.invoice.entity.SystemLog">
+     select * from t_system_log
+     <where>
+         <if test="condition != null and condition != ''">
+             and username like CONCAT('%',#{condition},'%')
+         </if>
+
+     </where>
+     order by gmtCreate desc
+ </select>
+
+    <insert id="addLog" parameterType="com.zhongyi.invoice.entity.SystemLog">
+
+        insert into t_system_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="username != null">
+                username,
+            </if>
+            <if test="exception != null">
+                exception,
+            </if>
+            <if test="method != null">
+                method,
+            </if>
+            <if test="params != null">
+                params,
+            </if>
+            <if test="requestUrl != null">
+                requestUrl,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="username != null">
+                #{username},
+            </if>
+            <if test="exception != null">
+                #{exception},
+            </if>
+            <if test="method != null">
+                #{method},
+            </if>
+            <if test="params != null">
+                #{params},
+            </if>
+            <if test="requestUrl != null">
+                #{requestUrl},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+
+        </trim>
+
+    </insert>
+
+
+</mapper>

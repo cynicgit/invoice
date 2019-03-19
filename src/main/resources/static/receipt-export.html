@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" media="all">
+    <title>发票汇总导出</title>
+
+
+</head>
+<body>
+<div class="cl pd-5 bg-1 bk-gray mt-20 skin-minimal">
+    <div class="row cl">
+        <label class="form-label "> 部门：</label>
+        <div class="formControls  " style="width: 100px">
+            <input type="text" class="input-text" placeholder="" name="dep" id="dep">
+        </div>
+
+        <label class="form-label "> 项目负责人：</label>
+        <div class="formControls  " style="width: 100px">
+            <input type="text" class="input-text" placeholder="" name="contractUser" id="contractUser">
+        </div>
+
+        <label class="form-label "> 发票类型：</label>
+        <div class="formControls  " style="width: 100px">
+            <input type="text" class="input-text" placeholder="" name="invoiceType" id="invoiceType">
+        </div>
+
+        <label class="form-label "> 开票单位：</label>
+        <div class="formControls  " style="width: 100px">
+            <input type="text" class="input-text" placeholder="" name="invoiceOffice" id="invoiceOffice">
+        </div>
+
+
+        <div class="layui-inline">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="sdate">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="edate">
+            </div>
+        </div>
+
+        <div class="formControls "> <span class="select-box">
+				<select id="type" name="type" class="select">
+                    <option value="0">请选择</option>
+                    <option value="1">按部门</option>
+                    <option value="2">按项目负责人</option>
+                    <option value="3">按发票类型</option>
+                    <option value="4">按开票单位</option>
+				</select>
+				</span>
+        </div>
+
+
+        <button id="export-btn" class="btn btn-primary-outline radius" style="width:100px">导出</button>
+
+    </div>
+
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/jquery.md5.js"></script>
+<script type="text/javascript" src="static/layui/layui.js"></script>
+<script>
+
+    searchPara = {
+        condition: null,
+        startTime: null,
+        endTime: null
+    };
+
+    var sdate;
+    var edate;
+
+
+    $(function () {
+
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#sdate',
+                type: 'datetime',
+                done: function (value, date) {
+                    sdate = date;
+                }
+            });
+            laydate.render({
+                elem: '#edate',
+                type: 'datetime',
+                done: function (value, date) {
+                    edate = date;
+                }
+            });
+        });
+    });
+
+
+
+    $('#export-btn').click(function (e) {
+        e.preventDefault();
+
+        var condition;
+        var url;
+        var data;
+
+        var type = $("#type").val();
+
+        if (type === '0') {
+            return;
+        } else if (type === '1') {
+            condition = $("#dep").val();
+            url = "receipt/gather/dep";
+            //data = "{\'departmentName\':\'" + condition + "\' }"
+        } else if (type === '2') {
+            condition = $("#contractUser").val();
+           // data = "{\'contractUser\':\'" + condition + "\' }"
+            url = "receipt/gather/contractUser";
+        } else if (type === '3') {
+            condition = $("#invoiceType").val();
+          //  data = "{\'invoiceType\':\'" + condition + "\' }"
+            url = "receipt/gather/invoiceType";
+        } else if (type === '4') {
+            condition = $("#invoiceOffice").val();
+            url = "receipt/gather/invoiceOffice";
+          //  data = "{\'invoiceOffice\':\'" + condition + "\' }"
+        }
+
+        searchPara.condition = condition;
+        searchPara.startTime = sdate;
+        searchPara.endTime = edate;
+        ajax({
+            url: url,
+            type: "get",
+            data: searchPara,
+            success: function (response) {
+                if (response.result === 0) {
+                    layer.msg('导出成功');
+                    setTimeout(function () {
+                        parent.location.reload();
+                    }, 1500)
+                }
+            }
+        });
+    });
+
+
+    // function checkPassword(password, message) {
+    //     if (!password) {
+    //         layer.msg("必须填写 " + message + " !", {icon: 2, time: 1000});
+    //         return false;
+    //     } else if (password.length < 4) {
+    //         layer.msg(message + " 长度不能小于4位!", {icon: 2, time: 1000});
+    //         return false;
+    //     } else if (password.length > 16) {
+    //         layer.msg(message + " 长度不能大于16位!", {icon: 2, time: 1000});
+    //         return false;
+    //     }
+    //     return true;
+    // }
+</script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 package com.zhongyi.invoice.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zhongyi.invoice.entity.BasePageOutputDTO;
 import com.zhongyi.invoice.entity.Invoice;
-import com.zhongyi.invoice.entity.InvoiceOutputDTO;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public class InvoiceController {
 
     @GetMapping("/page")
     public ZYResponse invoiceList(@RequestParam(defaultValue = "20") Integer pageSize,@RequestParam(defaultValue = "1")Integer pageNum){
-        InvoiceOutputDTO invoiceOutputDTO = invoiceService.invoiceList(pageSize, pageNum);
-        return ZYResponse.success(invoiceOutputDTO);
+        BasePageOutputDTO basePageOutputDTO = invoiceService.invoiceList(pageSize, pageNum);
+        return ZYResponse.success(basePageOutputDTO);
 
     }
 
@@ -43,8 +43,8 @@ public class InvoiceController {
 
     }
 
-    @GetMapping("/{id}")
-    public ZYResponse findById(@PathParam("id") Integer id){
+    @GetMapping()
+    public ZYResponse findById( Integer id){
         Invoice invoice = invoiceService.findById(id);
         return ZYResponse.success(invoice);
 
