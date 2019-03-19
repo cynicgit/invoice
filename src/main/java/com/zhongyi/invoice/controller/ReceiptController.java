@@ -304,8 +304,8 @@ public class ReceiptController {
         totalNoTaxAmount1 = invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
 
-        sumThisYearInvoiceAmount = thisYearSpecialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumThisYearNoTaxAmount = thisYearCommonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumThisYearInvoiceAmount = thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
         Map<String, List<InvoiceVO>> invoiceTypMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));
         Map<String, List<InvoiceVO>> thisYearInvoiceTypMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));

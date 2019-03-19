@@ -269,17 +269,17 @@ public class PayedController {
             map.put("time", key);
             map.put("invoiceCount", "开票量");
             map.put("payed", "已回款");
-            map.put("totalInvoiceAmount", "n:t.zq_totalInvoiceAmount");
-            map.put("receiveTotalInvoice", "n:t.zq_receiveTotalInvoice");
+            map.put("totalInvoiceAmount", "t.totalInvoice");
+            map.put("receiveTotalInvoice", "t.totalReceived");
             colList.add(map);
             Map<String, List<InvoiceVO>> devCollect = list3.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
             devCollect.forEach((key2, list4) -> {
                 Map<String, Object> depMap = new HashMap<String, Object>();
                 depMap.put("depName", key2);
                 double totalInvoiceAmount = list4.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
-                depMap.put("totalInvoiceAmount", totalInvoiceAmount);
+                depMap.put("totalInvoice", totalInvoiceAmount);
                 double totalReceivedAmount = list4.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-                depMap.put("totalReceivedAmount", totalReceivedAmount);
+                depMap.put("totalReceived", totalReceivedAmount);
 
                 valList.add(depMap);
             });
@@ -291,8 +291,8 @@ public class PayedController {
         collect1.forEach((key, list3) -> {
             double sum = list3.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
             double sum1 = list3.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-            depMap2.put("totalInvoiceAmount", sum);
-            depMap2.put("totalReceivedAmount", sum1);
+            depMap2.put("totalInvoice", sum);
+            depMap2.put("totalReceived", sum1);
         });
 
         valList.add(depMap2);
