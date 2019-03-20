@@ -49,7 +49,7 @@ function ajax(option) {
     $.ajax({
         url: url,
         type: option.type || 'get',
-        cache: option.cache,
+        cache: false,
         processData: option.processData,
         contentType: option.contentType,
         // headers: {

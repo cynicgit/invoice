@@ -10,6 +10,7 @@ import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class NoReceivableStaticsInvoiceController {
 
+
+    @Value("${excelPath}")
+    private String excelPath;
 
     @Autowired
     private InvoiceService invoiceService;
@@ -101,18 +105,18 @@ public class NoReceivableStaticsInvoiceController {
         String name = "未回款汇总-";
         if (type == 0) { // 部门
             name += "部门";
-            params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\noReceiveAmountDep.xlsx");
+            params.setTemplateUrl(excelPath + "noReceiveAmountDep.xlsx");
         } else if (type == 1) { // 日期
-            params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\noReceiveAmountDate.xlsx");
+            params.setTemplateUrl(excelPath + "noReceiveAmountDate.xlsx");
         } else if (type == 2) { // 信用
             name += "信用";
-            params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\noReceiveAmountCreadt.xlsx");
+            params.setTemplateUrl(excelPath + "noReceiveAmountCreadt.xlsx");
         } else if (type == 3) { // 开票
             name += "开票";
-            params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\noReceiveAmountOffice.xlsx");
+            params.setTemplateUrl(excelPath +  "noReceiveAmountOffice.xlsx");
         } else if (type == 4) { // 项目
             name += "项目负责人";
-            params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\noReceiveAmountUser.xlsx");
+            params.setTemplateUrl(excelPath + "noReceiveAmountUser.xlsx");
         }
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");

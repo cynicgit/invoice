@@ -44,4 +44,4 @@ logging:
 server:
   port: 8080
 
-excelPath: E:\ideaProjects\invoice\src\main\resources\
+excelPath: /home/excel/

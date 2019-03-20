@@ -40,7 +40,7 @@ public class UserService {
     public PageInfo<User> getUser(Integer page, Integer size, User user) {
         PageHelper.startPage(page, size);
         List<User> list = userMapper.getUser(user);
-        list.stream().filter(u -> u.getDepPid() != 0).forEach(u -> {
+        list.stream().filter(u -> u.getDepPid() !=null &&  u.getDepPid() != 0).forEach(u -> {
             Department depById = departmentMapper.getDepById(u.getDepPid());
             u.setDepName(depById.getName() + "-" + u.getDepName());
         });

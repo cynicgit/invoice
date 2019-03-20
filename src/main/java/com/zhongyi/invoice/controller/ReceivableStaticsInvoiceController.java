@@ -6,6 +6,7 @@ import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.InvoiceService;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,9 @@ public class ReceivableStaticsInvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Value("${excelPath}")
+    private String excelPath;
 
     @GetMapping("/receivable_statics_invoice")
     public void ReceivableStaticsInvoice(String startDate, String endDate, HttpServletResponse response) throws Exception {
@@ -49,10 +53,8 @@ public class ReceivableStaticsInvoiceController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("list", list);
         map.put("sum", new BigDecimal( sum[0] / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        File file = ResourceUtils.getFile("classpath:receivableStaticsInvoice.xlsx");
         TemplateExportParams params = new TemplateExportParams();
-
-        params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\receivableStaticsInvoice.xlsx");
+        params.setTemplateUrl(excelPath + "receivableStaticsInvoice.xlsx");
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -91,7 +93,7 @@ public class ReceivableStaticsInvoiceController {
             }
         }
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("sum", String.format("%.2f", sum / 10000));
+        map.put("sum", new BigDecimal( sum / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary1", new BigDecimal( summary1 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary2", new BigDecimal( summary2 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary3", new BigDecimal( summary3 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
@@ -99,7 +101,7 @@ public class ReceivableStaticsInvoiceController {
         map.put("summary5", new BigDecimal( summary5 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary6", new BigDecimal( summary6 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl("E:\\ideaProjects\\invoice\\src\\main\\resources\\receivableStaticsInvoiceSummary.xlsx");
+        params.setTemplateUrl(excelPath + "receivableStaticsInvoiceSummary.xlsx");
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
