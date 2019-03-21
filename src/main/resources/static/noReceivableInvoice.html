@@ -33,17 +33,7 @@
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
 		<input type="text" id="startDate" width="100px" class="demo-input" readonly placeholder="请选择开始日期">
 		<input type="text" id="endDate" width="100px" class="demo-input" placeholder="请选择结束日期" readonly>
-		<input type="text" id="departmentName" style="width: 150px"  class="input-text" placeholder="请输入部门">
-		<input type="text" id="invoiceOffice" style="width: 150px" class="input-text" placeholder="请输入公司">
-		<input type="text" id="contractUser" style="width: 150px" class="input-text" placeholder="请输入项目负责人">
-		<div class="radio-box">
-			<input type="radio" id="radio-1" value="3" name="demo-radio1">
-			<label for="radio-1">3个月</label>
-		</div>
-		<div class="radio-box">
-			<input type="radio" id="radio-2" value="6" name="demo-radio1">
-			<label for="radio-2">6个月</label>
-		</div>
+		<input type="text" id="condition" style="width: 150px"  class="input-text" placeholder="请输入部门/公司/负责人">
 		<br>
 		<div style="margin-top: 10px">
 			<select id="type" class="select" style="width: 100px">
@@ -96,20 +86,8 @@
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
             var mtype = $("#type").val();
-            var url = "/no_receiver_invoice_summary?startDate="+startDate + "&endDate=" + endDate
-			if (mtype == 0) {
-                url = url + "&departmentName=" + $("#departmentName").val()
-			} else if (mtype == 2) {
-                var creditLimit = $('input:radio[name="demo-radio1"]:checked').val();
-                if (!creditLimit) {
-                    creditLimit = ''
-                }
-                url = url + "&creditLimit=" + creditLimit
-			} else if (mtype == 3) {
-                url = url + "&invoiceOffice=" + $("#invoiceOffice").val()
-			} else if (mtype == 4) {
-                url = url + "&contractUser=" + $("#contractUser").val()
-			}
+            var condition = $("#condition").val();
+            var url = "/no_receiver_invoice_summary?startDate="+startDate + "&endDate=" + endDate + "&condition=" +condition
             window.location.href = url + "&type=" + mtype
 
         }
@@ -130,22 +108,9 @@
             if (start.getMilliseconds() > end.getMilliseconds()) {
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
-
+            var condition = $("#condition").val();
             var mtype = $("#type").val();
-            var url = "/no_receiver_invoice?startDate="+startDate + "&endDate=" + endDate
-            if (mtype == 0) {
-                url = url + "&departmentName=" + $("#departmentName").val()
-            } else if (mtype == 2) {
-                var creditLimit = $('input:radio[name="demo-radio1"]:checked').val();
-                if (!creditLimit) {
-                    creditLimit = ''
-				}
-                url = url + "&creditLimit=" + creditLimit
-            } else if (mtype == 3) {
-                url = url + "&invoiceOffice=" + $("#invoiceOffice").val()
-            } else if (mtype == 4) {
-                url = url + "&contractUser=" + $("#contractUser").val()
-            }
+            var url = "/no_receiver_invoice?startDate="+startDate + "&endDate=" + endDate + "&condition=" +condition
             window.location.href = url + "&type=" + mtype;
 
         }

@@ -130,13 +130,13 @@ public class NoReceivableStaticsInvoiceController {
         Map<String, Object> map = new HashMap<String, Object>();
         Map<String, List<ReceivableStaticsInvoice>> collect = null;
         if (type == 0) {
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getDepartmentName()) || i.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getDepartmentName));
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getDepartmentName().contains(invoiceVO.getCondition())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getDepartmentName));
         } else if (type == 2) {
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCreditLimit()) ||  i.getCreditLimit().contains(invoiceVO.getCreditLimit())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getCreditLimit));
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) ||  i.getCreditLimit().contains(invoiceVO.getCondition())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getCreditLimit));
         } else if (type == 3) {
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getInvoiceOffice()) || i.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getInvoiceOffice));
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getInvoiceOffice().contains(invoiceVO.getCondition())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getInvoiceOffice));
         } else if (type == 4) {
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getContractUser()) || i.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getContractUser));
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getContractUser().contains(invoiceVO.getCondition())).collect(Collectors.groupingBy(ReceivableStaticsInvoice::getContractUser));
         }
 
         List<ExportNoReceiver> list = new ArrayList<>();

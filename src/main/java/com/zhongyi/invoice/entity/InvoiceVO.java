@@ -29,4 +29,6 @@ public class InvoiceVO extends Invoice {
     private String invoiceDateTime;
     private Long startTime;
     private Long endTime;
+
+    private String condition;
 }

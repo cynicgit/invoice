@@ -9,6 +9,7 @@ import com.zhongyi.invoice.mapper.UserMapper;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -38,40 +39,81 @@ public class InvoiceService {
         List<Invoice> error = new ArrayList<>();
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = invoices.get(i);
-            if (invoice.getTaskId() == null && "作废".equals(invoice.getInvoiceOffice())) {
-                zuofei++;
-                continue;
-            }
-            Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
-            if (invoiceByTaskIdAndInvoiceNumber != null) {
-                invoiceNumberRepeat ++;
-                continue;
-            }
-            String departmentName = invoice.getDepartmentName();
-            String[] split = departmentName.split("-");
-            Department depByName = departmentMapper.getDepByName(split[1]);
-            if (depByName == null) {
-                invoice.setErrorMsg("未找到部门");
-                error.add(invoice);
-                continue;
-            }
-            invoice.setDepId(depByName.getId());
-            User userByName = userMapper.getUserByName(invoice.getContractUser());
-            if (userByName == null) {
-                invoice.setErrorMsg("未找到对应员工");
-                error.add(invoice);
-                continue;
-            }
-            invoice.setUserId(userByName.getId());
+            try {
 
+                if (invoice.getTaskId() == null && "作废".equals(invoice.getInvoiceOffice())) {
+                    zuofei++;
+                    continue;
+                }
+                Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
+                if (invoiceByTaskIdAndInvoiceNumber != null) {
+                    invoiceNumberRepeat ++;
+                    continue;
+                }
+                String departmentName = invoice.getDepartmentName();
+                String[] split = departmentName.split("-");
+                Department depByName = departmentMapper.getDepByName(split[1]);
+                if (depByName == null) {
+                    invoice.setErrorMsg("未找到部门");
+                    error.add(invoice);
+                    continue;
+                }
+                invoice.setDepId(depByName.getId());
+                User userByName = userMapper.getUserByName(invoice.getContractUser());
+                if (userByName == null) {
+                    invoice.setErrorMsg("未找到对应员工");
+                    error.add(invoice);
+                    continue;
+                }
+                invoice.setUserId(userByName.getId());
 
-            // TODO 完整校验数据类型
-            invoiceMapper.insert(invoice);
+                checkInvoice(invoice);
+                invoiceMapper.insert(invoice);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                invoice.setErrorMsg(e.getMessage());
+                error.add(invoice);
+            }
         }
         map.put("zuofei", zuofei);
         map.put("invoiceNumberRepeat", invoiceNumberRepeat);
         map.put("error", error);
         return map;
+    }
+
+    private void checkInvoice(Invoice invoice) throws Exception {
+        if (StringUtils.isEmpty(invoice.getTaskId())) {
+            throw new Exception("任务单号不能为空");
+        }if (StringUtils.isEmpty(invoice.getContractNumber())) {
+            throw new Exception("合同号不能为空");
+        }if (StringUtils.isEmpty(invoice.getInvoiceDate())) {
+            throw new Exception("任务单号不能为空");
+        }if (invoice.getInvoiceDate() == null) {
+            throw new Exception("开票日期不能为空格式不正确");
+        }if (StringUtils.isEmpty(invoice.getCreditType())) {
+            throw new Exception("信用类别不能为空");
+        }if (StringUtils.isEmpty(invoice.getCreditLimit())) {
+            throw new Exception("信用期限不能为空");
+        }if (StringUtils.isEmpty(invoice.getInvoiceType())) {
+            throw new Exception("发票类型不能为空");
+        }if (StringUtils.isEmpty(invoice.getInvoiceNumber())) {
+            throw new Exception("发票号不能为空");
+        }if (StringUtils.isEmpty(invoice.getInvoiceOffice())) {
+            throw new Exception("开票单位不能为空");
+        }if (StringUtils.isEmpty(invoice.getDepartmentName())) {
+            throw new Exception("所属部门不能为空");
+        }if (StringUtils.isEmpty(invoice.getInvoiceProject())) {
+            throw new Exception("项目不能为空");
+        }if (invoice.getContractAmount() == null) {
+            throw new Exception("合同金额不能为空");
+        }if (invoice.getInvoiceAmount() == null) {
+            throw new Exception("发票金额不能为空");
+        }if (invoice.getNoTaxAmount() == null) {
+            throw new Exception("不含税金额不能为空");
+        }if (invoice.getContractUser() == null) {
+            throw new Exception("项目负责人不能为空");
+        }
     }
 
 
