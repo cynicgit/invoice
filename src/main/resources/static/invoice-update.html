@@ -100,8 +100,8 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+            <label class="form-label col-xs-4 col-sm-2" style="margin-left:15px"><span class="c-red">*</span> 所属部门：</label>
+            <div class="formControls col-xs-8 col-sm-6"> <span class="select-box">
 				<select id="depId" name="depId" class="select">
 				</select>
 				</span></div>
@@ -144,7 +144,7 @@
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+            <div class="formControls col-xs-8 col-sm-6" style="margin-left:15px"> <span class="select-box">
 				<select id="userId" name="userId" class="select">
 				</select>
 				</span></div>
@@ -295,11 +295,21 @@
                 if (res.result === 0) {
                     console.log(res);
 
+                    var reportNumber = res.data.reportNumber === null ? "" : res.data.reportNumber;
+                    var invoiceSignatoryDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.invoiceSignatoryDate);
+                    var invoiceDate = res.data.invoiceDate == null?"":dateFormat( res.data.invoiceDate);
+                    var reportDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.reportDate);
+                    var receivedDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.receivedDate);
+
+
                     $('#taskId').val(res.data.taskId).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
                     $('#contractNumber').val(res.data.contractNumber).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
                     $("input[name='target'][value=" + res.data.creditType + "]").prop("checked", "checked");
+                    $("input[name='target']").attr("disabled", true);
                     $("input[name='time'][value=" + res.data.creditLimit + "]").prop("checked", "checked");
+                    $("input[name='time']").attr("disabled", true);
                     $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");
+                    $("input[name='type']").attr("disabled", true);
                     $('#invoiceOffice').val(res.data.invoiceOffice).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
                     $('#depId').append("<option value='" + res.data.depId + "'>" + res.data.departmentName + "</option>");
 
@@ -310,14 +320,14 @@
 
                     $('#userId').append("<option value='" + res.data.userId + "'>" + res.data.invoiceSignatory + "</option>");
 
-                    $('#invoiceSignatory').val(res.data.invoiceSignatory).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#reportNumber').val(res.data.reportNumber).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#receivedAmount').val(res.data.receivedAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#reportDate').val(dateFormat(res.data.reportDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#invoiceSignatoryDate').val(dateFormat(res.data.invoiceSignatoryDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#receivedDate').val(dateFormat(res.data.receivedDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#invoiceDate').val(dateFormat(res.data.invoiceDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
-                    $('#noReceivedAmount').val(res.data.receivedAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#invoiceSignatory').val(res.data.contractUser);
+                    $('#reportNumber').val(reportNumber);
+                    $('#receivedAmount').val(res.data.receivedAmount);
+                    $('#reportDate').val(reportDate);
+                    $('#invoiceSignatoryDate').val(invoiceSignatoryDate);
+                    $('#receivedDate').val(receivedDate);
+                    $('#invoiceDate').val(invoiceDate).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#noReceivedAmount').val(res.data.receivedAmount);
                     $('#descprition').val(res.data.descprition);
                     $("#noTaxAmount").val(res.data.noTaxAmount);
                 } else if (res.code === 0) {
@@ -384,11 +394,11 @@
                 invoiceAmount: invoiceAmount,
                 userId: userId,
                 invoiceSignatory: invoiceSignatory,
-              //  invoiceSignatoryDate: invoiceSignatoryDate,
+                invoiceSignatoryDate: invoiceSignatoryDate,
                 reportNumber: reportNumber,
-              //  reportDate: reportDate,
+                reportDate: reportDate,
                 receivedAmount: receivedAmount,
-              //  receivedDate: receivedDate,
+                receivedDate: receivedDate,
                 noReceivedAmount: noReceivedAmount,
                 descprition: descprition,
             },

@@ -98,19 +98,18 @@
         endDate: null
     };
 
-    var sdate;
-    var edate;
+
     $(function () {
 
         layui.use('laydate', function(){
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#sdate',
-                type: 'datetime',
+                type: 'date',
             });
             laydate.render({
                 elem: '#edate',
-
+                type: 'date',
             });
         });
     });
