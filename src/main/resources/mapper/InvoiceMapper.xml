@@ -479,6 +479,22 @@
         ti.report_number, ti.report_date, ti.received_date, ti.received_amount, ti.no_received_amount, ti.invoice_type,
         ti.descprition
         FROM t_invoice ti left join t_user tu on ti.user_id = tu.id
+        <where>
+      <!--      <if test="condition != null and condition != ''">
+                and contract_user = #{condition}
+                or department_name LIKE concat('%',#{condition},'%')
+                or credit_limit = #{condition}
+                or invoice_office LIKE concat('%',#{condition},'%')
+                or invoice_type = #{condition}
+            </if> -->
+
+            <if test="startDate != null and startDate != ''">
+                and invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and invoice_date &lt;= #{endDate}
+            </if>
+        </where>
     </select>
     <select id="listYearInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         select
