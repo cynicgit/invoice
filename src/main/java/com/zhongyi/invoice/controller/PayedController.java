@@ -136,7 +136,8 @@ public class PayedController {
 
 
     @GetMapping("/gather/invoiceOffice")
-    public void payedGatherByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedGatherByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
@@ -177,7 +178,8 @@ public class PayedController {
 
 
     @GetMapping("/gather/contractUser")
-    public void payedGatherByContractUser(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedGatherByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
@@ -216,7 +218,7 @@ public class PayedController {
     }
 
     @GetMapping("/gather/dep")
-    public void payedGatherByDep(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedGatherByDep(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
 //        List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
 //        List<InvoiceVO> list = new ArrayList<>();
 //        Map<String, Object> mapParms = new HashMap<>();
@@ -248,6 +250,7 @@ public class PayedController {
 //        workbook.write(response.getOutputStream());
 
         String path = "static/excel/payedGatherDep.xlsx";
+        invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
 
 
@@ -264,25 +267,64 @@ public class PayedController {
         Map<String, List<InvoiceVO>> collect1 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceDateTime));
 
 
+//        collect1.forEach((key, list3) -> {
+//            Map<String, Object> map = new HashMap<String, Object>();
+//            map.put("time", key);
+//            map.put("invoiceCount", "开票量");
+//            map.put("payed", "已回款");
+//            map.put("totalInvoiceAmount", "t.totalInvoice");
+//            map.put("receiveTotalInvoice", "t.totalReceived");
+//            colList.add(map);
+//            Map<String, List<InvoiceVO>> devCollect = list3.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
+//            devCollect.forEach((key2, list4) -> {
+//                Map<String, Object> depMap = new HashMap<String, Object>();
+//                depMap.put("depName", key2);
+//                double totalInvoiceAmount = list4.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
+//                depMap.put("totalInvoice", totalInvoiceAmount);
+//                double totalReceivedAmount = list4.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
+//                depMap.put("totalReceived", totalReceivedAmount);
+//
+//                valList.add(depMap);
+//            });
+//        });
+//
+//
+//        Map<String, Object> depMap2 = new HashMap<String, Object>();
+//        depMap2.put("depName", "合计");
+//        collect1.forEach((key, list3) -> {
+//            double sum = list3.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
+//            double sum1 = list3.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
+//            depMap2.put("totalInvoice", sum);
+//            depMap2.put("totalReceived", sum1);
+//        });
+//
+//        valList.add(depMap2);
+
+
+
         collect1.forEach((key, list3) -> {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("time", key);
             map.put("invoiceCount", "开票量");
             map.put("payed", "已回款");
-            map.put("totalInvoiceAmount", "t.totalInvoice");
-            map.put("receiveTotalInvoice", "t.totalReceived");
+            map.put("totalInvoiceAmount", "t.total" + key);
+            map.put("receiveTotalInvoice", "t.receive" + key);
             colList.add(map);
-            Map<String, List<InvoiceVO>> devCollect = list3.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
-            devCollect.forEach((key2, list4) -> {
-                Map<String, Object> depMap = new HashMap<String, Object>();
-                depMap.put("depName", key2);
-                double totalInvoiceAmount = list4.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
-                depMap.put("totalInvoice", totalInvoiceAmount);
-                double totalReceivedAmount = list4.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-                depMap.put("totalReceived", totalReceivedAmount);
 
-                valList.add(depMap);
+        });
+
+        Map<String, List<InvoiceVO>> devCollect = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
+
+        devCollect.forEach((dep, depList) -> {
+            Map<String, Object> depMap = new HashMap<String, Object>();
+            depMap.put("depName", dep);
+            collect1.forEach((key, l) -> {
+                double totalInvoiceAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getInvoiceAmount).sum();
+                double totalReceivedAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getReceivedAmount).sum();
+                depMap.put("total" + key, totalInvoiceAmount);
+                depMap.put("receive" + key, totalReceivedAmount);
             });
+            valList.add(depMap);
         });
 
 
@@ -291,10 +333,10 @@ public class PayedController {
         collect1.forEach((key, list3) -> {
             double sum = list3.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
             double sum1 = list3.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-            depMap2.put("totalInvoice", sum);
-            depMap2.put("totalReceived", sum1);
-        });
+            depMap2.put("total" + key, sum);
+            depMap2.put("receive" + key, sum1);
 
+        });
         valList.add(depMap2);
 
 
@@ -304,6 +346,7 @@ public class PayedController {
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
+        params.setColForEach(true);
         Workbook workbook = ExcelExportUtil.exportExcel(params, value);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -313,7 +356,8 @@ public class PayedController {
     }
 
     @GetMapping("/gather/creditLimit")
-    public void payedGatherByCreditLimit(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedGatherByCreditLimit(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setCreditLimit(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
@@ -328,9 +372,17 @@ public class PayedController {
             list = getPayedGatherStatistics(map, "creditLimit");
             path = "static/excel/payedGatherCreateLimit.xlsx";
         }else {
+            String createLimitPart = null;
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setCreateLimitPart(invoiceVO.getCreditLimit());
-            String createLimitPart = "3个月".equals(invoiceVO.getCreditLimit()) ? "企业" : "政府";
+            if ("3个月".equals(invoiceVO.getCreditLimit())){
+                createLimitPart = "企业";
+            }else if ("6个月".equals(invoiceVO.getCreditLimit())){
+                createLimitPart = "政府";
+            }else {
+                createLimitPart = "无";
+            }
+
             invoiceVO2.setCreateLimitPart(createLimitPart);
             invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);

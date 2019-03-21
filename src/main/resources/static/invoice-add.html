@@ -49,6 +49,14 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceNumber">
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -94,7 +102,7 @@
                     <label for="ordinary">普</label>
                 </div>
                 <div class="radio-box">
-                    <input name="sendContentType" type="radio" id="special" value="专">
+                    <input name="type" type="radio" id="special" value="专">
                     <label for="special">专</label>
                 </div>
             </div>
@@ -108,6 +116,7 @@
                 </div>
             </div>
         </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>
@@ -146,21 +155,32 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 不含税金额：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noTaxAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select id="userId" name="userId" class="select">
-                    <option value="">请选择</option>
-				</select>
-				</span></div>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="contractUser">
+                </div>
+            </div>
         </div>
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 签收人：</label>
 
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory">
-                </div>
+
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="userId" name="userId" class="select">
+                    <option value="">请选择</option>
+				</select>
+				</span>
             </div>
         </div>
 
@@ -256,40 +276,29 @@
 <script type="text/javascript" src="static/layui/layui.js"></script>
 <script>
 
-    var receivedDate = null;
-    var reportDate = null;
-    var invoiceSignatoryDate = null;
-    var invoiceDate = null;
     $(function () {
         layui.use('laydate', function () {
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#receivedDate',
                 type: 'date',
-                done: function (value, date) {
-                    receivedDate = date;
-                }
+                format: 'yyyy-MM-dd HH:mm:ss'
             });
             laydate.render({
                 elem: '#reportDate',
-                type: 'date',
-                done: function (value, date) {
-                    reportDate = date;
-                }
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
             });
             laydate.render({
                 elem: '#invoiceSignatoryDate',
-                type: 'date',
-                done: function (value, date) {
-                    invoiceSignatoryDate = date;
-                }
+                type: 'datetime',
+                format: 'yyyy-MM-dd HH:mm:ss'
+
             });
             laydate.render({
                 elem: '#invoiceDate',
                 type: 'date',
-                done: function (value, date) {
-                    invoiceDate = date;
-                }
+                format: 'yyyy-MM-dd HH:mm:ss'
             });
         });
 
@@ -344,25 +353,38 @@
     $('#submit-btn').click(function (e) {
         e.preventDefault();
 
-        var taskId = $('#taskId').val(),
-            contractNumber = $('#contractNumber').val(),
-            invoiceDate = invoiceDate,
-            target = $("input[name='target']:checked").val(),
-            time = $("input[name='time']:checked").val(),
-            depId = $("#depId").val(),
-            departmentName = $("#depId").html(),
-            invoiceProject = $("#invoiceProject").val(),
-            contractAmount = $("#contractAmount").val(),
-            invoiceAmount = $("#invoiceAmount").val(),
-            userId = $("#userId").val(),
-            invoiceSignatory = $("#invoiceSignatory").val(),
-            invoiceSignatoryDate = invoiceSignatoryDate,
-            reportNumber = $("#reportNumber").val(),
-            reportDate = reportDate,
-            receivedAmount = $("#receivedAmount").val(),
-            receivedDate = receivedDate,
-            noReceivedAmount = $("#noReceivedAmount").val(),
-            descprition = $("#descprition").val();
+        var taskId = $('#taskId').val();
+        var contractNumber = $('#contractNumber').val();
+        var contractUser = $('#contractUser').val();
+        var invoiceDate = $("#invoiceDate").val();
+        var invoiceOffice = $("#invoiceOffice").val();
+        var invoiceNumber = $("#invoiceNumber").val();
+        var type = $("input[name='type']:checked").val();
+        var target = $("input[name='target']:checked").val();
+        var time = $("input[name='time']:checked").val();
+        var depId = $("#depId").val();
+        var departmentName = $("#depId option:selected").text();
+        var invoiceProject = $("#invoiceProject").val();
+        var contractAmount = $("#contractAmount").val();
+        var invoiceAmount = $("#invoiceAmount").val();
+        var noTaxAmount = $("#noTaxAmount").val();
+        var userId = $("#userId").val();
+        var invoiceSignatory = $("#userId option:selected").text();
+
+        var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
+        var reportNumber = $("#reportNumber").val();
+        var reportDate = $("#reportDate").val();
+        var receivedAmount = $("#receivedAmount").val();
+        var receivedDate = $("#receivedDate").val();
+        var noReceivedAmount = $("#noReceivedAmount").val();
+        var descprition = $("#descprition").val();
+
+        if (!validateNum(contractAmount)) {return;}
+        if (!validateNum(invoiceAmount)) {return;}
+        if (!validateNum(noTaxAmount)) {return;}
+        if (!validateNum(receivedAmount)) {return;}
+        if (!validateNum(noReceivedAmount)) {return;}
+
 
         ajax
         ({
@@ -372,14 +394,19 @@
                 taskId: taskId,
                 contractNumber: contractNumber,
                 invoiceDate: invoiceDate,
-                target: target,
-                time: time,
+                invoiceOffice: invoiceOffice,
+                invoiceNumber: invoiceNumber,
+                creditType: target,
+                contractUser: contractUser,
+                creditLimit: time,
+                invoiceType: type,
                 taskId: taskId,
                 depId: depId,
                 departmentName: departmentName,
                 invoiceProject: invoiceProject,
                 contractAmount: contractAmount,
                 invoiceAmount: invoiceAmount,
+                noTaxAmount: noTaxAmount,
                 userId: userId,
                 invoiceSignatory: invoiceSignatory,
                 invoiceSignatoryDate: invoiceSignatoryDate,
@@ -391,7 +418,7 @@
                 descprition: descprition,
             },
             success: function (res) {
-                if (res.code === 1) {
+                if (res.result === 1) {
                     layer.msg('添加成功');
                     setTimeout(function () {
                         parent.location.reload();

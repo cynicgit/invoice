@@ -14,9 +14,9 @@
             </encoder>
         </appender>
 
-        <logger name="com.zhongyi" level="debug"/>
+        <logger name="com.zhongyi" level="info"/>
 
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="CONSOLE" />
         </root>
     </springProfile>

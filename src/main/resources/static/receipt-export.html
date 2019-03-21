@@ -23,43 +23,50 @@
 </head>
 <body>
 <div class="cl pd-5 bg-1 bk-gray mt-20 skin-minimal">
-    <div class="row cl">
-        <label class="form-label "> 部门：</label>
-        <div class="formControls  " style="width: 100px">
-            <input type="text" class="input-text" placeholder="" name="dep" id="dep">
-        </div>
+    <div class="row cl" style="margin-left: 20px">
 
-        <label class="form-label "> 项目负责人：</label>
-        <div class="formControls  " style="width: 100px">
-            <input type="text" class="input-text" placeholder="" name="contractUser" id="contractUser">
-        </div>
+        条件：
 
-        <label class="form-label "> 发票类型：</label>
-        <div class="formControls  " style="width: 100px">
-            <input type="text" class="input-text" placeholder="" name="invoiceType" id="invoiceType">
-        </div>
+        <input type="text" style="width: 150px"  class="input-text" placeholder="" name="condition" id="condition">
 
-        <label class="form-label "> 开票单位：</label>
-        <div class="formControls  " style="width: 100px">
-            <input type="text" class="input-text" placeholder="" name="invoiceOffice" id="invoiceOffice">
-        </div>
+
+
+        <!--<label class="form-label "> 部门：</label>-->
+        <!--<div class="formControls  " style="width: 100px">-->
+            <!--<input type="text" class="input-text" placeholder="" name="dep" id="dep">-->
+        <!--</div>-->
+
+        <!--<label class="form-label "> 项目负责人：</label>-->
+        <!--<div class="formControls  " style="width: 100px">-->
+            <!--<input type="text" class="input-text" placeholder="" name="contractUser" id="contractUser">-->
+        <!--</div>-->
+
+        <!--<label class="form-label "> 发票类型：</label>-->
+        <!--<div class="formControls  " style="width: 100px">-->
+            <!--<input type="text" class="input-text" placeholder="" name="invoiceType" id="invoiceType">-->
+        <!--</div>-->
+
+        <!--<label class="form-label "> 开票单位：</label>-->
+        <!--<div class="formControls  " style="width: 100px">-->
+            <!--<input type="text" class="input-text" placeholder="" name="invoiceOffice" id="invoiceOffice">-->
+        <!--</div>-->
 
 
         <div class="layui-inline">
             <label class="layui-form-label">开始时间</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" id="sdate">
+                <input type="text" class="layui-input" id="sdate" placeholder="开始时间">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">结束时间</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" id="edate">
+                <input type="text" class="layui-input" id="edate" placeholder="结束时间">
             </div>
         </div>
 
-        <div class="formControls "> <span class="select-box">
-				<select id="type" name="type" class="select">
+
+				<select id="type" name="type" class="select" style="width: 100px;height: 30px">
                     <option value="0">请选择</option>
                     <option value="1">按部门</option>
                     <option value="2">按项目负责人</option>
@@ -67,8 +74,6 @@
                     <option value="4">按开票单位</option>
 				</select>
 				</span>
-        </div>
-
 
         <button id="export-btn" class="btn btn-primary-outline radius" style="width:100px">导出</button>
 
@@ -86,33 +91,15 @@
 <script type="text/javascript" src="static/layui/layui.js"></script>
 <script>
 
-    searchPara = {
-        condition: null,
-        startTime: null,
-        endTime: null
-    };
-
-    var sdate;
-    var edate;
-
-
     $(function () {
 
         layui.use('laydate', function(){
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#sdate',
-                type: 'datetime',
-                done: function (value, date) {
-                    sdate = date;
-                }
             });
             laydate.render({
                 elem: '#edate',
-                type: 'datetime',
-                done: function (value, date) {
-                    edate = date;
-                }
             });
         });
     });
@@ -122,48 +109,58 @@
     $('#export-btn').click(function (e) {
         e.preventDefault();
 
-        var condition;
+        var condition = $("#condition").val();
+        var startDate = $("#sdate").val();
+        var endDate = $("#edate").val();
         var url;
-        var data;
 
         var type = $("#type").val();
+
+
+        if (startDate !== '' && endDate !== '') {
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            if (start.getMilliseconds() > end.getMilliseconds()) {
+                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+            }
+        }
+
+
 
         if (type === '0') {
             return;
         } else if (type === '1') {
-            condition = $("#dep").val();
+           // condition = $("#dep").val();
             url = "receipt/gather/dep";
             //data = "{\'departmentName\':\'" + condition + "\' }"
         } else if (type === '2') {
-            condition = $("#contractUser").val();
+           // condition = $("#contractUser").val();
            // data = "{\'contractUser\':\'" + condition + "\' }"
             url = "receipt/gather/contractUser";
         } else if (type === '3') {
-            condition = $("#invoiceType").val();
+           // condition = $("#invoiceType").val();
           //  data = "{\'invoiceType\':\'" + condition + "\' }"
             url = "receipt/gather/invoiceType";
         } else if (type === '4') {
-            condition = $("#invoiceOffice").val();
+           // condition = $("#invoiceOffice").val();
             url = "receipt/gather/invoiceOffice";
           //  data = "{\'invoiceOffice\':\'" + condition + "\' }"
         }
 
-        searchPara.condition = condition;
-        searchPara.startTime = sdate;
-        searchPara.endTime = edate;
-        ajax({
-            url: url,
-            type: "get",
-            data: searchPara,
-            success: function (response) {
-                if (response.result === 0) {
-                    layer.msg('导出成功');
-                    setTimeout(function () {
-                        parent.location.reload();
-                    }, 1500)
-                }
-            }
-        });
+        // ajax({
+        //     url: url,
+        //     type: "get",
+        //     data: searchPara,
+        //     success: function (response) {
+        //         if (response.result === 0) {
+        //             layer.msg('导出成功');
+        //             setTimeout(function () {
+        //                 parent.location.reload();
+        //             }, 1500)
+        //         }
+        //     }
+        // });
+        window.location.href = url + "?startDate="+startDate + "&endDate=" + endDate + "&condition=" + condition;
     });
 
 

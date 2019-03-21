@@ -151,7 +151,7 @@ public class InvoiceService {
     }
 
     public void updateInvoice(Invoice invoice) {
-        invoiceMapper.updateByPrimaryKey(invoice);
+        invoiceMapper.updateByPrimaryKeySelective(invoice);
     }
 
     public Invoice findById(Integer id) {

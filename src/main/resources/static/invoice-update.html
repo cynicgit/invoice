@@ -28,13 +28,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="taskId" disabled>
+                <input type="text" class="input-text" value="" placeholder="" id="taskId" >
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="contractNumber" disabled>
+                <input type="text" class="input-text" value="" placeholder="" id="contractNumber" >
             </div>
         </div>
 
@@ -94,7 +94,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票单位：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice" >
                 </div>
             </div>
         </div>
@@ -103,7 +103,6 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select id="depId" name="depId" class="select">
-                    <option value="">请选择</option>
 				</select>
 				</span></div>
         </div>
@@ -112,7 +111,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject" >
                 </div>
             </div>
         </div>
@@ -121,7 +120,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount" >
                 </div>
             </div>
         </div>
@@ -130,7 +129,15 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount">
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 不含税金额：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noTaxAmount">
                 </div>
             </div>
         </div>
@@ -139,7 +146,6 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>
             <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select id="userId" name="userId" class="select">
-                    <option value="">请选择</option>
 				</select>
 				</span></div>
         </div>
@@ -149,7 +155,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory" >
                 </div>
             </div>
         </div>
@@ -170,7 +176,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber" >
                 </div>
             </div>
         </div>
@@ -191,7 +197,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" >
                 </div>
             </div>
         </div>
@@ -212,7 +218,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount" disabled>
+                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
                 </div>
             </div>
         </div>
@@ -247,63 +253,74 @@
 <script>
 
 
-
-
     var id = $.cookie("invoice_id");
     $(function () {
         getInvoice();
     });
 
-    function getInvoice(){
+    $(function () {
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#receivedDate',
+                type: 'date',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '#reportDate',
+                type: 'date',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            laydate.render({
+                elem: '#invoiceSignatoryDate',
+                type: 'date',
+                format: 'yyyy-MM-dd HH:mm:ss'
+
+            });
+            laydate.render({
+                elem: '#invoiceDate',
+                type: 'date',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+        });
+    })
+
+    function getInvoice() {
 
         ajax({
-            url: 'invoice?id='+id,
+            url: 'invoice?id=' + id,
             type: 'get',
-            data:{},
-            success: function(res){
-                if(res.result === 0){
+            data: {},
+            success: function (res) {
+                if (res.result === 0) {
                     console.log(res);
-                    layui.use('laydate', function () {
-                        var laydate = layui.laydate;
-                        laydate.render({
-                            elem: '#receivedDate',
-                            value: dateFormat(res.data.receivedDate)
-                        });
-                        laydate.render({
-                            elem: '#reportDate',
-                            value: dateFormat(res.data.reportDate)
-                        });
-                        laydate.render({
-                            elem: '#invoiceSignatoryDate',
-                            value:dateFormat(res.data.invoiceSignatoryDate)
 
-                        });
-                        laydate.render({
-                            elem: '#invoiceDate',
-                            value: dateFormat(res.data.invoiceDate)
-                        });
-                    });
-                    $('#taskId').val(res.data.taskId);
-                    $('#contractNumber').val(res.data.contractNumber);
+                    $('#taskId').val(res.data.taskId).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#contractNumber').val(res.data.contractNumber).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
                     $("input[name='target'][value=" + res.data.creditType + "]").prop("checked", "checked");
                     $("input[name='time'][value=" + res.data.creditLimit + "]").prop("checked", "checked");
                     $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");
-                    $('#invoiceOffice').val(res.data.invoiceOffice);
-                    $("#depId").find("option[value=" + res.data.depId + "]").attr("selected", true);
-                    $('#invoiceProject').val(res.data.invoiceProject);
-                    $('#contractAmount').val(res.data.contractAmount);
-                    $('#invoiceAmount').val(res.data.invoiceAmount);
-                    $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
-                    $('#invoiceSignatory').val(res.data.invoiceSignatory);
-                    $('#invoiceSignatoryDate').val(res.data.invoiceSignatoryDate);
-                    $('#reportNumber').val(res.data.reportNumber);
-                   // $('#reportDate').val(res.data.reportDate);
-                    $('#receivedAmount').val(res.data.receivedAmount);
-                   // $('#receivedDate').val(res.data.receivedAmount);
-                    $('#noReceivedAmount').val(res.data.receivedAmount);
-                    $('#descprition').val(res.data.receivedAmount);
+                    $('#invoiceOffice').val(res.data.invoiceOffice).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#depId').append("<option value='" + res.data.depId + "'>" + res.data.departmentName + "</option>");
 
-                }else if(res.code === 0){
+                    $('#invoiceProject').val(res.data.invoiceProject).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#contractAmount').val(res.data.contractAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#invoiceAmount').val(res.data.invoiceAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                   // $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
+
+                    $('#userId').append("<option value='" + res.data.userId + "'>" + res.data.invoiceSignatory + "</option>");
+
+                    $('#invoiceSignatory').val(res.data.invoiceSignatory).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#reportNumber').val(res.data.reportNumber).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#receivedAmount').val(res.data.receivedAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#reportDate').val(dateFormat(res.data.reportDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#invoiceSignatoryDate').val(dateFormat(res.data.invoiceSignatoryDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#receivedDate').val(dateFormat(res.data.receivedDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#invoiceDate').val(dateFormat(res.data.invoiceDate)).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#noReceivedAmount').val(res.data.receivedAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
+                    $('#descprition').val(res.data.descprition);
+                    $("#noTaxAmount").val(res.data.noTaxAmount);
+                } else if (res.code === 0) {
                     layer.msg(res.error);
                 }
             }
@@ -314,58 +331,74 @@
     $('#submit-btn').click(function (e) {
         e.preventDefault();
 
-        var taskId = $('#taskId').val(),
-            contractNumber = $('#contractNumber').val(),
-            invoiceDate = $("#invoiceDate").val(),
-            target = $("input[name='target']:checked").val(),
-            time = $("input[name='time']:checked").val()
-            depId = $("#depId").val(),
-            invoiceProject = $("#invoiceProject").val(),
-            contractAmount = $("#contractAmount").val(),
-            invoiceAmount = $("#invoiceAmount").val(),
-            userId = $("#userId").val(),
-            invoiceSignatory = $("#invoiceSignatory").val(),
-            invoiceSignatoryDate = $("#invoiceSignatoryDate").val(),
-            reportNumber = $("#reportNumber").val(),
-            reportDate = $("#reportDate").val(),
-            receivedAmount = $("#receivedAmount").val(),
-            receivedDate = $("#receivedDate").val(),
-            noReceivedAmount = $("#noReceivedAmount").val(),
-            descprition = $("#descprition").val();
+        var taskId = $('#taskId').val();
+        var contractNumber = $('#contractNumber').val();
+        var contractUser = $('#contractUser').val();
+        var invoiceDate = $("#invoiceDate").val();
+        var invoiceOffice = $("#invoiceOffice").val();
+        var invoiceNumber = $("#invoiceNumber").val();
+        var target = $("input[name='target']:checked").val();
+        var time = $("input[name='time']:checked").val();
+        var type = $("input[name='type']:checked").val();
+        var depId = $("#depId").val();
+        var departmentName = $("#depId option:selected").text();
+        var invoiceProject = $("#invoiceProject").val();
+        var contractAmount = $("#contractAmount").val();
+        var invoiceAmount = $("#invoiceAmount").val();
+        var userId = $("#userId").val();
+        var invoiceSignatory = $("#userId option:selected").text();
+        var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
+        var reportNumber = $("#reportNumber").val();
+        var reportDate = $("#reportDate").val();
+        var receivedAmount = $("#receivedAmount").val();
+        var receivedDate = $("#receivedDate").val();
+        var noReceivedAmount = $("#noReceivedAmount").val();
+        var descprition = $("#descprition").val();
+        var noTaxAmount = $("#noTaxAmount").val();
+
+        if (!validateNum(contractAmount)) {return;}
+        if (!validateNum(invoiceAmount)) {return;}
+        if (!validateNum(noTaxAmount)) {return;}
+        if (!validateNum(receivedAmount)) {return;}
+        if (!validateNum(noReceivedAmount)) {return;}
 
         ajax
         ({
             url: 'invoice',
             type: 'put',
             data: {
-                id:id,
-                taskId:taskId,
-                contractNumber:contractNumber,
-                invoiceDate:invoiceDate,
-                target:target,
-                time:time,
-                taskId:taskId,
-                depId:depId,
-                invoiceProject:invoiceProject,
-                contractAmount:contractAmount,
-                invoiceAmount:invoiceAmount,
-                userId:userId,
-                invoiceSignatory:invoiceSignatory,
-                invoiceSignatoryDate:invoiceSignatoryDate,
-                reportNumber:reportNumber,
-                reportDate:reportDate,
-                receivedAmount:receivedAmount,
-                receivedDate:receivedDate,
-                noReceivedAmount:noReceivedAmount,
-                descprition:descprition,
+                id: id,
+                taskId: taskId,
+                contractNumber: contractNumber,
+               // invoiceDate: invoiceDate,
+                invoiceOffice: invoiceOffice,
+                invoiceNumber: invoiceNumber,
+                contractUser:contractUser,
+                creditLimit: time,
+                creditType:target,
+                invoiceType:type,
+                depId: depId,
+                departmentName: departmentName,
+                invoiceProject: invoiceProject,
+                contractAmount: contractAmount,
+                invoiceAmount: invoiceAmount,
+                userId: userId,
+                invoiceSignatory: invoiceSignatory,
+              //  invoiceSignatoryDate: invoiceSignatoryDate,
+                reportNumber: reportNumber,
+              //  reportDate: reportDate,
+                receivedAmount: receivedAmount,
+              //  receivedDate: receivedDate,
+                noReceivedAmount: noReceivedAmount,
+                descprition: descprition,
             },
             success: function (res) {
-                if (res.code === 1) {
+                if (res.result === 0) {
                     layer.msg('更新成功');
                     setTimeout(function () {
                         parent.location.reload();
                     }, 1500)
-                } else if (res.code === 0) {
+                } else if (res.result === 1) {
                     layer.msg(res.error);
                 }
             }

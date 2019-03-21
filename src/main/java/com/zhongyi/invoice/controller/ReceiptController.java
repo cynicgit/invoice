@@ -129,7 +129,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/gather/dep")
-    public void receiptGatherByDepId(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void receiptGatherByDepId(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
@@ -172,7 +172,7 @@ public class ReceiptController {
             Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
             getReceiptGatherStatistics(list, depMap, thisYearDepMap, "departmentName");
             //  getReceiptGatherThisYearStatistics(list,thisYearDepMap);
-        }else {
+        } else {
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setDepartmentName(invoiceVOS.get(0).getDepartmentName());
             invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
@@ -212,7 +212,7 @@ public class ReceiptController {
 
 
     @GetMapping("/gather/contractUser")
-    public void receiptGatherByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void receiptGatherByContractUser(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
@@ -230,6 +230,8 @@ public class ReceiptController {
         Double sumCommonNoTaxAmount;
         Double sumThisYearNoTaxAmount;
         Double sumThisYearInvoiceAmount;
+        Double sumNoTaxAmount;
+        Double sumInvoiceAmount;
         sumSpecialInvoiceAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
         //不含税金额
         sumSpecialNoTaxAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
@@ -238,6 +240,9 @@ public class ReceiptController {
         //不含税金额
         sumCommonNoTaxAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
+
+        sumNoTaxAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumInvoiceAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
         sumThisYearInvoiceAmount = thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
         sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
@@ -249,13 +254,15 @@ public class ReceiptController {
             Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getContractUser));
             getReceiptGatherStatistics(list, contractUserMap, thisYearDepMap, "contractUser");
 
-        }else {
+        } else {
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setContractUser(invoiceVO.getContractUser());
             invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
             invoiceVO2.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
             invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
             invoiceVO2.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+            invoiceVO2.setTotalInvoiceAmount(sumInvoiceAmount);
+            invoiceVO2.setTotalNoTaxAmount(sumNoTaxAmount);
             invoiceVO2.setTotalThisYearInvoiceAmount(sumThisYearInvoiceAmount);
             invoiceVO2.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
             list.add(invoiceVO2);
@@ -269,6 +276,8 @@ public class ReceiptController {
         invoiceVO1.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
         invoiceVO1.setCommonInvoiceAmount(sumCommonInvoiceAmount);
         invoiceVO1.setCommonNoTaxAmount(sumCommonNoTaxAmount);
+        invoiceVO1.setTotalInvoiceAmount(sumInvoiceAmount);
+        invoiceVO1.setTotalNoTaxAmount(sumNoTaxAmount);
         invoiceVO1.setTotalThisYearInvoiceAmount(sumThisYearInvoiceAmount);
         invoiceVO1.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
         list.add(invoiceVO1);
@@ -285,7 +294,7 @@ public class ReceiptController {
 
 
     @GetMapping("/gather/invoiceType")
-    public void receiptGatherByInvoiceType(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void receiptGatherByInvoiceType(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
@@ -427,7 +436,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/gather/invoiceOffice")
-    public void receiptGatherByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void receiptGatherByInvoiceOffice(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
@@ -437,9 +446,9 @@ public class ReceiptController {
         String path = "static/excel/receiptGatherOffice.xlsx";
 
         //专票
-      //  List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
+        //  List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
         //普票
-      //  List<InvoiceVO> commonInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
+        //  List<InvoiceVO> commonInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
         Double sumCommonInvoiceAmount;
         Double sumCommonNoTaxAmount;
@@ -462,7 +471,7 @@ public class ReceiptController {
             getReceiptGatherStatistics(list, contractUserMap, thisYearDepMap, "invoiceOffice");
 
             //list = getReceiptGatherStatistics(contractUserMap, "invoiceOffice");
-        }else {
+        } else {
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setInvoiceOffice(invoiceVO.getInvoiceOffice());
 //            invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
@@ -573,55 +582,67 @@ public class ReceiptController {
             String dateString = DateUtils.date2String(invoiceVO2.getInvoiceDate());
             invoiceVO2.setInvoiceDateTime(dateString);
         });
+        Map<String, List<InvoiceVO>> collect1 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
 
 
         Map<String, Object> value = new HashMap<String, Object>();
         List<Map<String, Object>> valList = new ArrayList<Map<String, Object>>();
         List<Map<String, Object>> colList = new ArrayList<Map<String, Object>>();
 
-        Map<String, List<InvoiceVO>> collect1 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceDateTime));
-
-
-        collect1.forEach((key,list3) ->{
+        collect1.forEach((key, list3) -> {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("time",key);
-            map.put("invoiceCount","开票量");
-            map.put("payed","已回款");
-            map.put("totalInvoiceAmount", "n:t.zq_totalInvoiceAmount");
-            map.put("receiveTotalInvoice", "n:t.zq_receiveTotalInvoice");
+            map.put("time", key);
+            map.put("invoiceCount", "开票量");
+            map.put("payed", "已回款");
+            map.put("totalInvoiceAmount", "t.total" + key);
+            map.put("receiveTotalInvoice", "t.receive" + key);
             colList.add(map);
-            Map<String, List<InvoiceVO>> devCollect = list3.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
-            devCollect.forEach((key2,list4) ->{
-                Map<String, Object> depMap = new HashMap<String, Object>();
-                depMap.put("depName",key2);
-                double totalInvoiceAmount = list4.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
-                depMap.put("totalInvoiceAmount",totalInvoiceAmount);
-                double totalReceivedAmount = list4.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-                depMap.put("totalReceivedAmount",totalReceivedAmount);
 
-                valList.add(depMap);
+        });
+
+        Map<String, List<InvoiceVO>> devCollect = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
+
+        devCollect.forEach((dep, depList) -> {
+            Map<String, Object> depMap = new HashMap<String, Object>();
+            depMap.put("depName", dep);
+            collect1.forEach((key, l) -> {
+                double totalInvoiceAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getInvoiceAmount).sum();
+                double totalReceivedAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getReceivedAmount).sum();
+                depMap.put("total" + key, totalInvoiceAmount);
+                depMap.put("receive" + key, totalReceivedAmount);
             });
+            valList.add(depMap);
         });
-
-
-        Map<String, Object> depMap2 = new HashMap<String, Object>();
-        depMap2.put("depName","合计");
-        collect1.forEach((key,list3) ->{
-            double sum = list3.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
-            double sum1 = list3.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-            depMap2.put("totalInvoiceAmount",sum);
-            depMap2.put("totalReceivedAmount",sum1);
-        });
-
-        valList.add(depMap2);
-
-
-        value.put("colList", colList);
-        value.put("valList", valList);
-
-         System.out.println(1111);
 
     }
 
+    @GetMapping("/gather/test2")
+    public void test2(InvoiceVO invoiceVO, HttpServletResponse response) throws Exception{
+        List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
+        invoiceVOS.forEach(invoiceVO2 -> {
+            String dateString = DateUtils.date2String(invoiceVO2.getInvoiceDate());
+            invoiceVO2.setInvoiceDateTime(dateString);
+        });
 
+        Map<String, List<InvoiceVO>> collect1 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
+
+        Map<String, List<InvoiceVO>> collect2 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceDateTime));
+
+        List<String> times = new ArrayList<>();
+        collect2.forEach((key2,list2) ->{
+            times.add(key2);
+
+        });
+
+        collect1.forEach((key,list) ->{
+
+
+
+        });
+    }
+
+
+    public void test3(){
+
+    }
 }

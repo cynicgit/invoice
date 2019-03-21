@@ -44,7 +44,7 @@
         ti.report_number, ti.report_date, ti.received_date, ti.received_amount, ti.no_received_amount, ti.invoice_type,
         ti.descprition
         FROM t_invoice ti left join t_user tu on ti.user_id = tu.id
-        where id = #{id,jdbcType=INTEGER}
+        where ti.id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
         delete from t_invoice
@@ -382,8 +382,8 @@
             <if test="contractUser != null and contractUser != ''">
                 and contract_user = #{contractUser}
             </if>
-            <if test="depId != null">
-                and dep_id = #{depId}
+            <if test="departmentName != null">
+                and department_name LIKE concat('%',#{departmentName},'%')
             </if>
             <if test="startDate != null and startDate != ''">
                 and invoice_date >= #{startDate}
@@ -454,14 +454,14 @@
             <if test="contractUser != null and contractUser != ''">
                 and contract_user = #{contractUser}
             </if>
-            <if test="depId != null">
-                and dep_id = #{depId}
+            <if test="departmentName != null">
+                and department_name LIKE concat('%',#{departmentName},'%')
             </if>
             <if test="creditLimit != null and creditLimit != ''">
                 and credit_limit = #{creditLimit}
             </if>
             <if test="invoiceOffice != null and invoiceOffice != ''">
-                and invoice_office = #{invoiceOffice}
+                and invoice_office LIKE concat('%',#{invoiceOffice},'%')
             </if>
             <if test="startDate != null and startDate != ''">
                 and invoice_date >= #{startDate}

@@ -35,29 +35,42 @@
 <div class="page-container" id="student-list">
     <div class="cl pd-5 bg-1 bk-gray mt-20 skin-minimal">
         <div class="row cl">
-            <div class="formControls  col-sm-9" style="width: 150px">
+            <div class="formControls  col-sm-9" style="width: 120px">
                 <input type="text" class="input-text" placeholder="" name="email" id="condition">
             </div>
             <!--<input type="text" class="layui-input" placeholder="" name="sdate" id="sdate">-->
             <!--<input type="text" class="layui-input" placeholder="" name="edate" id="edate">-->
             <div class="layui-inline">
-                <label class="layui-form-label">开始时间</label>
+                开始时间
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="sdate">
+                    <input type="text" class="layui-input" id="sdate" placeholder="开始时间">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">结束时间</label>
+                结束时间
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input" id="edate">
+                    <input type="text" class="layui-input" id="edate" placeholder="结束时间">
                 </div>
             </div>
 
             <button id="search-btn" class="btn btn-primary-outline radius" style="width:100px">查询
             </button>
-            <button id="add-btn" class="btn btn-primary-outline radius" onclick="addInvoice()">添加账单</button>
-            <button id="export-repeict" class="btn btn-primary-outline radius" onclick="exportRepeictDetail()">导出发票明细</button>
-            <button id="export-payed" class="btn btn-primary-outline radius" onclick="exportPayedDetail()">导出已回款明细</button>
+            <button id="add-btn" class="btn btn-primary-outline radius" onclick="addInvoice()" hidden>添加账单</button>
+
+            <select id="type" name="type" class="select" style="width: 100px;height: 30px">
+                <option value="0">请选择</option>
+                <option value="1">按部门</option>
+                <option value="2">按信用期限</option>
+                <option value="3">按发票类型</option>
+                <option value="4">按开票单位</option>
+                <option value="5">按项目负责人</option>
+            </select>
+
+
+            <button id="export-repeict" class="btn btn-primary-outline radius" onclick="exportRepeictDetail()">导出发票明细
+            </button>
+            <button id="export-payed" class="btn btn-primary-outline radius" onclick="exportPayedDetail()">导出已回款明细
+            </button>
             <span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
         </div>
 
@@ -87,7 +100,7 @@
                 <th class="title-width" width="100">回款日期</th>
                 <th class="title-width" width="150">回款金额</th>
                 <th class="title-width" width="100">未到账</th>
-                <th class="title-width" width="100">操作</th>
+                <th class="title-width" width="100" id="operate">操作</th>
             </tr>
             </thead>
             <tbody id="meeting-tbody" class="text-c">
@@ -119,6 +132,13 @@
         edate: null
     };
 
+
+    var exportPara = {
+        condition: null,
+        startTime: null,
+        endTime: null
+    };
+
     function getData(searchPara) {
         $('#pagination').hide();
         ajax({
@@ -137,11 +157,26 @@
     }
 
     function renderTable(data) {
+
+        var type = $.cookie('type');
+
+
         $('#nodata').hide();
         var list = data.list,
             trs = '';
         for (var i = 0; i < list.length; i++) {
             var item = list[i];
+
+            var ss = '';
+            if (type === '0') {
+                ss = '<td>' + '<button onclick="getInvoice(\'' + item.id + '\')" class="btn btn-secondary-outline radius"/>' +
+                    '<i class="Hui-iconfont"></i>修改' +
+                    '<button onclick="deleteInvoice(\'' + item.id + '\')" class="btn btn-secondary-outline radius"/>' +
+                    '<i class="Hui-iconfont"></i>删除' +
+                    '</td>'
+            }
+
+            var reportNumber = item.reportNumber === null ? "" : item.reportNumber;
             trs += '<tr>' +
                 '<td class="ellipsis-td">' + item.taskId + '</td>' +
                 '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
@@ -159,15 +194,12 @@
                 '<td class="ellipsis-td">' + item.contractUser + '</td>' +
                 '<td class="ellipsis-td">' + item.invoiceSignatory + '</td>' +
                 '<td class="ellipsis-td">' + dateFormat(item.invoiceSignatoryDate) + '</td>' +
-                '<td class="ellipsis-td">' + item.reportNumber + '</td>' +
+                '<td class="ellipsis-td">' + reportNumber+'</td>' +
                 '<td class="ellipsis-td">' + dateFormat(item.reportDate) + '</td>' +
                 '<td class="ellipsis-td">' + dateFormat(item.receivedDate) + '</td>' +
                 '<td class="ellipsis-td">' + item.receivedAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
-                '<td>'+ '<button onclick="getInvoice(\''+item.id + '\')" class="btn btn-secondary-outline radius">'+
-                '<i class="Hui-iconfont"></i>修改'+
-                '<button onclick="deleteInvoice(\''+item.id + '\')" class="btn btn-secondary-outline radius">'+
-                '<i class="Hui-iconfont"></i>删除'+
+                ss +
                 '</tr>';
         }
         $('#meeting-tbody').html(trs);
@@ -195,15 +227,18 @@
     }
 
     $(function () {
-        // layui.use('laydate', function(){
-        //     var laydate = layui.laydate;
-        //
-        //     //执行一个laydate实例
-        //     laydate.render({
-        //         elem: '#sdate' //指定元素
-        //     });
-        // });
-        layui.use('laydate', function(){
+
+
+        var type = $.cookie('type');
+        if (type === '0') {
+            $('#add-btn').show();
+            $('#operate').show()
+        } else {
+            $("#add-btn").hide();
+            $('#operate').hide()
+        }
+
+        layui.use('laydate', function () {
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#sdate',
@@ -211,7 +246,8 @@
             });
             laydate.render({
                 elem: '#edate',
-                type: 'datetime'
+                type: 'datetime',
+
             });
         });
         searchPara.pageNum = 1;
@@ -249,27 +285,122 @@
     }
 
     function exportRepeictDetail() {
-        ajax({
-            url: "receipt/detail/depId",
-            data: data,
-            success: function (response) {
-                if (response.code == 1) {
-                    layer.msg('导出成功');
-                } else {
-                    layer.open({
-                        type: 0,
-                        closeBtn: 0,
-                        icon: 7,
-                        title: '出现错误',
-                        content: response.error
-                    })
-                }
+
+
+        var startDate = $('#sdate').val();
+        var endDate = $('#edate').val();
+
+        var type = $("#type").val();
+
+        var condition = $("#condition").val();
+
+
+        if (startDate !== '' && endDate !== '') {
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            if (start.getMilliseconds() > end.getMilliseconds()) {
+                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
-        });
+        }
+
+        if (type === '0') {
+            layer.msg('请选择类型');
+            return;
+        } else if (type === '1') {
+            url = "/receipt/detail/dep";
+        } else if (type === '3') {
+            url = "/receipt/detail/invoiceType";
+        } else if (type === '4') {
+
+            url = "/receipt/detail/invoiceOffice";
+        } else if (type === '5') {
+            url = "/receipt/detail/contractUser";
+
+        } else {
+            layer.msg('信用期限只用于已回款');
+            return;
+        }
+        // exportPara.condition = condition;
+        // exportPara.startTime = startDate;
+        // exportPara.endTime = endDate;
+        // ajax({
+        //     url: url,
+        //     data: exportPara,
+        //     success: function (response) {
+        //         if (response.code == 1) {
+        //             layer.msg('导出成功');
+        //         } else {
+        //             layer.open({
+        //                 type: 0,
+        //                 closeBtn: 0,
+        //                 icon: 7,
+        //                 title: '出现错误',
+        //                 content: response.error
+        //             })
+        //         }
+        //     }
+        // });
+        window.location.href = url + "?startDate=" + startDate + "&endDate=" + endDate + "&condition=" + condition;
+
     }
 
     function exportPayedDetail() {
+        var startDate = $('#sdate').val();
+        var endDate = $('#edate').val();
 
+        var type = $("#type").val();
+
+        var condition = $("#condition").val();
+
+        if (startDate !== '' && endDate !== '') {
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            if (start.getMilliseconds() > end.getMilliseconds()) {
+                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+            }
+        }
+
+        if (type === '0') {
+            layer.msg('请选择类型');
+            return;
+        } else if (type === '1') {
+
+            url = "/payed/detail/dep";
+
+        } else if (type === '2') {
+
+            url = "/payed/detail/creditLimit";
+        } else if (type === '4') {
+
+            url = "/payed/detail/invoiceOffice";
+        } else if (type === '5') {
+            url = "/payed/detail/contractUser";
+
+        } else {
+            layer.msg('发票类型只用于发票统计');
+            return;
+        }
+        // exportPara.condition = condition;
+        // exportPara.startTime = startDate;
+        // exportPara.endTime = endDate;
+        // ajax({
+        //     url: url,
+        //     data: exportPara,
+        //     success: function (response) {
+        //         if (response.code == 1) {
+        //             layer.msg('导出成功');
+        //         } else {
+        //             layer.open({
+        //                 type: 0,
+        //                 closeBtn: 0,
+        //                 icon: 7,
+        //                 title: '出现错误',
+        //                 content: response.error
+        //             })
+        //         }
+        //     }
+        // });
+        window.location.href = url + "?startDate=" + startDate + "&endDate=" + endDate + "&condition=" + condition;
     }
 
 </script>
