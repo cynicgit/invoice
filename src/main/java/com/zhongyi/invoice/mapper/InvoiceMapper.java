@@ -38,6 +38,6 @@ public interface InvoiceMapper {
 
     List<ReceivableStaticsInvoice> getInvoices(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
-    List<InvoiceVO> listInvoices();
+    List<InvoiceVO> listInvoices(@Param("startDate") String startDate,@Param("endDate") String endDate,@Param("condition")String condition);
     List<InvoiceVO> listYearInvoices();
 }

@@ -9,6 +9,7 @@ import com.zhongyi.invoice.mapper.UserMapper;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -132,10 +133,31 @@ public class InvoiceService {
        return invoiceMapper.selectPayedGather(invoiceVO);
     }
 
-    public BasePageOutputDTO invoiceList(Integer pageSize, Integer pageNum) {
+    public BasePageOutputDTO invoiceList(Integer pageSize, Integer pageNum,String startDate,String endDate,Integer type,String condition) {
         BasePageOutputDTO invoiceOutputDTO = new BasePageOutputDTO();
         PageHelper.startPage(pageNum, pageSize);
-        List<InvoiceVO> list = invoiceMapper.listInvoices();
+        List<InvoiceVO> list = invoiceMapper.listInvoices(startDate,endDate,condition);
+
+        if (!StringUtils.isEmpty(condition)){
+            if (type == 1){
+                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getDepartmentName()));
+                list = map.get(condition);
+            }else if (type == 2){
+                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getCreditLimit()));
+                list = map.get(condition);
+            }else if (type == 3){
+                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getInvoiceType()));
+                list = map.get(condition);
+            }else if (type == 4){
+                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getInvoiceOffice()));
+                list = map.get(condition);
+            }else if (type == 5){
+                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
+                list = map.get(condition);
+            }
+        }
+
+
         PageInfo<InvoiceVO> pageInfo = new PageInfo<>(list);
         invoiceOutputDTO.setPage(pageInfo.getPages());
         invoiceOutputDTO.setList(pageInfo.getList());

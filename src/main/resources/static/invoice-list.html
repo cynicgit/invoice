@@ -36,8 +36,18 @@
     <div class="cl pd-5 bg-1 bk-gray mt-20 skin-minimal">
         <div class="row cl">
             <div class="formControls  col-sm-9" style="width: 120px">
-                <input type="text" class="input-text" placeholder="" name="email" id="condition">
+                <input type="text" class="input-text" placeholder="查询条件" name="email" id="condition">
             </div>
+
+            <select id="type" name="type" class="select" style="width: 100px;height: 30px">
+                <option value="0">请选择</option>
+                <option value="1">按部门</option>
+                <option value="2">按信用期限</option>
+                <option value="3">按发票类型</option>
+                <option value="4">按开票单位</option>
+                <option value="5">按项目负责人</option>
+            </select>
+
             <!--<input type="text" class="layui-input" placeholder="" name="sdate" id="sdate">-->
             <!--<input type="text" class="layui-input" placeholder="" name="edate" id="edate">-->
             <div class="layui-inline">
@@ -57,14 +67,7 @@
             </button>
             <button id="add-btn" class="btn btn-primary-outline radius" onclick="addInvoice()" hidden>添加账单</button>
 
-            <select id="type" name="type" class="select" style="width: 100px;height: 30px">
-                <option value="0">请选择</option>
-                <option value="1">按部门</option>
-                <option value="2">按信用期限</option>
-                <option value="3">按发票类型</option>
-                <option value="4">按开票单位</option>
-                <option value="5">按项目负责人</option>
-            </select>
+
 
 
             <button id="export-repeict" class="btn btn-primary-outline radius" onclick="exportRepeictDetail()">导出发票明细
@@ -128,16 +131,12 @@
     searchPara = {
         pageSize: 20,
         pageNum: 1,
-        sdate: null,
-        edate: null
+        startDate: null,
+        endDate: null,
+        condition:null,
+        type:6
     };
 
-
-    var exportPara = {
-        condition: null,
-        startTime: null,
-        endTime: null
-    };
 
     function getData(searchPara) {
         $('#pagination').hide();
@@ -169,18 +168,22 @@
 
             var ss = '';
             if (type === '0') {
-                ss = '<td>' + '<button onclick="getInvoice(\'' + item.id + '\')" class="btn btn-secondary-outline radius"/>' +
-                    '<i class="Hui-iconfont"></i>修改' +
-                    '<button onclick="deleteInvoice(\'' + item.id + '\')" class="btn btn-secondary-outline radius"/>' +
-                    '<i class="Hui-iconfont"></i>删除' +
+                ss = '<td>' + '<button onclick="getInvoice(\'' + item.id + '\')" class="btn btn-secondary-outline radius">' +
+                    '<i class="Hui-iconfont"></i>修改</button>' +
+                    '<button onclick="deleteInvoice(\'' + item.id + '\')" class="btn btn-secondary-outline radius">' +
+                    '<i class="Hui-iconfont"></i>删除</button>' +
                     '</td>'
             }
 
             var reportNumber = item.reportNumber === null ? "" : item.reportNumber;
+            var invoiceSignatoryDate = item.invoiceSignatoryDate == null?"":dateFormat(item.invoiceSignatoryDate);
+            var invoiceDate = item.invoiceDate == null?"":dateFormat(item.invoiceDate);
+            var reportDate = item.invoiceSignatoryDate == null?"":dateFormat(item.reportDate);
+            var receivedDate = item.invoiceSignatoryDate == null?"":dateFormat(item.receivedDate);
             trs += '<tr>' +
                 '<td class="ellipsis-td">' + item.taskId + '</td>' +
                 '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
-                '<td class="ellipsis-td">' + dateFormat(item.invoiceDate) + '</td>' +
+                '<td class="ellipsis-td">' + invoiceDate + '</td>' +
                 '<td class="ellipsis-td">' + item.creditType + '</td>' +
                 '<td class="ellipsis-td">' + item.creditLimit + '</td>' +
                 '<td class="ellipsis-td">' + item.invoiceType + '</td>' +
@@ -193,10 +196,10 @@
                 '<td class="ellipsis-td">' + item.noTaxAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.contractUser + '</td>' +
                 '<td class="ellipsis-td">' + item.invoiceSignatory + '</td>' +
-                '<td class="ellipsis-td">' + dateFormat(item.invoiceSignatoryDate) + '</td>' +
+                '<td class="ellipsis-td">' + invoiceSignatoryDate + '</td>' +
                 '<td class="ellipsis-td">' + reportNumber+'</td>' +
-                '<td class="ellipsis-td">' + dateFormat(item.reportDate) + '</td>' +
-                '<td class="ellipsis-td">' + dateFormat(item.receivedDate) + '</td>' +
+                '<td class="ellipsis-td">' + reportDate + '</td>' +
+                '<td class="ellipsis-td">' + receivedDate + '</td>' +
                 '<td class="ellipsis-td">' + item.receivedAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
                 ss +
@@ -402,6 +405,27 @@
         // });
         window.location.href = url + "?startDate=" + startDate + "&endDate=" + endDate + "&condition=" + condition;
     }
+
+    $('#search-btn').click(function (e) {
+        e.preventDefault();
+        var startDate = $('#sdate').val();
+        var endDate = $('#edate').val();
+        var condition = $("#condition").val();
+        var type = $("#type").val();
+        if (startDate !== '' && endDate !== '') {
+            var start = new Date(startDate);
+            var end = new Date(endDate);
+            if (start.getMilliseconds() > end.getMilliseconds()) {
+                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+            }
+        }
+
+        searchPara.condition = condition;
+        searchPara.startDate = startDate;
+        searchPara.endDate = endDate;
+        searchPara.type = type;
+        getData(searchPara)
+    });
 
 </script>
 
