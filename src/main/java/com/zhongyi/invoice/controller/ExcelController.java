@@ -42,6 +42,13 @@ public class ExcelController {
 
     @PostMapping
     public ZYResponse importExcel(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return ZYResponse.success("文件为空");
+        }
+
+        if (file.getOriginalFilename().endsWith("xlsx")) {
+            return ZYResponse.success("文件格式不支持");
+        }
         Map<String, Object> map = invoiceService.importExcel(file);
         return ZYResponse.success(map);
     }

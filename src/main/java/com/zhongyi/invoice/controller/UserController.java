@@ -7,6 +7,8 @@ import com.zhongyi.invoice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/system/user")
 public class UserController {
@@ -15,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ZYResponse addUser(User user) throws Exception {
+    public ZYResponse addUser(@Valid User user) throws Exception {
         userService.addUser(user);
         return ZYResponse.success();
     }

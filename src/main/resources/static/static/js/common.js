@@ -64,21 +64,15 @@ function ajax(option) {
         },
         success: function (res) {
             layer.closeAll();
-            if (res.result === -2) {
-                layer.open({
-                    type: 0,
-                    closeBtn: 0,
-                    title: '提示',
-                    icon: 7,
-                    content: '您没有权限'
-                })
+            if (res.result === -1) {
+                parent.location.href = "/login.html"
             } else if (res.result === 1) {
                 layer.open({
                     type: 0,
                     closeBtn: 0,
                     title: '提示',
                     icon: 7,
-                    content: res.message
+                    content: res.data
                 })
             } else if (res.result === 0) {
                 option.success && option.success(res)

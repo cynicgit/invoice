@@ -41,7 +41,7 @@
                                 class="Hui-iconfont">&#xe6d5;</i></div>
                         <ul class="dropDown-menu menu radius box-shadow">
                             <!--<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>-->
-                            <li><a href="/signOut">退出</a></li>
+                            <li><a href="/logout">退出</a></li>
                         </ul>
                     </li>
                     <li class="dropDown dropDown_hover">
@@ -138,6 +138,9 @@
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
 <script>
+  var username =  $.cookie("username")
+    $("#name").val(username)
+    $("#name").text(username)
 </script>
 
 </body>

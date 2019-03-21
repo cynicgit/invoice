@@ -28,4 +28,8 @@ public class ZYResponse {
         return new ZYResponse(1, data);
     }
 
+    public static ZYResponse notLogin() {
+        return new ZYResponse(-1, null);
+
+    }
 }
