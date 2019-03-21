@@ -9,6 +9,7 @@ import com.zhongyi.invoice.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -36,9 +37,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PayedController {
 
+    @Value("${excelPath}")
+    private String excelPath;
+
+
     @Autowired
     private InvoiceService invoiceService;
-    private static final String DETAIL_PATH = "static/excel/receiptDetail.xlsx";
+
 
 
     @GetMapping("/detail/depId")
@@ -52,7 +57,8 @@ public class PayedController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path = excelPath +  "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -76,7 +82,8 @@ public class PayedController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path = excelPath +  "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -99,7 +106,8 @@ public class PayedController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path = excelPath +  "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -122,7 +130,8 @@ public class PayedController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path = excelPath +  "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -141,7 +150,7 @@ public class PayedController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
-        String path = "static/excel/payedGatherInvoiceOff.xlsx";
+        String path = excelPath + "payedGatherInvoiceOff.xlsx";
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
@@ -183,7 +192,7 @@ public class PayedController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
-        String path = "static/excel/payedGatherConUser.xlsx";
+        String path = excelPath + "payedGatherConUser.xlsx";
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
@@ -249,7 +258,7 @@ public class PayedController {
 //                "attachment;filename=" + URLEncoder.encode("已回款汇总按部门统计.xlsx", "UTF-8"));
 //        workbook.write(response.getOutputStream());
 
-        String path = "static/excel/payedGatherDep.xlsx";
+        String path = excelPath + "payedGatherDep.xlsx";
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
 
@@ -370,7 +379,7 @@ public class PayedController {
         if (StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
             list = getPayedGatherStatistics(map, "creditLimit");
-            path = "static/excel/payedGatherCreateLimit.xlsx";
+            path = excelPath + "payedGatherCreateLimit.xlsx";
         }else {
             String createLimitPart = null;
             InvoiceVO invoiceVO2 = new InvoiceVO();

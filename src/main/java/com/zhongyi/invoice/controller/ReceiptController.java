@@ -9,6 +9,7 @@ import com.zhongyi.invoice.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
@@ -38,7 +39,10 @@ public class ReceiptController {
     @Autowired
     private InvoiceService invoiceService;
 
-    private static final String DETAIL_PATH = "static/excel/receiptDetail.xlsx";
+    @Value("${excelPath}")
+    private String excelPath;
+
+
 
     @GetMapping("/detail/depId")
     public void receiptDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
@@ -50,7 +54,8 @@ public class ReceiptController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path =  excelPath + "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -72,7 +77,8 @@ public class ReceiptController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path =  excelPath + "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -94,7 +100,8 @@ public class ReceiptController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path =  excelPath + "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -116,7 +123,8 @@ public class ReceiptController {
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        Resource resource = new ClassPathResource(DETAIL_PATH);
+        String path =  excelPath + "receiptDetail.xlsx";
+        Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(filePath);
@@ -135,7 +143,7 @@ public class ReceiptController {
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
 
         List<InvoiceVO> list = new ArrayList<>();
-        String path = "static/excel/receiptGatherDep.xlsx";
+        String path =  excelPath + "receiptGatherDep.xlsx";
         Map<String, Object> mapParms = new HashMap<>();
         //专票
         List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
@@ -217,7 +225,7 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
-        String path = "static/excel/receiptGatherUser.xlsx";
+        String path = excelPath + "receiptGatherUser.xlsx";
         Map<String, Object> mapParms = new HashMap<>();
         //专票
         List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
@@ -299,7 +307,7 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
-        String path = "static/excel/receiptGatherType.xlsx";
+        String path = "receiptGatherType.xlsx";
         Map<String, Object> mapParms = new HashMap<>();
 
         List<InvoiceVO> thisYearCommonInvoices = thisYear.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
@@ -443,7 +451,7 @@ public class ReceiptController {
 
 
         List<InvoiceVO> list = new ArrayList<>();
-        String path = "static/excel/receiptGatherOffice.xlsx";
+        String path = excelPath + "receiptGatherOffice.xlsx";
 
         //专票
         //  List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
