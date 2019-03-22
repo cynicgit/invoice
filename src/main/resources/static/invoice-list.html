@@ -70,7 +70,7 @@
 
 
 
-            <div style="margin-left: 15px;margin-top: 8px">
+            <div style="margin-left: 15px;margin-top: 8px;display: none" id="exportDiv">
 
                 <span class="btn-upload form-group">
 			    <a href="javascript:void(0)" class="btn btn-primary radius">
@@ -140,6 +140,11 @@
 <script type="text/javascript" src="static/js/common.js"></script>
 <script type="text/javascript" src="static/layui/layui.js"></script>
 <script type="text/javascript">
+
+    var type = $.cookie("type")
+    if (type == 0) {
+        $("#exportDiv").css('display','block');
+    }
 
     var isPageInit = false;
     searchPara = {
@@ -452,7 +457,7 @@
         var formFile = new FormData();
         formFile.append("file", fileObj[0]); //加入文件对象
 
-        $.ajax({
+        ajax({
             url: 'system/excel',
             data: formFile,
             type: "Post",
@@ -461,9 +466,9 @@
             processData: false,//用于对data参数进行序列化处理 这里必须false
             contentType: false, //必须
             success: function (response) {
-                e.preventDefault();
                 var data = response.data;
-                layer.msg(data);
+                alert(data)
+                getData(searchPara)
             },
         })
     });

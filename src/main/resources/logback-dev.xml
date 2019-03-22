@@ -39,33 +39,9 @@
             </layout>
         </appender>
 
-        <logger name="com.juphoon" level="debug"/>
+        <logger name="com.zhongyi" level="debug"/>
         <root level="info">
             <appender-ref ref="PRO-FILE" />
         </root>
     </springProfile>
-    <!-- 测试环境 -->
-    <springProfile name="ec">
-        <!-- 每天产生一个文件 -->
-        <appender name="PRO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <!-- 文件路径 -->
-            <file>${FILE_PATH}/tax-log.log</file>
-            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <!-- 文件名称 -->
-                <fileNamePattern>${FILE_PATH}/tax-web-log.%d{yyyy-MM-dd}.log</fileNamePattern>
-                <!-- 文件最大保存历史数量 -->
-                <MaxHistory>30</MaxHistory>
-            </rollingPolicy>
-
-            <layout class="ch.qos.logback.classic.PatternLayout">
-                <pattern>${PATTERN}</pattern>
-            </layout>
-        </appender>
-
-        <logger name="com.juphoon" level="debug"/>
-        <root level="info">
-            <appender-ref ref="PRO-FILE"/>
-        </root>
-    </springProfile>
-
 </configuration>

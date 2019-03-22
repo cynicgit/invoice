@@ -50,7 +50,7 @@ public class ExcelController {
                 && !file.getOriginalFilename().endsWith("xls")) {
             return ZYResponse.success("文件格式不支持");
         }
-        Map<String, Object> map = invoiceService.importExcel(file);
+       String map = invoiceService.importExcel(file);
         return ZYResponse.success(map);
     }
 

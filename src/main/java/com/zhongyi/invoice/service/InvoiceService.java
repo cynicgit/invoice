@@ -7,6 +7,7 @@ import com.zhongyi.invoice.mapper.DepartmentMapper;
 import com.zhongyi.invoice.mapper.InvoiceMapper;
 import com.zhongyi.invoice.mapper.UserMapper;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class InvoiceService {
 
 
@@ -31,7 +33,7 @@ public class InvoiceService {
     @Autowired
     private UserMapper userMapper;
 
-    public Map<String, Object> importExcel(MultipartFile file) {
+    public String importExcel(MultipartFile file) {
         List<Invoice> invoices = EasyPoiUtils.importExcel(file, 0, 1, Invoice.class);
         Map<String, Object> map = new HashMap<>();
         int zuofei = 0;
@@ -40,17 +42,18 @@ public class InvoiceService {
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = invoices.get(i);
             try {
-
                 if (invoice.getTaskId() == null && "作废".equals(invoice.getInvoiceOffice())) {
                     zuofei++;
                     continue;
                 }
+                checkInvoice(invoice);
                 Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
                 if (invoiceByTaskIdAndInvoiceNumber != null) {
                     invoiceNumberRepeat ++;
                     continue;
                 }
                 String departmentName = invoice.getDepartmentName();
+                log.info(invoice.getTaskId());
                 String[] split = departmentName.split("-");
                 Department depByName = departmentMapper.getDepByName(split[1]);
                 if (depByName == null) {
@@ -67,7 +70,7 @@ public class InvoiceService {
                 }
                 invoice.setUserId(userByName.getId());
 
-                checkInvoice(invoice);
+
                 invoiceMapper.insert(invoice);
 
             } catch (Exception e) {
@@ -76,10 +79,19 @@ public class InvoiceService {
                 error.add(invoice);
             }
         }
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("作废:").append(zuofei + "条")
+                .append("\n")
+                .append("重复:").append(invoiceNumberRepeat).append("条")
+                .append("\n");
+        error.forEach(e -> {
+            sb.append(e.getTaskId() + " " + e.getErrorMsg()).append("\n");
+        });
         map.put("zuofei", zuofei);
         map.put("invoiceNumberRepeat", invoiceNumberRepeat);
         map.put("error", error);
-        return map;
+        return sb.toString();
     }
 
     private void checkInvoice(Invoice invoice) throws Exception {
@@ -174,10 +186,10 @@ public class InvoiceService {
        return invoiceMapper.selectPayedGather(invoiceVO);
     }
 
-    public BasePageOutputDTO invoiceList(Integer pageSize, Integer pageNum,String startDate,String endDate,Integer type,String condition) {
+    public BasePageOutputDTO invoiceList(Integer pageSize, Integer pageNum, String startDate, String endDate, Integer type, String condition, String name) {
         BasePageOutputDTO invoiceOutputDTO = new BasePageOutputDTO();
         PageHelper.startPage(pageNum, pageSize);
-        List<InvoiceVO> list = invoiceMapper.listInvoices(startDate,endDate,condition);
+        List<InvoiceVO> list = invoiceMapper.listInvoices(startDate,endDate,condition, name);
 
         if (!StringUtils.isEmpty(condition)){
             if (type == 1){

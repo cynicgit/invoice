@@ -494,6 +494,9 @@
             <if test="endDate != null and endDate != ''">
                 and invoice_date &lt;= #{endDate}
             </if>
+            <if test="name != null and name != ''">
+                and ti.contract_user = #{name}
+            </if>
         </where>
     </select>
     <select id="listYearInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">

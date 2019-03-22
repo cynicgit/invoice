@@ -3,11 +3,13 @@ package com.zhongyi.invoice.controller;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.entity.BasePageOutputDTO;
 import com.zhongyi.invoice.entity.Invoice;
+import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 
 /**
@@ -25,8 +27,13 @@ public class InvoiceController {
     @GetMapping("/page")
     public ZYResponse invoiceList(@RequestParam(defaultValue = "20") Integer pageSize,
                                   @RequestParam(defaultValue = "1")Integer pageNum,
-                                  Integer type,String startDate,String endDate,String condition){
-        BasePageOutputDTO basePageOutputDTO = invoiceService.invoiceList(pageSize, pageNum,startDate,endDate,type,condition);
+                                  Integer type, String startDate, String endDate, String condition, HttpSession session){
+        User user = (User) session.getAttribute("user");
+        String name = "";
+        if (user.getType() == 2) {
+            name = user.getName();
+        }
+        BasePageOutputDTO basePageOutputDTO = invoiceService.invoiceList(pageSize, pageNum,startDate,endDate,type,condition, name);
         return ZYResponse.success(basePageOutputDTO);
 
     }
