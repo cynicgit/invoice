@@ -46,7 +46,8 @@ public class ExcelController {
             return ZYResponse.success("文件为空");
         }
 
-        if (file.getOriginalFilename().endsWith("xlsx")) {
+        if (!file.getOriginalFilename().endsWith("xlsx")
+                && !file.getOriginalFilename().endsWith("xls")) {
             return ZYResponse.success("文件格式不支持");
         }
         Map<String, Object> map = invoiceService.importExcel(file);

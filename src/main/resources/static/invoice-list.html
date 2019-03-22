@@ -70,10 +70,24 @@
 
 
 
-            <button id="export-repeict" class="btn btn-primary-outline radius" onclick="exportRepeictDetail()">导出发票明细
-            </button>
-            <button id="export-payed" class="btn btn-primary-outline radius" onclick="exportPayedDetail()">导出已回款明细
-            </button>
+            <div style="margin-left: 15px;margin-top: 8px">
+
+                <span class="btn-upload form-group">
+			    <a href="javascript:void(0)" class="btn btn-primary radius">
+				<i class="Hui-iconfont">&#xe642;</i> 浏览文件
+                </a>
+				<input type="file" multiple name="file" class="input-file" id="file">
+		        </span>
+
+                <button id="import-btn" class="btn btn-primary-outline radius"  hidden>导入发票</button>
+
+                <button  class="btn btn-primary-outline radius" onclick="exportRepeictDetail()">导出发票明细
+                </button>
+                <button  class="btn btn-primary-outline radius" onclick="exportPayedDetail()">导出已回款明细
+                </button>
+            </div>
+
+
             <span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
         </div>
 
@@ -426,6 +440,34 @@
         searchPara.type = type;
         getData(searchPara)
     });
+
+
+
+    $('#import-btn').click(function (e) {
+        var fileObj = document.getElementById('file').files; // js 获取文件对象
+        if (typeof (fileObj) == "undefined" || fileObj.length <= 0) {
+            layer.msg("请选择文件");
+            return;
+        }
+        var formFile = new FormData();
+        formFile.append("file", fileObj[0]); //加入文件对象
+
+        $.ajax({
+            url: 'system/excel',
+            data: formFile,
+            type: "Post",
+            dataType: "json",
+            cache: false,//上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须
+            success: function (response) {
+                e.preventDefault();
+                var data = response.data;
+                layer.msg(data);
+            },
+        })
+    });
+
 
 </script>
 
