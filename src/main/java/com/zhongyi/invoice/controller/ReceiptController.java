@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
+import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -45,13 +48,15 @@ public class ReceiptController {
 
 
     @GetMapping("/detail/depId")
-    public void receiptDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (invoiceVO.getDepId() != null) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
             invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
         }
+
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";
@@ -68,7 +73,8 @@ public class ReceiptController {
     }
 
     @GetMapping("/detail/contractUser")
-    public void receiptDetailByContractUser(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptDetailByContractUser(InvoiceVO invoiceVO, HttpServletResponse response, HttpServletRequest request) throws IOException {
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
@@ -91,13 +97,23 @@ public class ReceiptController {
     }
 
     @GetMapping("/detail/invoiceType")
-    public void receiptDetailByInvoiceType(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptDetailByInvoiceType(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceType())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceType));
             invoiceVOS = map.get(String.valueOf(invoiceVO.getInvoiceType()));
         }
+
+        if (user.getType() == 2){
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
+            invoiceVOS = map.get(user.getName());
+        }
+
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";
@@ -114,12 +130,21 @@ public class ReceiptController {
     }
 
     @GetMapping("/detail/invoiceOffice")
-    public void receiptDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void receiptDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
             invoiceVOS = map.get(String.valueOf(invoiceVO.getInvoiceOffice()));
+        }
+
+        if (user.getType() == 2){
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
+            invoiceVOS = map.get(user.getName());
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);

@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
+import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -45,9 +48,9 @@ public class PayedController {
     private InvoiceService invoiceService;
 
 
-
     @GetMapping("/detail/depId")
     public void payedDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按部门
@@ -55,6 +58,7 @@ public class PayedController {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
             invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
         }
+
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path = excelPath +  "receiptDetail.xlsx";
@@ -71,7 +75,11 @@ public class PayedController {
     }
 
     @GetMapping("/detail/creditLimit")
-    public void payedDetailByCreditLimit(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedDetailByCreditLimit(InvoiceVO invoiceVO, HttpServletResponse response, HttpServletRequest request) throws IOException {
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按信用日期
@@ -80,9 +88,15 @@ public class PayedController {
             invoiceVOS = map.get(invoiceVO.getCreditLimit());
 
         }
+
+        if (user.getType() == 2){
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
+            invoiceVOS = map.get(user.getName());
+        }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path = excelPath +  "receiptDetail.xlsx";
+       // String path =    "static/excel/receiptDetail.xlsx";
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
@@ -97,12 +111,21 @@ public class PayedController {
 
 
     @GetMapping("/detail/invoiceOffice")
-    public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
             invoiceVOS = map.get(invoiceVO.getInvoiceOffice());
+        }
+
+        if (user.getType() == 2){
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
+            invoiceVOS = map.get(user.getName());
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
