@@ -1,6 +1,7 @@
 package com.zhongyi.invoice.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.BasePageOutputDTO;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.User;
@@ -39,6 +40,7 @@ public class InvoiceController {
     }
 
     @PostMapping()
+    @OperateLog("发票添加")
     public ZYResponse saveInvoice(Invoice invoice){
          invoiceService.saveInvoice(invoice);
         return ZYResponse.success("添加成功");
@@ -46,6 +48,7 @@ public class InvoiceController {
     }
 
     @PutMapping()
+    @OperateLog("发票更新")
     public ZYResponse updateInvoice(Invoice invoice){
         invoiceService.updateInvoice(invoice);
         return ZYResponse.success("修改成功");
@@ -60,6 +63,7 @@ public class InvoiceController {
     }
 
     @DeleteMapping("/{id}")
+    @OperateLog("发票删除")
     public ZYResponse deleteInvoice(@PathParam("id") Integer id){
          invoiceService.deleteInvoice(id);
         return ZYResponse.success("删除成功");

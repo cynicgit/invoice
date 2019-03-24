@@ -2,6 +2,7 @@ package com.zhongyi.invoice.aspect;
 
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.SystemLog;
+import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.mapper.SystemLogMapper;
 import com.zhongyi.invoice.service.SystemLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,13 @@ public class LogAspect {
 
         String name = joinPoint.getSignature().getName();
         logPO.setMethod(name);
-        logPO.setUsername("hgh");
+        Object user = request.getSession().getAttribute("user");
+        if (user != null) {
+            User u = (User) user;
+            logPO.setUsername(u.getName());
+        }
+
+
         logPO.setDescription(operateLog.value());
         Object[] args = joinPoint.getArgs();
         logPO.setParams(Arrays.asList(args).toString());

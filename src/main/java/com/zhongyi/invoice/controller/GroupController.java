@@ -25,12 +25,14 @@ public class GroupController {
     }
 
     @PutMapping
+    @OperateLog("修改分组")
     public ZYResponse updateGroup(@RequestBody Group group) throws Exception {
         groupService.updateGroup(group);
         return ZYResponse.success();
     }
 
     @DeleteMapping("/{id}")
+    @OperateLog("删除分组")
     public ZYResponse deleteGroup(@PathVariable Integer id) throws Exception {
         groupService.deleteGroupById(id);
         return ZYResponse.success();

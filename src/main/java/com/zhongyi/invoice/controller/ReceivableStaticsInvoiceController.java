@@ -2,6 +2,7 @@ package com.zhongyi.invoice.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.InvoiceService;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,6 +29,7 @@ public class ReceivableStaticsInvoiceController {
     private String excelPath;
 
     @GetMapping("/receivable_statics_invoice")
+    @OperateLog("应收账款账龄分析明细导出")
     public void ReceivableStaticsInvoice(String startDate, String endDate, HttpServletResponse response) throws Exception {
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
         final double[] sum = {0.00f};
@@ -65,6 +67,7 @@ public class ReceivableStaticsInvoiceController {
 
 
     @GetMapping("/receivable_statics_invoice_summary")
+    @OperateLog("应收账款账龄分析汇总导出")
     public void ReceivableStaticsInvoiceSummary(String startDate, String endDate, HttpServletResponse response) throws Exception {
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
         double sum = 0.00f;

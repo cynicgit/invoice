@@ -2,6 +2,7 @@ package com.zhongyi.invoice.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
@@ -49,6 +50,7 @@ public class PayedController {
 
 
     @GetMapping("/detail/depId")
+    @OperateLog("已回款明细")
     public void payedDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
 
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
@@ -75,6 +77,7 @@ public class PayedController {
     }
 
     @GetMapping("/detail/creditLimit")
+    @OperateLog("已回款明细")
     public void payedDetailByCreditLimit(InvoiceVO invoiceVO, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         HttpSession session = request.getSession();
@@ -111,6 +114,7 @@ public class PayedController {
 
 
     @GetMapping("/detail/invoiceOffice")
+    @OperateLog("已回款明细")
     public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
         HttpSession session = request.getSession();
@@ -143,6 +147,7 @@ public class PayedController {
     }
 
     @GetMapping("/detail/contractUser")
+    @OperateLog("已回款明细")
     public void payedDetailByContractUser(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
@@ -168,6 +173,7 @@ public class PayedController {
 
 
     @GetMapping("/gather/invoiceOffice")
+    @OperateLog("已回款汇总")
     public void payedGatherByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
@@ -210,6 +216,7 @@ public class PayedController {
 
 
     @GetMapping("/gather/contractUser")
+    @OperateLog("已回款汇总")
     public void payedGatherByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
@@ -250,6 +257,7 @@ public class PayedController {
     }
 
     @GetMapping("/gather/dep")
+    @OperateLog("已回款汇总")
     public void payedGatherByDep(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
 //        List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
 //        List<InvoiceVO> list = new ArrayList<>();
@@ -388,6 +396,7 @@ public class PayedController {
     }
 
     @GetMapping("/gather/creditLimit")
+    @OperateLog("已回款汇总")
     public void payedGatherByCreditLimit(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setCreditLimit(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);

@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.ZYResponse;
@@ -41,6 +42,7 @@ public class ExcelController {
 
 
     @PostMapping
+    @OperateLog("导出数据")
     public ZYResponse importExcel(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return ZYResponse.success("文件为空");

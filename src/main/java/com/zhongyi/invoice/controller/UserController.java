@@ -1,6 +1,7 @@
 package com.zhongyi.invoice.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.UserService;
@@ -17,18 +18,21 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
+    @OperateLog("用户添加")
     public ZYResponse addUser(@Valid User user) throws Exception {
         userService.addUser(user);
         return ZYResponse.success();
     }
 
     @PutMapping
+    @OperateLog("用户更新")
     public ZYResponse putUser(User user) throws Exception {
         userService.updateUser(user);
         return ZYResponse.success();
     }
 
     @DeleteMapping("/{id}")
+    @OperateLog("用户删除")
     public ZYResponse deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return ZYResponse.success();

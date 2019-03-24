@@ -4,6 +4,7 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
@@ -48,6 +49,7 @@ public class NoReceivableStaticsInvoiceController {
      * @throws IOException
      */
     @GetMapping("/no_receiver_invoice")
+    @OperateLog("未回款明细导出")
     public void exportExcel(InvoiceVO invoiceVO, int type, HttpServletResponse response) throws IOException {
         List<InvoiceVO> invoiceVOS = invoiceService.noReceiveAmount(invoiceVO);
         ExportParams exportParams = new ExportParams();
@@ -79,6 +81,7 @@ public class NoReceivableStaticsInvoiceController {
      * @throws IOException
      */
     @GetMapping("/no_receiver_invoice_summary")
+    @OperateLog("未回款汇总导出")
     public void exportExcelNoAmountStatistics(InvoiceVO invoiceVO, @RequestParam(required = true) int type, HttpServletResponse response) throws IOException {
         List<ReceivableStaticsInvoice> invoiceVOS = invoiceService.getInvoices(invoiceVO.getStartDate(), invoiceVO.getEndDate());
         Map<String, Object> map = null;

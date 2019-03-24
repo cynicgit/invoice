@@ -3,6 +3,7 @@ package com.zhongyi.invoice.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.alibaba.fastjson.JSONArray;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.GroupService;
 import com.zhongyi.invoice.service.InvoiceService;
@@ -45,6 +46,7 @@ public class ChanZhiController {
     private UserService userService;
 
     @GetMapping("/chanzhi/user")
+    @OperateLog("商务人员产值统计")
     public void getChanzhi(String startDate, String endDate, HttpServletResponse response, HttpServletRequest request) {
         System.out.println(request.getRequestURI());
         List<ReceivableStaticsInvoice> invoices = invoiceService.getInvoices(startDate, endDate);
@@ -201,6 +203,7 @@ public class ChanZhiController {
     }
 
     @GetMapping("/chanzhi/dep")
+    @OperateLog("部门产值统计")
     public void getChanzhiDep(String startDate, String endDate, HttpServletResponse response) {
         List<ReceivableStaticsInvoice> invoices = invoiceService.getInvoices(startDate, endDate);
         invoices.forEach(i -> i.setInvoiceAmount(i.getInvoiceAmount() / 10000));

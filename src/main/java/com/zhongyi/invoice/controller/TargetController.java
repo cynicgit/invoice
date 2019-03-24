@@ -1,6 +1,7 @@
 package com.zhongyi.invoice.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Target;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.TargetService;
@@ -17,12 +18,14 @@ public class TargetController {
     private TargetService targetService;
 
     @PostMapping
+    @OperateLog("年度目标添加")
     public ZYResponse addTarget(Target target) throws Exception {
         targetService.addTarget(target);
         return ZYResponse.success();
     }
 
     @PutMapping
+    @OperateLog("年度目标更新")
     public ZYResponse updateTarget(Target target) throws Exception {
         targetService.updateTarget(target);
         return ZYResponse.success();
@@ -41,6 +44,7 @@ public class TargetController {
     }
 
     @DeleteMapping("/{id}")
+    @OperateLog("年度目标删除")
     public ZYResponse deleteTarget(@PathVariable Integer id) throws Exception {
         targetService.deleteTarget(id);
         return ZYResponse.success();

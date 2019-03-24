@@ -2,6 +2,7 @@ package com.zhongyi.invoice.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
@@ -48,6 +49,7 @@ public class ReceiptController {
 
 
     @GetMapping("/detail/depId")
+    @OperateLog("发票统计明细导出")
     public void receiptDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
@@ -73,6 +75,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/detail/contractUser")
+    @OperateLog("发票统计明细导出")
     public void receiptDetailByContractUser(InvoiceVO invoiceVO, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
@@ -97,6 +100,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/detail/invoiceType")
+    @OperateLog("发票统计明细导出")
     public void receiptDetailByInvoiceType(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
         HttpSession session = request.getSession();
@@ -130,6 +134,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/detail/invoiceOffice")
+    @OperateLog("发票统计明细导出")
     public void receiptDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
         HttpSession session = request.getSession();
@@ -162,6 +167,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/gather/dep")
+    @OperateLog("发票汇总导出")
     public void receiptGatherByDepId(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
@@ -245,6 +251,7 @@ public class ReceiptController {
 
 
     @GetMapping("/gather/contractUser")
+    @OperateLog("发票汇总导出")
     public void receiptGatherByContractUser(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
@@ -327,6 +334,7 @@ public class ReceiptController {
 
 
     @GetMapping("/gather/invoiceType")
+    @OperateLog("发票汇总导出")
     public void receiptGatherByInvoiceType(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
@@ -469,6 +477,7 @@ public class ReceiptController {
     }
 
     @GetMapping("/gather/invoiceOffice")
+    @OperateLog("发票汇总导出")
     public void receiptGatherByInvoiceOffice(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
