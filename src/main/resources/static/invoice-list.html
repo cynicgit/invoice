@@ -197,8 +197,8 @@
             var reportNumber = item.reportNumber === null ? "" : item.reportNumber;
             var invoiceSignatoryDate = item.invoiceSignatoryDate == null?"":dateFormat(item.invoiceSignatoryDate);
             var invoiceDate = item.invoiceDate == null?"":dateFormat(item.invoiceDate);
-            var reportDate = item.invoiceSignatoryDate == null?"":dateFormat(item.reportDate);
-            var receivedDate = item.invoiceSignatoryDate == null?"":dateFormat(item.receivedDate);
+            var reportDate = item.reportDate == null?"":dateFormat(item.reportDate);
+            var receivedDate = item.receivedDate == null?"":dateFormat(item.receivedDate);
             trs += '<tr>' +
                 '<td class="ellipsis-td">' + item.taskId + '</td>' +
                 '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
@@ -252,6 +252,11 @@
 
 
         var type = $.cookie('type');
+        if (type === '2'){
+            $("#type option[value='1']").remove();
+            $("#type option[value='5']").remove();
+        }
+
         if (type === '0') {
             $('#add-btn').show();
             $('#operate').show()
@@ -278,7 +283,8 @@
 
     function getInvoice(id) {
         $.cookie("invoice_id", id);
-        layer_show('发票详情', 'invoice-update.html', '', '1000');
+       // layer_show('发票详情', 'invoice-update.html', '', '1000');
+        layer_full('发票详情', 'invoice-update.html');
     }
 
     function deleteInvoice(id) {
@@ -286,9 +292,9 @@
             url: "invoice/" + id,
             type: "delete",
             success: function (response) {
-                if (response.code == 1) {
+                if (response.result == 0) {
                     layer.msg('删除成功');
-                    initData();
+                    getData(searchPara);
                 } else {
                     layer.open({
                         type: 0,
@@ -303,7 +309,19 @@
     }
 
     function addInvoice() {
-        layer_show('添加发票', 'invoice-add.html', '', '1000');
+        layer_full('添加发票', 'invoice-add.html');
+    }
+
+
+
+    function layer_full(title, url) {
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url
+        });
+        layer_index = index;
+        layer.full(index);
     }
 
     function exportRepeictDetail() {
@@ -339,7 +357,7 @@
             url = "/receipt/detail/contractUser";
 
         } else {
-            layer.msg('信用期限只用于已回款');
+            layer.msg('信用期限只用于已回款明细');
             return;
         }
         // exportPara.condition = condition;
@@ -399,7 +417,7 @@
             url = "/payed/detail/contractUser";
 
         } else {
-            layer.msg('发票类型只用于发票统计');
+            layer.msg('发票类型只用于发票明细');
             return;
         }
         // exportPara.condition = condition;

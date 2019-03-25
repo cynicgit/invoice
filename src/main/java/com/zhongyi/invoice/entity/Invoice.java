@@ -77,6 +77,9 @@ public class Invoice {
     @Excel(name = "备注", orderNum = "21")
     private String descprition;
 
+    private Date gmtCreate;
+
+    private Date gmtModified;
 
 
     private String errorMsg;

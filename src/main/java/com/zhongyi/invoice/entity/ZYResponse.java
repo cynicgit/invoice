@@ -32,4 +32,7 @@ public class ZYResponse {
         return new ZYResponse(-1, null);
 
     }
+    public int getResult() {
+        return result;
+    }
 }

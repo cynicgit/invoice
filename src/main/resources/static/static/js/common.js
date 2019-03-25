@@ -396,7 +396,7 @@ function validatePass(pass,confirmPassword) {
 function validateNum(num){
     var patrn = /^\d+(\.\d+)?$/;
     if (!patrn.exec(num)) {
-        layer.msg("请输入数字", {icon: 2, time: 1000});
+        layer.msg("金额为数字", {icon: 2, time: 1000});
         return false;
     }
     return true

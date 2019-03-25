@@ -40,4 +40,8 @@ public interface InvoiceMapper {
 
     List<InvoiceVO> listInvoices(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("condition") String condition, @Param("name")String name);
     List<InvoiceVO> listYearInvoices();
+
+    Integer findByTaskId(String taskId);
+
+    Integer findByInvoiceNumber(String invoiceNumber);
 }

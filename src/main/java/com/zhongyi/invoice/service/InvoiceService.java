@@ -3,6 +3,7 @@ package com.zhongyi.invoice.service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.entity.*;
+import com.zhongyi.invoice.expection.BusinessException;
 import com.zhongyi.invoice.mapper.DepartmentMapper;
 import com.zhongyi.invoice.mapper.InvoiceMapper;
 import com.zhongyi.invoice.mapper.UserMapper;
@@ -10,6 +11,7 @@ import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -220,11 +222,23 @@ public class InvoiceService {
         return invoiceOutputDTO;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void saveInvoice(Invoice invoice) {
 
+        Integer byTaskId = invoiceMapper.findByTaskId(invoice.getTaskId());
+        if (byTaskId != null){
+            throw new BusinessException("任务号已存在");
+        }
+
+        Integer byInvoiceNumber = invoiceMapper.findByInvoiceNumber(invoice.getInvoiceNumber());
+
+        if (byInvoiceNumber != null){
+            throw new BusinessException("发票号已存在");
+        }
         invoiceMapper.insertSelective(invoice);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void updateInvoice(Invoice invoice) {
         invoiceMapper.updateByPrimaryKeySelective(invoice);
     }

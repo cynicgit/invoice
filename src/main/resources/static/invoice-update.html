@@ -151,7 +151,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 签收人：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 签收人：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -161,7 +161,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 签收日期：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -172,7 +172,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 报告号：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 报告号：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -182,7 +182,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 报告日期：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 报告日期：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -193,7 +193,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 回款金额：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 回款金额：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -203,7 +203,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 回款日期：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 回款日期：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -214,7 +214,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 未到账：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 未到账：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -224,7 +224,7 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 备注：</label>
+            <label class="form-label col-xs-4 col-sm-2"> 备注：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -318,9 +318,9 @@
                     $('#invoiceAmount').val(res.data.invoiceAmount).removeClass("input-text").attr("disabled", true).addClass("input-text disabled");
                    // $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
 
-                    $('#userId').append("<option value='" + res.data.userId + "'>" + res.data.invoiceSignatory + "</option>");
+                    $('#userId').append("<option value='" + res.data.userId + "'>" + res.data.contractUser + "</option>");
 
-                    $('#invoiceSignatory').val(res.data.contractUser);
+                    $('#invoiceSignatory').val(res.data.invoiceSignatory);
                     $('#reportNumber').val(reportNumber);
                     $('#receivedAmount').val(res.data.receivedAmount);
                     $('#reportDate').val(reportDate);
@@ -343,7 +343,7 @@
 
         var taskId = $('#taskId').val();
         var contractNumber = $('#contractNumber').val();
-        var contractUser = $('#contractUser').val();
+        var invoiceSignatory = $('#invoiceSignatory').val();
         var invoiceDate = $("#invoiceDate").val();
         var invoiceOffice = $("#invoiceOffice").val();
         var invoiceNumber = $("#invoiceNumber").val();
@@ -356,7 +356,7 @@
         var contractAmount = $("#contractAmount").val();
         var invoiceAmount = $("#invoiceAmount").val();
         var userId = $("#userId").val();
-        var invoiceSignatory = $("#userId option:selected").text();
+        var contractUser = $("#userId option:selected").text();
         var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
         var reportNumber = $("#reportNumber").val();
         var reportDate = $("#reportDate").val();
@@ -369,8 +369,8 @@
         if (!validateNum(contractAmount)) {return;}
         if (!validateNum(invoiceAmount)) {return;}
         if (!validateNum(noTaxAmount)) {return;}
-        if (!validateNum(receivedAmount)) {return;}
-        if (!validateNum(noReceivedAmount)) {return;}
+        if (receivedAmount !== "" &&!validateNum(receivedAmount)) {return;}
+        if (noReceivedAmount !== "" && !validateNum(noReceivedAmount)) {return;}
 
         ajax
         ({
