@@ -199,6 +199,7 @@
             var invoiceDate = item.invoiceDate == null?"":dateFormat(item.invoiceDate);
             var reportDate = item.reportDate == null?"":dateFormat(item.reportDate);
             var receivedDate = item.receivedDate == null?"":dateFormat(item.receivedDate);
+            var invoiceSignatory = item.invoiceSignatory === null ? "" : item.invoiceSignatory;
             trs += '<tr>' +
                 '<td class="ellipsis-td">' + item.taskId + '</td>' +
                 '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
@@ -214,7 +215,7 @@
                 '<td class="ellipsis-td">' + item.invoiceAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.noTaxAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.contractUser + '</td>' +
-                '<td class="ellipsis-td">' + item.invoiceSignatory + '</td>' +
+                '<td class="ellipsis-td">' + invoiceSignatory + '</td>' +
                 '<td class="ellipsis-td">' + invoiceSignatoryDate + '</td>' +
                 '<td class="ellipsis-td">' + reportNumber+'</td>' +
                 '<td class="ellipsis-td">' + reportDate + '</td>' +
@@ -288,6 +289,7 @@
     }
 
     function deleteInvoice(id) {
+        console.log("id----"  + id)
         ajax({
             url: "invoice/" + id,
             type: "delete",

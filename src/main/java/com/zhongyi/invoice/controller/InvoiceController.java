@@ -64,7 +64,7 @@ public class InvoiceController {
 
     @DeleteMapping("/{id}")
     @OperateLog("发票删除")
-    public ZYResponse deleteInvoice(@PathParam("id") Integer id){
+    public ZYResponse deleteInvoice(@PathVariable Integer id){
          invoiceService.deleteInvoice(id);
         return ZYResponse.success("删除成功");
 

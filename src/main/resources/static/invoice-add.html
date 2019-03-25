@@ -273,8 +273,8 @@
 <script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
-<script type="text/javascript" src="static/js/common.js"></script>
 <script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
 <script>
 
     $(function () {
@@ -378,6 +378,22 @@
         var receivedDate = $("#receivedDate").val();
         var noReceivedAmount = $("#noReceivedAmount").val();
         var descprition = $("#descprition").val();
+
+        // if (taskId === null || taskId === ""){
+        //     layer.msg("不能为空", {icon: 2, time: 1000});
+        //     return;
+        // }
+
+        if (!validateNull(taskId,"任务号")) {return;}
+        if (!validateNull(contractNumber,"合同号")) {return;}
+        if (!validateNull(invoiceOffice,"开票单位")) {return;}
+        if (!validateNull(invoiceNumber,"发票号")) {return;}
+        if (!validateNull(departmentName,"所属部门")) {return;}
+        if (!validateNull(invoiceProject,"项目")) {return;}
+        if (!validateNull(contractUser,"项目负责人")) {return;}
+        if (!validateNull(invoiceAmount,"发票金额")) {return;}
+        if (!validateNull(contractAmount,"合同金额")) {return;}
+        if (!validateNull(noTaxAmount,"不含税金额")) {return;}
 
         if (!validateNum(contractAmount)) {return;}
         if (!validateNum(invoiceAmount)) {return;}
