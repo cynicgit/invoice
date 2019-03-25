@@ -224,17 +224,26 @@ public class InvoiceService {
 
     @Transactional(rollbackFor = Exception.class)
     public void saveInvoice(Invoice invoice) {
+        Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
 
-        Integer byTaskId = invoiceMapper.findByTaskId(invoice.getTaskId());
-        if (byTaskId != null){
-            throw new BusinessException("任务号已存在");
+        if (invoiceByTaskIdAndInvoiceNumber != null) {
+            throw new BusinessException("任务号 发票号已存在");
         }
 
-        Integer byInvoiceNumber = invoiceMapper.findByInvoiceNumber(invoice.getInvoiceNumber());
-
-        if (byInvoiceNumber != null){
-            throw new BusinessException("发票号已存在");
+        User userByName = userMapper.getUserByName(invoice.getContractUser());
+        if (userByName == null) {
+            throw new BusinessException("未找到对应员工");
         }
+
+        invoice.setUserId(userByName.getId());
+        String name = departmentMapper.getParentName(invoice.getDepartmentName());
+        if (StringUtils.isEmpty(name)) {
+            invoice.setDepartmentName(invoice.getDepartmentName() + "-" + invoice.getDepartmentName());
+        } else {
+            invoice.setDepartmentName(name + "-" + invoice.getDepartmentName());
+        }
+
+
         invoiceMapper.insertSelective(invoice);
     }
 

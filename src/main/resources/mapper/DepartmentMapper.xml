@@ -71,4 +71,10 @@
     <select id="getDepByName" resultType="com.zhongyi.invoice.entity.Department">
         select * FROM t_department where `name` = #{name}
     </select>
+    <select id="getParentName" resultType="java.lang.String">
+        select p.name FROM t_department p
+        left join t_department c
+        p.id = c.pid
+        where c.name = #{departmentName}
+    </select>
 </mapper>
