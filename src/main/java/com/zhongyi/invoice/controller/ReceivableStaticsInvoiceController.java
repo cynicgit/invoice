@@ -37,17 +37,19 @@ public class ReceivableStaticsInvoiceController {
             i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             sum[0] = sum[0] + i.getNoReceivedAmount();
             int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), new Date());
-            if (monthBetween < 6 && monthBetween >= 3) {
+            if (monthBetween <= 3) {
+                i.setLimitAmount0(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+            } else if (monthBetween <= 6) {
                 i.setLimitAmount1(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
-            } else if (monthBetween >= 6 && monthBetween < 9) {
+            } else if (monthBetween <= 9) {
                 i.setLimitAmount2(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
-            } else if (monthBetween > 9 && monthBetween <= 12) {
+            } else if (monthBetween <= 12) {
                 i.setLimitAmount3(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
-            } else if (monthBetween > 12 && monthBetween <= 24) {
+            } else if (monthBetween <= 24) {
                 i.setLimitAmount4(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
-            } else if (monthBetween > 24 && monthBetween <= 36) {
+            } else if (monthBetween <= 36) {
                 i.setLimitAmount5(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
-            } else if (monthBetween > 36){
+            } else {
                 i.setLimitAmount6(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
             }
 
@@ -71,6 +73,7 @@ public class ReceivableStaticsInvoiceController {
     public void ReceivableStaticsInvoiceSummary(String startDate, String endDate, HttpServletResponse response) throws Exception {
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
         double sum = 0.00f;
+        double summary0 = 0.00f;
         double summary1 = 0.00f;
         double summary2 = 0.00f;
         double summary3 = 0.00f;
@@ -81,22 +84,25 @@ public class ReceivableStaticsInvoiceController {
             i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             sum = sum + i.getNoReceivedAmount();
             int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), new Date());
-            if (monthBetween < 6 && monthBetween >= 3) {
+            if (monthBetween <= 3) {
+                summary0 = summary0 + (i.getInvoiceAmount() - i.getReceivedAmount());
+            } else if (monthBetween <= 6) {
                 summary1 = summary1 + (i.getInvoiceAmount() - i.getReceivedAmount());
-            } else if (monthBetween >= 6 && monthBetween < 9) {
+            } else if (monthBetween <= 9) {
                 summary2 = summary2 + (i.getInvoiceAmount() - i.getReceivedAmount());
-            } else if (monthBetween > 9 && monthBetween <= 12) {
+            } else if (monthBetween <= 12) {
                 summary3 = summary3 + (i.getInvoiceAmount() - i.getReceivedAmount());
-            } else if (monthBetween > 12 && monthBetween <= 24) {
+            } else if (monthBetween <= 24) {
                 summary4 = summary4 + (i.getInvoiceAmount() - i.getReceivedAmount());
-            } else if (monthBetween > 24 && monthBetween <= 36) {
+            } else if (monthBetween <= 36) {
                 summary5 = summary5 + (i.getInvoiceAmount() - i.getReceivedAmount());
-            } else if (monthBetween > 36){
+            } else {
                 summary6 = summary6 + (i.getInvoiceAmount() - i.getReceivedAmount());
             }
         }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("sum", new BigDecimal( sum / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+        map.put("summary0", new BigDecimal( summary0 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary1", new BigDecimal( summary1 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary2", new BigDecimal( summary2 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         map.put("summary3", new BigDecimal( summary3 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());

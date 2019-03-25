@@ -13,5 +13,5 @@ public class ExportNoReceiver {
     private String keyDesc;
     private Double totalInvoice;
     private Double noReceiveTotalInvoice;
-
+    private String badInvoice;
 }

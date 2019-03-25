@@ -109,6 +109,9 @@ public class ChanZhiController {
         ja.add(hejiMap); // 合计
 
         group.forEach(g -> {
+            if ("其他".equals(g.getName())) {
+                System.out.println("");
+            }
             List<Map<String,Object>> groupList = new ArrayList<>();
             Map<String, Object> xiaojiMap = new LinkedHashMap<>();
             xiaojiMap.put("groupName", "");
@@ -161,7 +164,10 @@ public class ChanZhiController {
                     xiaojiLeiji[0] = xiaojiLeiji[0] + (Double) v;
                 }
             });
-            hejixiaozuleiji[0] = hejixiaozuleiji[0] + xiaojiLeiji[0];
+            if (!"其他".equals(g.getName())) {
+                hejixiaozuleiji[0] = hejixiaozuleiji[0] + xiaojiLeiji[0];
+            }
+
             xiaojiMap.put("累计开票",xiaojiLeiji[0]);
             xiaojiMap.put("个人目标产值", xiaojiGerren[0] == 0 ? "" :  xiaojiGerren[0]);
             if ( xiaojiGerren[0] > 0) {
@@ -221,6 +227,7 @@ public class ChanZhiController {
         collect.forEach((depName, invoiceList) -> {
             Map<String, Object> depMap = new LinkedHashMap<>();
             depMap.put("部门", depName);
+            xiaojiMap.put("部门", "部门合计");
             double leijiDep = 0.0;
             for (Integer i = 0; i < jidu.size(); i++) {
                 Integer j = jidu.get(i);
@@ -320,7 +327,7 @@ public class ChanZhiController {
 
     private Group getOtherUser(List<User> allUser, List<Group> group) {
         List<String> collect = getGroupUser(group).stream().map(User::getName).collect(Collectors.toList());
-        List<User> otherUsers = allUser.stream().filter(u -> !collect.equals(u.getName())).collect(Collectors.toList());
+        List<User> otherUsers = allUser.stream().filter(u -> !collect.contains(u.getName())).collect(Collectors.toList());
         Group g = new Group();
         g.setName("其他");
         g.setUsers(otherUsers);

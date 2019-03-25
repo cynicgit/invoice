@@ -172,6 +172,10 @@ public class ExcelUtil{
         workbook.setCompressTempFiles(true);
          //表头样式
         CellStyle titleStyle = workbook.createCellStyle();
+        titleStyle.setBorderBottom(BorderStyle.THIN);
+        titleStyle.setBorderLeft(BorderStyle.THIN);
+        titleStyle.setBorderRight(BorderStyle.THIN);
+        titleStyle.setBorderTop(BorderStyle.THIN);
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
         Font titleFont = workbook.createFont();
         titleFont.setFontHeightInPoints((short) 20);
@@ -230,12 +234,18 @@ public class ExcelUtil{
                 if ( rowIndex != 0 ) sheet = workbook.createSheet();//如果数据超过了，则在第二页显示
 
                 SXSSFRow titleRow = sheet.createRow(0);//表头 rowIndex=0
-                titleRow.createCell(0).setCellValue(title);
-                titleRow.getCell(0).setCellStyle(titleStyle);
+
+                for (int i = 0; i < headMap.size(); i++) {
+                    titleRow.createCell(i).setCellValue(title);
+                    titleRow.getCell(i).setCellStyle(titleStyle);
+                }
+
                 sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headMap.size() - 1));
                 SXSSFRow subheadRow = sheet.createRow(1);
-                subheadRow.createCell(0).setCellValue(subhead);
-                subheadRow.getCell(0).setCellStyle(titleStyle);
+                for (int i = 0; i < headMap.size(); i++) {
+                    subheadRow.createCell(i).setCellValue(subhead);
+                    subheadRow.getCell(i).setCellStyle(titleStyle);
+                }
                 sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, headMap.size() - 1));
 
                 SXSSFRow headerRow = sheet.createRow(2); //列头 rowIndex =1

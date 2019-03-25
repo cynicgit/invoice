@@ -7,27 +7,24 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.InvoiceService;
+import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 @RestController
@@ -58,16 +55,16 @@ public class NoReceivableStaticsInvoiceController {
         List<InvoiceVO> collect = null;
         if (type == 0) {
             name += "部门";
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getDepartmentName()) || i.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getDepartmentName().contains(invoiceVO.getCondition())).collect(Collectors.toList());
         } else if (type == 2) {
             name += "信用";
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCreditLimit()) ||  i.getCreditLimit().contains(invoiceVO.getCreditLimit())).collect(Collectors.toList());
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) ||  i.getCreditLimit().contains(invoiceVO.getCondition())).collect(Collectors.toList());
         } else if (type == 3) {
             name += "开票";
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getInvoiceOffice()) || i.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.toList());
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getInvoiceOffice().contains(invoiceVO.getCondition())).collect(Collectors.toList());
         } else if (type == 4) {
             name += "项目负责人";
-            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getContractUser()) || i.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
+            collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getContractUser().contains(invoiceVO.getCondition())).collect(Collectors.toList());
         }
         exportParams.setTitle(name + " " + invoiceVO.getStartDate() + "-" + invoiceVO.getEndDate());
         EasyPoiUtils.defaultExport(collect, Invoice.class, name +".xlsx", response, exportParams);
@@ -89,7 +86,7 @@ public class NoReceivableStaticsInvoiceController {
             ExportNoReceiver exportNoReceiver1 = new ExportNoReceiver();
             exportNoReceiver1.setKey(invoiceVO.getStartDate() + "-" + invoiceVO.getEndDate());
             Double invoiceAmount = invoiceVOS.stream().mapToDouble(Invoice::getInvoiceAmount).sum();
-            Double noReceive = invoiceVOS.stream().filter(i -> i.getReceivedAmount() == null || i.getReceivedAmount() - i.getInvoiceAmount() < 0).mapToDouble(Invoice::getNoReceivedAmount).sum();
+            Double noReceive = invoiceVOS.stream().mapToDouble(Invoice::getNoReceivedAmount).sum();
             exportNoReceiver1.setTotalInvoice(invoiceAmount);
             exportNoReceiver1.setNoReceiveTotalInvoice(noReceive);
             ExportNoReceiver exportNoReceiver2 = new ExportNoReceiver();
@@ -121,6 +118,8 @@ public class NoReceivableStaticsInvoiceController {
             name += "项目负责人";
             params.setTemplateUrl(excelPath + "noReceiveAmountUser.xlsx");
         }
+
+        params.setStyle(MyExcelExportStylerDefaultImpl.class);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -151,8 +150,8 @@ public class NoReceivableStaticsInvoiceController {
                 exportNoReceiver.setKeyDesc(key.equals(Const.CreditLimit3) ? Const.CreditTypeOffice : Const.CreditTypeOrg);
             }
 
-            Double invoiceAmount = list1.stream().mapToDouble(Invoice::getInvoiceAmount).sum();
-            Double noReceive = list1.stream().filter(i -> i.getReceivedAmount() == null || i.getReceivedAmount() - i.getInvoiceAmount() < 0).mapToDouble(Invoice::getNoReceivedAmount).sum();
+            Double invoiceAmount = list1.stream().mapToDouble(ReceivableStaticsInvoice::getInvoiceAmount).sum();
+            Double noReceive = list1.stream().mapToDouble(ReceivableStaticsInvoice::getNoReceivedAmount).sum();
             exportNoReceiver.setTotalInvoice(invoiceAmount);
             exportNoReceiver.setNoReceiveTotalInvoice(noReceive);
             list.add(exportNoReceiver);
