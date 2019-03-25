@@ -70,7 +70,10 @@
             }
             var s = startDate.split("-")[0]
 			var e = endDate.split("-")[0]
-
+			if (s != e) {
+                layer.msg('年度产值不能跨年', {icon: 2, time: 1000});
+                return;
+			}
             var start = new Date(startDate);
             var end = new Date(endDate);
             if (start.getMilliseconds() > end.getMilliseconds()) {
@@ -92,7 +95,12 @@
                 layer.msg('请选择结束时间', {icon: 2, time: 1000});
                 return;
             }
-
+            var s = startDate.split("-")[0]
+            var e = endDate.split("-")[0]
+            if (s != e) {
+                layer.msg('年度产值不能跨年', {icon: 2, time: 1000});
+                return;
+            }
             var start = new Date(startDate);
             var end = new Date(endDate);
             if (start.getMilliseconds() > end.getMilliseconds()) {
