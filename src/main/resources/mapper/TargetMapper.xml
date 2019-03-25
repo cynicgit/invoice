@@ -93,7 +93,7 @@
         select * FROM t_target
         <where>
             <if test="name != null and name !=''">
-                `name` = #{name}
+                `name` like CONCAT('%',#{name},'%')
             </if>
         </where>
     </select>

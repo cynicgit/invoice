@@ -68,6 +68,8 @@
                 layer.msg('请选择结束时间', {icon: 2, time: 1000});
                 return;
             }
+            var s = startDate.split("-")[0]
+			var e = endDate.split("-")[0]
 
             var start = new Date(startDate);
             var end = new Date(endDate);

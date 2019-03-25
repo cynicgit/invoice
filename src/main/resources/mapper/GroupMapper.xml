@@ -66,6 +66,7 @@
         ON g.id = m.group_id
         LEFT JOIN t_user u
         ON m.user_id = u.id
+        where g.name like CONCAT('%',#{name},'%') or u.name like CONCAT('%',#{name},'%')
     </select>
     <select id="getGroupById"  resultMap="group">
        select g.id, g.name, u.name userName, u.id userId FROM t_group g
