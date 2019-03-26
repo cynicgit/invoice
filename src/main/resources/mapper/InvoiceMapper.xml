@@ -514,4 +514,9 @@
     <select id="findByInvoiceNumber" resultType="java.lang.Integer">
          select id from t_invoice where invoice_number = #{invoiceNumber}
     </select>
+    <select id="getInvoiceByUserName" resultType="com.zhongyi.invoice.entity.InvoiceVO">
+        select
+        <include refid="Base_Column_List"/>
+        from `t_invoice` where contract_user = #{name}
+    </select>
 </mapper>

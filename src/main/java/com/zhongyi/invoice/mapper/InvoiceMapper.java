@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Mapper
@@ -44,4 +45,6 @@ public interface InvoiceMapper {
     Integer findByTaskId(String taskId);
 
     Integer findByInvoiceNumber(String invoiceNumber);
+
+    List<InvoiceVO> getInvoiceByUserName(@Param("name") String name);
 }
