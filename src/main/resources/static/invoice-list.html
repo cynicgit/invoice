@@ -503,8 +503,24 @@
             contentType: false, //必须
             success: function (response) {
                 var data = response.data;
-                alert(data)
-                getData(searchPara)
+                if (data.code == 0) {
+
+                    alert(data.message)
+
+                    getData(searchPara)
+                } else {
+                    layer.open({
+                        type: 0 //Page层类型
+                        ,area: ['500px', '300px']
+                        ,title: '出现错误'
+                        ,shade: 0.6 //遮罩透明度
+                        ,anim: 1 //0-6的动画形式，-1不开启
+                        ,content: '<div style="padding:10px;">'+data.message+'</div>'
+                    });
+                }
+
+
+
             },
         })
     });

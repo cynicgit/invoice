@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,12 +36,12 @@ public class InvoiceService {
     @Autowired
     private UserMapper userMapper;
 
-    public String importExcel(MultipartFile file) {
+    public Map<String, Object> importExcel(MultipartFile file) {
         List<Invoice> invoices = EasyPoiUtils.importExcel(file, 0, 1, Invoice.class);
-        Map<String, Object> map = new HashMap<>();
         int zuofei = 0;
         int invoiceNumberRepeat = 0;
         List<Invoice> error = new ArrayList<>();
+        List<Invoice> list = new ArrayList<>();
         for (int i = 0; i < invoices.size(); i++) {
             Invoice invoice = invoices.get(i);
             try {
@@ -51,49 +52,46 @@ public class InvoiceService {
                 checkInvoice(invoice);
                 Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
                 if (invoiceByTaskIdAndInvoiceNumber != null) {
-                    invoiceNumberRepeat ++;
-                    continue;
+                    throw new BusinessException("任务号 发票号已存在");
                 }
                 String departmentName = invoice.getDepartmentName();
                 log.info(invoice.getTaskId());
                 String[] split = departmentName.split("-");
                 Department depByName = departmentMapper.getDepByName(split[1]);
                 if (depByName == null) {
-                    invoice.setErrorMsg("未找到部门");
-                    error.add(invoice);
-                    continue;
+                    throw new BusinessException("部门不存在");
                 }
                 invoice.setDepId(depByName.getId());
                 User userByName = userMapper.getUserByName(invoice.getContractUser());
                 if (userByName == null) {
-                    invoice.setErrorMsg("未找到对应员工");
-                    error.add(invoice);
-                    continue;
+                    throw new BusinessException("未找到对应员工");
                 }
                 invoice.setUserId(userByName.getId());
-
-
-                invoiceMapper.insert(invoice);
-
+                list.add(invoice);
             } catch (Exception e) {
                 e.printStackTrace();
                 invoice.setErrorMsg(e.getMessage());
                 error.add(invoice);
             }
         }
+        Map<String, Object> map = new HashMap<>();
         StringBuilder sb = new StringBuilder();
 
-        sb.append("作废:").append(zuofei + "条")
-                .append("\n")
-                .append("重复:").append(invoiceNumberRepeat).append("条")
-                .append("\n");
-        error.forEach(e -> {
-            sb.append(e.getTaskId() + " " + e.getErrorMsg()).append("\n");
-        });
-        map.put("zuofei", zuofei);
-        map.put("invoiceNumberRepeat", invoiceNumberRepeat);
-        map.put("error", error);
-        return sb.toString();
+        if (CollectionUtils.isEmpty(error)) {
+            map.put("code", 0);
+            list.forEach(invoice -> invoiceMapper.insert(invoice));
+            sb.append("作废:").append(zuofei).append("条")
+                    .append("\n")
+                    .append("导入:").append(list.size()).append("条");
+        } else {
+            map.put("code", 1);
+            error.forEach(e -> {
+                sb.append(e.getTaskId() + " " + e.getErrorMsg()).append("<br/>");
+            });
+        }
+
+        map.put("message", sb.toString());
+        return map;
     }
 
     private void checkInvoice(Invoice invoice) throws Exception {
