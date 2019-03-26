@@ -74,7 +74,7 @@
     <select id="getParentName" resultType="java.lang.String">
         select p.name FROM t_department p
         left join t_department c
-        p.id = c.pid
+        on p.id = c.pid
         where c.name = #{departmentName}
     </select>
 </mapper>
