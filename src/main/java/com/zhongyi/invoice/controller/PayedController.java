@@ -50,7 +50,7 @@ public class PayedController {
     private InvoiceService invoiceService;
 
 
-    @GetMapping("/detail/depId")
+    @GetMapping("/detail/dep")
     @OperateLog("已回款明细")
     public void payedDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
 

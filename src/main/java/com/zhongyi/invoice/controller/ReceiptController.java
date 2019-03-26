@@ -48,7 +48,7 @@ public class ReceiptController {
 
 
 
-    @GetMapping("/detail/depId")
+    @GetMapping("/detail/dep")
     @OperateLog("发票统计明细导出")
     public void receiptDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
 

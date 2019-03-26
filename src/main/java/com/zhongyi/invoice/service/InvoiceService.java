@@ -193,24 +193,24 @@ public class InvoiceService {
         PageHelper.startPage(pageNum, pageSize);
         List<InvoiceVO> list = invoiceMapper.listInvoices(startDate,endDate,condition, name);
 
-        if (!StringUtils.isEmpty(condition)){
-            if (type == 1){
-                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getDepartmentName()));
-                list = map.get(condition);
-            }else if (type == 2){
-                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getCreditLimit()));
-                list = map.get(condition);
-            }else if (type == 3){
-                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getInvoiceType()));
-                list = map.get(condition);
-            }else if (type == 4){
-                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getInvoiceOffice()));
-                list = map.get(condition);
-            }else if (type == 5){
-                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
-                list = map.get(condition);
-            }
-        }
+//        if (!StringUtils.isEmpty(condition)){
+//            if (type == 1){
+//                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getDepartmentName()));
+//                list = map.get(condition);
+//            }else if (type == 2){
+//                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getCreditLimit()));
+//                list = map.get(condition);
+//            }else if (type == 3){
+//                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getInvoiceType()));
+//                list = map.get(condition);
+//            }else if (type == 4){
+//                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getInvoiceOffice()));
+//                list = map.get(condition);
+//            }else if (type == 5){
+//                Map<String, List<InvoiceVO>> map = list.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
+//                list = map.get(condition);
+//            }
+//        }
 
 
         PageInfo<InvoiceVO> pageInfo = new PageInfo<>(list);

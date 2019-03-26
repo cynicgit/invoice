@@ -480,13 +480,16 @@
         ti.descprition
         FROM t_invoice ti left join t_user tu on ti.user_id = tu.id
         <where>
-      <!--      <if test="condition != null and condition != ''">
-                and contract_user = #{condition}
-                or department_name LIKE concat('%',#{condition},'%')
-                or credit_limit = #{condition}
-                or invoice_office LIKE concat('%',#{condition},'%')
-                or invoice_type = #{condition}
-            </if> -->
+           <if test="condition != null and condition != ''">
+                and (ti.contract_user = #{condition}
+                or ti.department_name LIKE concat('%',#{condition},'%')
+                or ti.credit_limit = #{condition}
+                or ti.invoice_office LIKE concat('%',#{condition},'%')
+                or ti.invoice_type = #{condition}
+                or tu.name  LIKE concat('%',#{condition},'%')
+                or ti.contract_number  LIKE concat('%',#{condition},'%')
+                or ti.task_id  LIKE concat('%',#{condition},'%') )
+            </if>
 
             <if test="startDate != null and startDate != ''">
                 and ti.invoice_date >= #{startDate}

@@ -87,6 +87,10 @@ public class Invoice {
     @Excel(name = "未到账", orderNum = "20")
     private Double noReceivedAmount = 0.0;
 
+    @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
+    @Excel(name = "坏账", orderNum = "20")
+    private Double badAmount = 0.0;
+
     @Excel(name = "备注", orderNum = "21")
     private String descprition;
 

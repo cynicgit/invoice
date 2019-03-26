@@ -26,21 +26,25 @@
 
 <div class="page-container" id="student-list">
     <form action="" method="post" class="form form-horizontal" id="form-menu-add">
+
+        <!--<div class="row cl">-->
+            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>任务单号：</label>-->
+            <!--<div class="formControls col-xs-8 col-sm-9">-->
+                <!--<input type="text" class="input-text" value="" placeholder="" id="taskId">-->
+            <!--</div>-->
+        <!--</div>-->
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>任务单号：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="taskId">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="taskId">
+                </div>
             </div>
         </div>
 
-        <!--<div class="row cl">-->
-        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>-->
-        <!--<div class="formControls col-xs-8 col-sm-9">-->
-        <!--<input type="text" class="input-text" value="" placeholder="" id="contractNumber">-->
-        <!--</div>-->
-        <!--</div>-->
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同号：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
                     <input type="text" class="input-text" value="" placeholder="" id="contractNumber">
@@ -120,12 +124,29 @@
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select id="depId" name="depId" class="select">
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="select-box">
+                    <select id="depId" name="depId" class="select">
                     <option value="">请选择</option>
-				</select>
-				</span></div>
+                    </select>
+                    </span>
+                </div>
+            </div>
         </div>
+
+        <!--<div class="row cl">-->
+            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>-->
+            <!--<div class="formControls col-xs-8 col-sm-9"> -->
+                <!--<span class="select-box">-->
+				<!--<select id="depId" name="depId" class="select">-->
+                    <!--<option value="">请选择</option>-->
+				<!--</select>-->
+				<!--</span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
@@ -163,18 +184,33 @@
             </div>
         </div>
 
+        <!--<div class="row cl">-->
+            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>-->
+
+
+            <!--<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">-->
+				<!--<select id="userId" name="userId" class="select">-->
+                    <!--<option value="">请选择</option>-->
+				<!--</select>-->
+				<!--</span>-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>
-
-
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select id="userId" name="userId" class="select">
+            <label class="form-label col-xs-4 col-sm-2">项目负责人：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select id="userId" name="userId" class="select">
                     <option value="">请选择</option>
-				</select>
-				</span>
+                    </select>
+                    </span>
+                </div>
             </div>
-
         </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 签收人：</label>
@@ -185,16 +221,16 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>
+        <!--<div class="row cl">-->
+            <!--<label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>-->
 
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="layui-input" id="invoiceSignatoryDate">
-                    <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">-->
-                </div>
-            </div>
-        </div>
+            <!--<div class="formControls col-xs-8 col-sm-9">-->
+                <!--<div class="formControls col-xs-8 col-sm-9">-->
+                    <!--<input type="text" class="layui-input" id="invoiceSignatoryDate">-->
+                    <!--&lt;!&ndash;<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 报告号：</label>
@@ -249,6 +285,16 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"> 坏账：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 备注：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
@@ -290,12 +336,12 @@
                 type: 'datetime',
                 format: 'yyyy-MM-dd HH:mm:ss'
             });
-            laydate.render({
-                elem: '#invoiceSignatoryDate',
-                type: 'datetime',
-                format: 'yyyy-MM-dd HH:mm:ss'
-
-            });
+            // laydate.render({
+            //     elem: '#invoiceSignatoryDate',
+            //     type: 'datetime',
+            //     format: 'yyyy-MM-dd HH:mm:ss'
+            //
+            // });
             laydate.render({
                 elem: '#invoiceDate',
                 type: 'date',
@@ -371,7 +417,7 @@
         var noTaxAmount = $("#noTaxAmount").val();
         var userId = $("#userId").val();
         var contractUser = $("#userId option:selected").text();
-        var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
+      //  var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
         var reportNumber = $("#reportNumber").val();
         var reportDate = $("#reportDate").val();
         var receivedAmount = $("#receivedAmount").val();
@@ -425,7 +471,7 @@
                 noTaxAmount: noTaxAmount,
                 userId: userId,
                 invoiceSignatory: invoiceSignatory,
-                invoiceSignatoryDate: invoiceSignatoryDate,
+            //k    invoiceSignatoryDate: invoiceSignatoryDate,
                 reportNumber: reportNumber,
                 reportDate: reportDate,
                 receivedAmount: receivedAmount,
