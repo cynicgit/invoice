@@ -65,7 +65,7 @@ public class ReceiptController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -90,7 +90,7 @@ public class ReceiptController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -124,7 +124,7 @@ public class ReceiptController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -157,7 +157,7 @@ public class ReceiptController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -240,7 +240,7 @@ public class ReceiptController {
         list.add(invoiceVO1);
         map.put("list", list);
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -323,7 +323,7 @@ public class ReceiptController {
         list.add(invoiceVO1);
         map.put("list", list);
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -396,7 +396,7 @@ public class ReceiptController {
         list.add(invoiceVO1);
         mapParms.put("list", list);
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -465,7 +465,7 @@ public class ReceiptController {
 //        list.add(invoiceVO1);
 //        map.put("list", list);
 //        TemplateExportParams params = new TemplateExportParams();
-//        params.setTemplateUrl(filePath);
+//        params.setTemplateUrl(path);
 //        Workbook workbook = ExcelExportUtil.exportExcel(params, map);
 //        response.setCharacterEncoding("UTF-8");
 //        response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -538,7 +538,7 @@ public class ReceiptController {
         list.add(invoiceVO1);
         map.put("list", list);
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");

@@ -239,7 +239,7 @@ public class ExcelController {
 //        map.put("sumCommonInvoiceAmount", sumCommonInvoiceAmount);
 //        map.put("sumCommonNoTaxAmount", sumCommonNoTaxAmount);
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -298,7 +298,7 @@ public class ExcelController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -356,7 +356,7 @@ public class ExcelController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -442,7 +442,7 @@ public class ExcelController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");

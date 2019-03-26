@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -103,7 +104,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -137,7 +138,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -162,7 +163,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -205,7 +206,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -247,7 +248,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
@@ -290,6 +291,8 @@ public class PayedController {
 //        workbook.write(response.getOutputStream());
 
         String path = excelPath + "payedGatherDep.xlsx";
+        log.info(path);
+       // FileInputStream fileInputStream = new FileInputStream(path);
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
 
@@ -382,10 +385,8 @@ public class PayedController {
 
         value.put("colList", colList);
         value.put("valList", valList);
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         params.setColForEach(true);
         Workbook workbook = ExcelExportUtil.exportExcel(params, value);
         response.setCharacterEncoding("UTF-8");
@@ -439,7 +440,7 @@ public class PayedController {
         Resource resource = new ClassPathResource(path);
         String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(filePath);
+        params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
