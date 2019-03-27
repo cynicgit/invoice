@@ -173,22 +173,30 @@
             </div>
         </div>
 
+
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-6" style="margin-left:15px"> <span class="select-box">-->
-				<!--<select id="userId" name="userId" class="select">-->
-				<!--</select>-->
-				<!--</span></div>-->
+            <!--<label class="form-label col-xs-4 col-sm-2">项目负责人：</label>-->
+            <!--<div class="formControls col-xs-8 col-sm-9">-->
+                <!--<div class="formControls col-xs-8 col-sm-9">-->
+                <!--<span class="select-box">-->
+                    <!--<select id="userId" name="userId" class="select">-->
+                    <!--</select>-->
+                    <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
         <!--</div>-->
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">项目负责人：</label>
-            <div class="formControls col-xs-8 col-sm-9">
+        <div class="row cl layui-form">
+            <div class="layui-form-item">
+                <label class="form-label col-xs-4 col-sm-2">项目负责人：</label>
                 <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
-                    <select id="userId" name="userId" class="select">
+                    <select id="userId" name="userId" class="select" lay-verify="" lay-search>
+                    <option value="">请选择</option>
                     </select>
                     </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -269,6 +277,16 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"> 坏账：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="badAmount">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 备注：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
@@ -327,6 +345,9 @@
                 type: 'date',
                 format: 'yyyy-MM-dd HH:mm:ss'
             });
+            layui.use('form', function () {
+                var form = layui.form;
+            });
         });
     })
 
@@ -372,6 +393,7 @@
                     $('#noReceivedAmount').val(res.data.receivedAmount);
                     $('#descprition').val(res.data.descprition);
                     $("#noTaxAmount").val(res.data.noTaxAmount);
+                    $("#badAmount").val(res.data.badAmount);
                 } else if (res.code === 0) {
                     layer.msg(res.error);
                 }
@@ -407,6 +429,7 @@
         var noReceivedAmount = $("#noReceivedAmount").val();
         var descprition = $("#descprition").val();
         var noTaxAmount = $("#noTaxAmount").val();
+        var badAmount = $("#badAmount").val();
 
         if (!validateNull(taskId,"任务号")) {return;}
         if (!validateNull(contractNumber,"合同号")) {return;}
@@ -453,6 +476,7 @@
                 receivedAmount: receivedAmount,
                 receivedDate: receivedDate,
                 noReceivedAmount: noReceivedAmount,
+                badAmount:badAmount,
                 descprition: descprition,
             },
             success: function (res) {

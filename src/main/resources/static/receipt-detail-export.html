@@ -49,9 +49,9 @@
         <!--<div class="formControls  " style="width: 100px">-->
             <!--<input type="text" class="input-text" placeholder="" name="invoiceOffice" id="invoiceOffice">-->
         <!--</div>-->
-
         <!--<span style="margin-left: 5px">开票时间：</span>-->
         <div class="layui-inline">
+
             <label class="layui-form-label">开票日期开始时间</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" id="sdate" placeholder="开始时间">
@@ -129,53 +129,21 @@
         if (type === '0') {
             return;
         } else if (type === '1') {
-           // condition = $("#dep").val();
-            url = "receipt/gather/dep";
-            //data = "{\'departmentName\':\'" + condition + "\' }"
+            url = "receipt/detail/dep";
         } else if (type === '2') {
-           // condition = $("#contractUser").val();
-           // data = "{\'contractUser\':\'" + condition + "\' }"
-            url = "receipt/gather/contractUser";
+            url = "receipt/detail/contractUser";
         } else if (type === '3') {
-           // condition = $("#invoiceType").val();
-          //  data = "{\'invoiceType\':\'" + condition + "\' }"
-            url = "receipt/gather/invoiceType";
+
+            url = "receipt/detail/invoiceType";
         } else if (type === '4') {
-           // condition = $("#invoiceOffice").val();
-            url = "receipt/gather/invoiceOffice";
-          //  data = "{\'invoiceOffice\':\'" + condition + "\' }"
+            url = "receipt/detail/invoiceOffice";
         }
 
-        // ajax({
-        //     url: url,
-        //     type: "get",
-        //     data: searchPara,
-        //     success: function (response) {
-        //         if (response.result === 0) {
-        //             layer.msg('导出成功');
-        //             setTimeout(function () {
-        //                 parent.location.reload();
-        //             }, 1500)
-        //         }
-        //     }
-        // });
         window.location.href = url + "?startDate="+startDate + "&endDate=" + endDate + "&condition=" + condition;
     });
 
 
-    // function checkPassword(password, message) {
-    //     if (!password) {
-    //         layer.msg("必须填写 " + message + " !", {icon: 2, time: 1000});
-    //         return false;
-    //     } else if (password.length < 4) {
-    //         layer.msg(message + " 长度不能小于4位!", {icon: 2, time: 1000});
-    //         return false;
-    //     } else if (password.length > 16) {
-    //         layer.msg(message + " 长度不能大于16位!", {icon: 2, time: 1000});
-    //         return false;
-    //     }
-    //     return true;
-    // }
+
 </script>
 </body>
 </html>

@@ -28,10 +28,10 @@
     <form action="" method="post" class="form form-horizontal" id="form-menu-add">
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>任务单号：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<input type="text" class="input-text" value="" placeholder="" id="taskId">-->
-            <!--</div>-->
+        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>任务单号：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<input type="text" class="input-text" value="" placeholder="" id="taskId">-->
+        <!--</div>-->
         <!--</div>-->
 
         <div class="row cl">
@@ -136,16 +136,15 @@
         </div>
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-9"> -->
-                <!--<span class="select-box">-->
-				<!--<select id="depId" name="depId" class="select">-->
-                    <!--<option value="">请选择</option>-->
-				<!--</select>-->
-				<!--</span>-->
-            <!--</div>-->
+        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-9"> -->
+        <!--<span class="select-box">-->
+        <!--<select id="depId" name="depId" class="select">-->
+        <!--<option value="">请选择</option>-->
+        <!--</select>-->
+        <!--</span>-->
         <!--</div>-->
-
+        <!--</div>-->
 
 
         <div class="row cl">
@@ -184,29 +183,35 @@
             </div>
         </div>
 
-        <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目负责人：</label>-->
-
-
-            <!--<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">-->
-				<!--<select id="userId" name="userId" class="select">-->
-                    <!--<option value="">请选择</option>-->
-				<!--</select>-->
-				<!--</span>-->
-            <!--</div>-->
-
+        <!--<div class="layui-form">-->
+        <!--<div class="layui-form-item">-->
+        <!--<label for="" class="layui-form-label">wa</label>-->
+        <!--<div class="layui-input-block">-->
+        <!--<select name="city" lay-verify="" lay-search>-->
+        <!--<option value="">带搜索功能的下拉框</option>-->
+        <!--<option value="021">form</option>-->
+        <!--<option value="0571">layim</option>-->
+        <!--<option value="021">form</option>-->
+        <!--<option value="0571">layim</option>-->
+        <!--<option value="021">form</option>-->
+        <!--<option value="0571">layim</option>-->
+        <!--<option value="021">form</option>-->
+        <!--<option value="0571">layim</option>-->
+        <!--</select>-->
         <!--</div>-->
-
-
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">项目负责人：</label>
-            <div class="formControls col-xs-8 col-sm-9">
+        <!--</div>-->
+        <!--</div>-->
+        <div class="row cl layui-form">
+            <div class="layui-form-item">
+                <label class="form-label col-xs-4 col-sm-2">项目负责人：</label>
                 <div class="formControls col-xs-8 col-sm-9">
+                    <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
-                    <select id="userId" name="userId" class="select">
+                    <select id="userId" name="userId" class="select" lay-verify="" lay-search>
                     <option value="">请选择</option>
                     </select>
                     </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -222,14 +227,14 @@
         </div>
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>-->
+        <!--<label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>-->
 
-            <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<div class="formControls col-xs-8 col-sm-9">-->
-                    <!--<input type="text" class="layui-input" id="invoiceSignatoryDate">-->
-                    <!--&lt;!&ndash;<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">&ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<input type="text" class="layui-input" id="invoiceSignatoryDate">-->
+        <!--&lt;!&ndash;<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">&ndash;&gt;-->
+        <!--</div>-->
+        <!--</div>-->
         <!--</div>-->
 
         <div class="row cl">
@@ -289,7 +294,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="badAmount">
                 </div>
             </div>
         </div>
@@ -349,6 +354,9 @@
             });
         });
 
+        layui.use('form', function () {
+            var form = layui.form;
+        });
         getDep();
         getUser();
     });
@@ -417,12 +425,13 @@
         var noTaxAmount = $("#noTaxAmount").val();
         var userId = $("#userId").val();
         var contractUser = $("#userId option:selected").text();
-      //  var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
+        //  var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
         var reportNumber = $("#reportNumber").val();
         var reportDate = $("#reportDate").val();
         var receivedAmount = $("#receivedAmount").val();
         var receivedDate = $("#receivedDate").val();
         var noReceivedAmount = $("#noReceivedAmount").val();
+        var badAmount = $("#badAmount").val();
         var descprition = $("#descprition").val();
 
         // if (taskId === null || taskId === ""){
@@ -430,22 +439,52 @@
         //     return;
         // }
 
-        if (!validateNull(taskId,"任务号")) {return;}
-        if (!validateNull(contractNumber,"合同号")) {return;}
-        if (!validateNull(invoiceOffice,"开票单位")) {return;}
-        if (!validateNull(invoiceNumber,"发票号")) {return;}
-        if (!validateNull(departmentName,"所属部门")) {return;}
-        if (!validateNull(invoiceProject,"项目")) {return;}
-        if (!validateNull(contractUser,"项目负责人")) {return;}
-        if (!validateNull(invoiceAmount,"发票金额")) {return;}
-        if (!validateNull(contractAmount,"合同金额")) {return;}
-        if (!validateNull(noTaxAmount,"不含税金额")) {return;}
+        if (!validateNull(taskId, "任务号")) {
+            return;
+        }
+        if (!validateNull(contractNumber, "合同号")) {
+            return;
+        }
+        if (!validateNull(invoiceOffice, "开票单位")) {
+            return;
+        }
+        if (!validateNull(invoiceNumber, "发票号")) {
+            return;
+        }
+        if (!validateNull(departmentName, "所属部门")) {
+            return;
+        }
+        if (!validateNull(invoiceProject, "项目")) {
+            return;
+        }
+        if (!validateNull(contractUser, "项目负责人")) {
+            return;
+        }
+        if (!validateNull(invoiceAmount, "发票金额")) {
+            return;
+        }
+        if (!validateNull(contractAmount, "合同金额")) {
+            return;
+        }
+        if (!validateNull(noTaxAmount, "不含税金额")) {
+            return;
+        }
 
-        if (!validateNum(contractAmount)) {return;}
-        if (!validateNum(invoiceAmount)) {return;}
-        if (!validateNum(noTaxAmount)) {return;}
-        if (receivedAmount !== "" && !validateNum(receivedAmount)) {return;}
-        if (noReceivedAmount !== "" && !validateNum(noReceivedAmount)) {return;}
+        if (!validateNum(contractAmount)) {
+            return;
+        }
+        if (!validateNum(invoiceAmount)) {
+            return;
+        }
+        if (!validateNum(noTaxAmount)) {
+            return;
+        }
+        if (receivedAmount !== "" && !validateNum(receivedAmount)) {
+            return;
+        }
+        if (noReceivedAmount !== "" && !validateNum(noReceivedAmount)) {
+            return;
+        }
 
 
         ajax
@@ -471,12 +510,13 @@
                 noTaxAmount: noTaxAmount,
                 userId: userId,
                 invoiceSignatory: invoiceSignatory,
-            //k    invoiceSignatoryDate: invoiceSignatoryDate,
+                //k    invoiceSignatoryDate: invoiceSignatoryDate,
                 reportNumber: reportNumber,
                 reportDate: reportDate,
                 receivedAmount: receivedAmount,
                 receivedDate: receivedDate,
                 noReceivedAmount: noReceivedAmount,
+                badAmount: badAmount,
                 descprition: descprition,
             },
             success: function (res) {

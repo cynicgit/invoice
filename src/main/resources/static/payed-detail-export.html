@@ -17,7 +17,7 @@
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
     <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
     <link rel="stylesheet" type="text/css" href="static/layui/css/layui.css" media="all">
-    <title>发票汇总导出</title>
+    <title>已回款汇总导出</title>
 
 
 </head>
@@ -26,8 +26,8 @@
     <div class="row cl" style="margin-left: 20px">
 
 
-        <input type="text" style="width: 150px"  class="input-text" placeholder="查询条件" name="condition" id="condition">
 
+        <input type="text" style="width: 150px" class="input-text" placeholder="查询条件" name="condition" id="condition">
 
 
         <!--<label class="form-label "> 部门：</label>-->
@@ -35,14 +35,9 @@
             <!--<input type="text" class="input-text" placeholder="" name="dep" id="dep">-->
         <!--</div>-->
 
-        <!--<label class="form-label "> 项目负责人：</label>-->
+        <!--<label class="form-label "> 信用期限：</label>-->
         <!--<div class="formControls  " style="width: 100px">-->
-            <!--<input type="text" class="input-text" placeholder="" name="contractUser" id="contractUser">-->
-        <!--</div>-->
-
-        <!--<label class="form-label "> 发票类型：</label>-->
-        <!--<div class="formControls  " style="width: 100px">-->
-            <!--<input type="text" class="input-text" placeholder="" name="invoiceType" id="invoiceType">-->
+            <!--<input type="text" class="input-text" placeholder="" name="creditLimit" id="creditLimit">-->
         <!--</div>-->
 
         <!--<label class="form-label "> 开票单位：</label>-->
@@ -50,15 +45,20 @@
             <!--<input type="text" class="input-text" placeholder="" name="invoiceOffice" id="invoiceOffice">-->
         <!--</div>-->
 
-        <!--<span style="margin-left: 5px">开票时间：</span>-->
+        <!--<label class="form-label "> 项目负责人：</label>-->
+        <!--<div class="formControls  " style="width: 100px">-->
+            <!--<input type="text" class="input-text" placeholder="" name="contractUser" id="contractUser">-->
+        <!--</div>-->
+
+        <!--<span style="margin-left: 5px">回款时间：</span>-->
         <div class="layui-inline">
-            <label class="layui-form-label">开票日期开始时间</label>
+            <label class="layui-form-label">回款日期开始时间</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" id="sdate" placeholder="开始时间">
             </div>
         </div>
         <div class="layui-inline">
-            <label class="layui-form-label">开票日期结束时间</label>
+            <label class="layui-form-label">回款日期结束时间</label>
             <div class="layui-input-inline">
                 <input type="text" class="layui-input" id="edate" placeholder="结束时间">
             </div>
@@ -68,11 +68,13 @@
 				<select id="type" name="type" class="select" style="width: 100px;height: 30px">
                     <option value="0">请选择</option>
                     <option value="1">按部门</option>
-                    <option value="2">按项目负责人</option>
-                    <option value="3">按发票类型</option>
-                    <option value="4">按开票单位</option>
+                    <option value="2">按信用期限</option>
+                    <option value="3">按开票单位</option>
+                    <option value="4">按项目负责人</option>
 				</select>
 				</span>
+
+
 
         <button id="export-btn" class="btn btn-primary-outline radius" style="width:100px">导出</button>
 
@@ -90,15 +92,24 @@
 <script type="text/javascript" src="static/layui/layui.js"></script>
 <script>
 
+    searchPara = {
+        condition: 1,
+        startDate: null,
+        endDate: null
+    };
+
+
     $(function () {
 
         layui.use('laydate', function(){
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#sdate',
+                type: 'date',
             });
             laydate.render({
                 elem: '#edate',
+                type: 'date',
             });
         });
     });
@@ -107,13 +118,13 @@
 
     $('#export-btn').click(function (e) {
         e.preventDefault();
-
-        var condition = $("#condition").val();
-        var startDate = $("#sdate").val();
-        var endDate = $("#edate").val();
         var url;
-
+        var condition = $("#condition").val();;
+        var startDate = $('#sdate').val();
+        var endDate = $('#edate').val();
         var type = $("#type").val();
+
+
 
 
         if (startDate !== '' && endDate !== '') {
@@ -125,57 +136,26 @@
         }
 
 
-
         if (type === '0') {
+            layer.msg('请选择类型');
             return;
         } else if (type === '1') {
-           // condition = $("#dep").val();
-            url = "receipt/gather/dep";
-            //data = "{\'departmentName\':\'" + condition + "\' }"
+            url = "/payed/detail/dep";
         } else if (type === '2') {
-           // condition = $("#contractUser").val();
-           // data = "{\'contractUser\':\'" + condition + "\' }"
-            url = "receipt/gather/contractUser";
+            url = "/payed/detail/creditLimit";
         } else if (type === '3') {
-           // condition = $("#invoiceType").val();
-          //  data = "{\'invoiceType\':\'" + condition + "\' }"
-            url = "receipt/gather/invoiceType";
+            url = "/payed/detail/invoiceOffice";
         } else if (type === '4') {
-           // condition = $("#invoiceOffice").val();
-            url = "receipt/gather/invoiceOffice";
-          //  data = "{\'invoiceOffice\':\'" + condition + "\' }"
+            url = "/payed/detail/contractUser";
         }
 
-        // ajax({
-        //     url: url,
-        //     type: "get",
-        //     data: searchPara,
-        //     success: function (response) {
-        //         if (response.result === 0) {
-        //             layer.msg('导出成功');
-        //             setTimeout(function () {
-        //                 parent.location.reload();
-        //             }, 1500)
-        //         }
-        //     }
-        // });
+
         window.location.href = url + "?startDate="+startDate + "&endDate=" + endDate + "&condition=" + condition;
+
     });
 
 
-    // function checkPassword(password, message) {
-    //     if (!password) {
-    //         layer.msg("必须填写 " + message + " !", {icon: 2, time: 1000});
-    //         return false;
-    //     } else if (password.length < 4) {
-    //         layer.msg(message + " 长度不能小于4位!", {icon: 2, time: 1000});
-    //         return false;
-    //     } else if (password.length > 16) {
-    //         layer.msg(message + " 长度不能大于16位!", {icon: 2, time: 1000});
-    //         return false;
-    //     }
-    //     return true;
-    // }
+
 </script>
 </body>
 </html>
