@@ -42,6 +42,6 @@ pagehelper:
 logging:
   config: classpath:logback-dev.xml
 server:
-  port: 8080
+  port: 8033
 
 excelPath: E:\ideaProjects\invoice\src\main\resources\

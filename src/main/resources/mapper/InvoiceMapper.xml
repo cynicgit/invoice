@@ -30,12 +30,15 @@
             <arg column="descprition" jdbcType="VARCHAR" javaType="java.lang.String" />
         </constructor>
     </resultMap>
+    <!--Convert(decimal(18,2),13.145)-->
     <sql id="Base_Column_List" >
         id, task_id, contract_number, invoice_date, credit_type, credit_limit, invoice_number,
-        invoice_office, department_name, dep_id, invoice_project, contract_amount, invoice_amount,
-        no_tax_amount, contract_user, user_id, invoice_signatory, invoice_signatory_date,
-        report_number, report_date, received_date, received_amount, no_received_amount, invoice_type,
-        descprition,bad_amount
+        invoice_office, department_name, dep_id, invoice_project, Convert(contract_amount,decimal(10,2)) as contract_amount,
+        Convert(invoice_amount,decimal(10,2)) as invoice_amount,
+        Convert(no_tax_amount,decimal(10,2)) as no_tax_amount, contract_user, user_id, invoice_signatory, invoice_signatory_date,
+        report_number, report_date, received_date, Convert(received_amount,decimal(10,2)) as received_amount, Convert(no_received_amount,decimal(10,2)) as no_received_amount,
+         invoice_type,
+        descprition,Convert(bad_amount,decimal(10,2)) as bad_amount
     </sql>
     <select id="selectByPrimaryKey" resultType="com.zhongyi.invoice.entity.Invoice" parameterType="java.lang.Integer" >
         SELECT ti.id, ti.task_id, ti.contract_number, ti.invoice_date, ti.credit_type, ti.credit_limit, ti.invoice_number,

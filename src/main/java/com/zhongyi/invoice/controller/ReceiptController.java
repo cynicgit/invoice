@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,8 +60,7 @@ public class ReceiptController {
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
+
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -87,8 +84,7 @@ public class ReceiptController {
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
+
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -121,8 +117,7 @@ public class ReceiptController {
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
+
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -154,8 +149,6 @@ public class ReceiptController {
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -225,8 +218,6 @@ public class ReceiptController {
             list.add(invoiceVO2);
         }
         invoiceVO1.setDepartmentName("合计");
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
 
 
         invoiceVO1.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
@@ -308,10 +299,6 @@ public class ReceiptController {
             list.add(invoiceVO2);
         }
         invoiceVO1.setContractUser("合计");
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
-
-
         invoiceVO1.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
         invoiceVO1.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
         invoiceVO1.setCommonInvoiceAmount(sumCommonInvoiceAmount);
@@ -340,7 +327,8 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
-        String path = "receiptGatherType.xlsx";
+       // String path =  "static/excel/receiptGatherType.xlsx";
+        String path = excelPath + "receiptGatherType.xlsx";
         Map<String, Object> mapParms = new HashMap<>();
 
         List<InvoiceVO> thisYearCommonInvoices = thisYear.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
@@ -375,9 +363,9 @@ public class ReceiptController {
 
             thisYearInvoiceTypMap.forEach((key2, list2) -> {
                 if (key.equals(key2)) {
-                    Double thisYearTotalInvoiceAmount = getInvoiceAmount(list1);
+                    Double thisYearTotalInvoiceAmount = getInvoiceAmount(list2);
                     invoiceVO1.setTotalThisYearInvoiceAmount(thisYearTotalInvoiceAmount);
-                    Double thisYearTotalNoTaxAmount = getNoTaxAmount(list1);
+                    Double thisYearTotalNoTaxAmount = getNoTaxAmount(list2);
                     invoiceVO1.setTotalThisYearNoTaxAmount(thisYearTotalNoTaxAmount);
                 }
             });
@@ -385,8 +373,6 @@ public class ReceiptController {
             list.add(invoiceVO1);
         });
 
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
         InvoiceVO invoiceVO1 = new InvoiceVO();
         invoiceVO1.setInvoiceType("合计");
         invoiceVO1.setCommonInvoiceAmount(totalInvoiceAmount1);
@@ -525,8 +511,6 @@ public class ReceiptController {
             list.add(invoiceVO2);
         }
         invoiceVO1.setInvoiceOffice("合计");
-        Resource resource = new ClassPathResource(path);
-        String filePath = ((ClassPathResource) resource).getPath();
 
 
 //        invoiceVO1.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);

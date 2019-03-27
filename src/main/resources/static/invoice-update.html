@@ -151,7 +151,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount" >
+                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount" onblur="onblus(this)">
                 </div>
             </div>
         </div>
@@ -193,7 +193,6 @@
                     <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
                     <select id="userId" name="userId" class="select" lay-verify="" lay-search>
-                    <option value="">请选择</option>
                     </select>
                     </span>
                     </div>
@@ -250,7 +249,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" >
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" onblur="onblus(this)">
                 </div>
             </div>
         </div>
@@ -267,24 +266,25 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"> 未到账：</label>
-
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 坏账：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="badAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="badAmount" onblur="onblus(this)">
                 </div>
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"> 未到账：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount" disabled>
+                </div>
+            </div>
+        </div>
+
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 备注：</label>
@@ -313,12 +313,15 @@
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
 <script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript" src="static/js/common-invoice.js"></script>
 <script>
 
 
     var id = $.cookie("invoice_id");
     $(function () {
         getInvoice();
+        getDep();
+        getUser();
     });
 
     $(function () {
@@ -334,12 +337,6 @@
                 type: 'date',
                 format: 'yyyy-MM-dd HH:mm:ss'
             });
-            // laydate.render({
-            //     elem: '#invoiceSignatoryDate',
-            //     type: 'date',
-            //     format: 'yyyy-MM-dd HH:mm:ss'
-            //
-            // });
             laydate.render({
                 elem: '#invoiceDate',
                 type: 'date',
@@ -374,14 +371,15 @@
                     $("input[name='time'][value=" + res.data.creditLimit + "]").prop("checked", "checked");
                     $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");
                     $('#invoiceOffice').val(res.data.invoiceOffice);
-                    $('#depId').append("<option value='" + res.data.depId + "'>" + res.data.departmentName + "</option>");
+
+                    $("#depId").find("option[value=" + res.data.depId + "]").attr("selected", true);
 
                     $('#invoiceProject').val(res.data.invoiceProject);
                     $('#contractAmount').val(res.data.contractAmount);
                     $('#invoiceAmount').val(res.data.invoiceAmount);
-                   // $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
 
-                    $('#userId').append("<option value='" + res.data.userId + "'>" + res.data.contractUser + "</option>");
+
+                    $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
 
                     $('#invoiceSignatory').val(res.data.invoiceSignatory);
                     $('#reportNumber').val(reportNumber);
@@ -431,23 +429,46 @@
         var noTaxAmount = $("#noTaxAmount").val();
         var badAmount = $("#badAmount").val();
 
-        if (!validateNull(taskId,"任务号")) {return;}
-        if (!validateNull(contractNumber,"合同号")) {return;}
-        if (!validateNull(invoiceOffice,"开票单位")) {return;}
-        if (!validateNull(invoiceNumber,"发票号")) {return;}
-        if (!validateNull(departmentName,"所属部门")) {return;}
-        if (!validateNull(invoiceProject,"项目")) {return;}
-        if (!validateNull(contractUser,"项目负责人")) {return;}
-        if (!validateNull(invoiceAmount,"发票金额")) {return;}
-        if (!validateNull(contractAmount,"合同金额")) {return;}
-        if (!validateNull(noTaxAmount,"不含税金额")) {return;}
+        if (!validateNull(taskId, "任务号")) {
+            return;
+        }
+        if (!validateNull(contractNumber, "合同号")) {
+            return;
+        }
+        if (!validateNull(invoiceOffice, "开票单位")) {
+            return;
+        }
+        if (!validateNull(invoiceNumber, "发票号")) {
+            return;
+        }
+        if (!validateNull(departmentName, "所属部门")) {
+            return;
+        }
+        if (!validateNull(invoiceProject, "项目")) {
+            return;
+        }
+        if (!validateNull(contractUser, "项目负责人")) {
+            return;
+        }
+        if (!validateNull(invoiceAmount, "发票金额") && !validateNum(invoiceAmount, "发票金额")) {
+            return;
+        }
+        if (!validateNull(contractAmount, "合同金额") && !validateNum(contractAmount, "合同金额")) {
+            return;
+        }
+        if (!validateNull(noTaxAmount, "不含税金额") && !validateNum(noTaxAmount, "不含税金额")) {
+            return;
+        }
 
-        if (!validateNum(contractAmount)) {return;}
-        if (!validateNum(invoiceAmount)) {return;}
-        if (!validateNum(noTaxAmount)) {return;}
-        if (receivedAmount !== "" &&!validateNum(receivedAmount)) {return;}
-        if (noReceivedAmount !== "" && !validateNum(noReceivedAmount)) {return;}
-
+        if (!validateNull(badAmount, "坏账") && !validateNum(badAmount, "坏账")) {
+            return;
+        }
+        if (!validateNum(receivedAmount, "回款金额")) {
+            return;
+        }
+        if (!validateNum(noReceivedAmount, "未到账金额")) {
+            return;
+        }
         ajax
         ({
             url: 'invoice',

@@ -392,25 +392,9 @@ function validatePass(pass, confirmPassword) {
     return false;
 }
 
-function validateNull(con, string) {
 
 
-    if (con === null || con === "") {
-        layer.msg(string + "不能为空", {icon: 2, time: 1000});
-        return false;
-    }
-    return true;
 
-}
-
-function validateNum(num) {
-    var patrn = /^\d+(\.\d+)?$/;
-    if (!patrn.exec(num)) {
-        layer.msg("金额为数字", {icon: 2, time: 1000});
-        return false;
-    }
-    return true
-}
 
 //实例化编辑器
 //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例

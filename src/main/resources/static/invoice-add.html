@@ -169,38 +169,37 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount" onblur="onblus(this)">
                 </div>
             </div>
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 不含税金额：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 税率：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noTaxAmount">
+                    <span class="select-box">
+                    <select id="taxRate" name="taxRate" class="select">
+                         <option value="0">0%</option>
+                         <option value="6">6%</option>
+                         <option value="9">9%</option>
+                         <option value="13">13%</option>
+                    </select>
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!--<div class="layui-form">-->
-        <!--<div class="layui-form-item">-->
-        <!--<label for="" class="layui-form-label">wa</label>-->
-        <!--<div class="layui-input-block">-->
-        <!--<select name="city" lay-verify="" lay-search>-->
-        <!--<option value="">带搜索功能的下拉框</option>-->
-        <!--<option value="021">form</option>-->
-        <!--<option value="0571">layim</option>-->
-        <!--<option value="021">form</option>-->
-        <!--<option value="0571">layim</option>-->
-        <!--<option value="021">form</option>-->
-        <!--<option value="0571">layim</option>-->
-        <!--<option value="021">form</option>-->
-        <!--<option value="0571">layim</option>-->
-        <!--</select>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 不含税金额：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noTaxAmount" disabled>
+                </div>
+            </div>
+        </div>
+
         <div class="row cl layui-form">
             <div class="layui-form-item">
                 <label class="form-label col-xs-4 col-sm-2">项目负责人：</label>
@@ -263,7 +262,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" onblur="onblus(this)">
                 </div>
             </div>
         </div>
@@ -280,24 +279,26 @@
         </div>
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"> 未到账：</label>
-
-            <div class="formControls col-xs-8 col-sm-9">
-                <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount">
-                </div>
-            </div>
-        </div>
-
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 坏账：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="badAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="badAmount" onblur="onblus(this)">
                 </div>
             </div>
         </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"> 未到账：</label>
+
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="noReceivedAmount" disabled>
+                </div>
+            </div>
+        </div>
+
 
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 备注：</label>
@@ -326,6 +327,8 @@
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="static/layui/layui.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/common-invoice.js"></script>
+
 <script>
 
     $(function () {
@@ -341,12 +344,6 @@
                 type: 'datetime',
                 format: 'yyyy-MM-dd HH:mm:ss'
             });
-            // laydate.render({
-            //     elem: '#invoiceSignatoryDate',
-            //     type: 'datetime',
-            //     format: 'yyyy-MM-dd HH:mm:ss'
-            //
-            // });
             laydate.render({
                 elem: '#invoiceDate',
                 type: 'date',
@@ -359,51 +356,14 @@
         });
         getDep();
         getUser();
+        $('#taxRate').on('change', function () {
+            var taxRate = $(this).val();
+            var invoiceAmount = $("#invoiceAmount").val();
+            var noTaxAmount = (100 - taxRate) * invoiceAmount / 100;
+            $("#noTaxAmount").val(noTaxAmount.toFixed(2));
+        });
     });
 
-
-    function getUser() {
-        ajax
-        ({
-            url: '/system/user/all',
-            success: function (res) {
-                if (res.result === 0) {
-                    showUser(res.data);
-                } else if (res.result === 1) {
-                    layer.msg(res.error);
-                }
-            }
-        })
-    }
-
-    function getDep() {
-        ajax
-        ({
-            url: '/system/dep/all',
-            success: function (res) {
-                if (res.result === 0) {
-                    showDep(res.data);
-                } else if (res.result === 1) {
-                    layer.msg(res.error);
-                }
-            }
-        })
-    }
-
-    function showDep(list) {
-        for (var i = 0; i < list.length; i++) {
-            $('#depId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
-        }
-        // $('#depId').searchableSelect();
-    }
-
-
-    function showUser(list) {
-        for (var i = 0; i < list.length; i++) {
-            $('#userId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
-        }
-        // $('#userId').searchableSelect();
-    }
 
     $('#submit-btn').click(function (e) {
         e.preventDefault();
@@ -460,29 +420,23 @@
         if (!validateNull(contractUser, "项目负责人")) {
             return;
         }
-        if (!validateNull(invoiceAmount, "发票金额")) {
+        if (!validateNull(invoiceAmount, "发票金额") && !validateNum(invoiceAmount, "发票金额")) {
             return;
         }
-        if (!validateNull(contractAmount, "合同金额")) {
+        if (!validateNull(contractAmount, "合同金额") && !validateNum(contractAmount, "合同金额")) {
             return;
         }
-        if (!validateNull(noTaxAmount, "不含税金额")) {
+        if (!validateNull(noTaxAmount, "不含税金额") && !validateNum(noTaxAmount, "不含税金额")) {
             return;
         }
 
-        if (!validateNum(contractAmount)) {
+        if (!validateNull(badAmount, "坏账") && !validateNum(badAmount, "坏账")) {
             return;
         }
-        if (!validateNum(invoiceAmount)) {
+        if (!validateNum(receivedAmount, "回款金额")) {
             return;
         }
-        if (!validateNum(noTaxAmount)) {
-            return;
-        }
-        if (receivedAmount !== "" && !validateNum(receivedAmount)) {
-            return;
-        }
-        if (noReceivedAmount !== "" && !validateNum(noReceivedAmount)) {
+        if (!validateNum(noReceivedAmount, "未到账金额")) {
             return;
         }
 
