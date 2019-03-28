@@ -8,6 +8,7 @@ import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
+import com.zhongyi.invoice.utils.DoubleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -164,11 +163,14 @@ public class ReceiptController {
     public void receiptGatherByDepId(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
-        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
+
+        String year = getYear(invoiceVO);
+        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
+
+
 
         List<InvoiceVO> list = new ArrayList<>();
         String path =  excelPath + "receiptGatherDep.xlsx";
-        Map<String, Object> mapParms = new HashMap<>();
         //专票
         List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
         //普票
@@ -183,19 +185,19 @@ public class ReceiptController {
         Double sumThisYearNoTaxAmount;
         Double sumThisYearInvoiceAmount;
 
-        sumSpecialInvoiceAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        sumSpecialInvoiceAmount = DoubleUtil.getExactDouble(specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
         //不含税金额
-        sumSpecialNoTaxAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumSpecialNoTaxAmount = DoubleUtil.getExactDouble(specialInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
-        sumCommonInvoiceAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        sumCommonInvoiceAmount = DoubleUtil.getExactDouble(commonInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
         //不含税金额
-        sumCommonNoTaxAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumCommonNoTaxAmount = DoubleUtil.getExactDouble(commonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
-        sumInvoiceAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumNoTaxAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumInvoiceAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        sumNoTaxAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
-        sumThisYearInvoiceAmount = thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumThisYearInvoiceAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        sumThisYearNoTaxAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         //按部门统计
@@ -246,7 +248,9 @@ public class ReceiptController {
     public void receiptGatherByContractUser(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
-        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
+
+        String year = getYear(invoiceVO);
+         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         String path = excelPath + "receiptGatherUser.xlsx";
         Map<String, Object> mapParms = new HashMap<>();
@@ -263,19 +267,19 @@ public class ReceiptController {
         Double sumThisYearInvoiceAmount;
         Double sumNoTaxAmount;
         Double sumInvoiceAmount;
-        sumSpecialInvoiceAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        sumSpecialInvoiceAmount = DoubleUtil.getExactDouble(specialInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
         //不含税金额
-        sumSpecialNoTaxAmount = specialInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumSpecialNoTaxAmount = DoubleUtil.getExactDouble(specialInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
-        sumCommonInvoiceAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        sumCommonInvoiceAmount = DoubleUtil.getExactDouble(commonInvoices.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
         //不含税金额
-        sumCommonNoTaxAmount = commonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumCommonNoTaxAmount = DoubleUtil.getExactDouble(commonInvoices.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
 
-        sumNoTaxAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
-        sumInvoiceAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumThisYearInvoiceAmount = thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumNoTaxAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
+        sumInvoiceAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        sumThisYearInvoiceAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        sumThisYearNoTaxAmount =DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
@@ -319,13 +323,24 @@ public class ReceiptController {
         workbook.write(response.getOutputStream());
     }
 
+    private String getYear(InvoiceVO invoiceVO) {
+        String date = null;
+        if (StringUtils.isEmpty(invoiceVO.getStartDate()) && StringUtils.isEmpty(invoiceVO.getEndDate())){
+            date = DateUtils.date2String(new Date()).split("-")[0];
+        }else {
+            date = invoiceVO.getStartDate().substring(0,4);
+        }
+        return  date;
+    }
+
 
     @GetMapping("/gather/invoiceType")
     @OperateLog("发票汇总导出")
     public void receiptGatherByInvoiceType(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
-        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
+        String year = getYear(invoiceVO);
+        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
        // String path =  "static/excel/receiptGatherType.xlsx";
         String path = excelPath + "receiptGatherType.xlsx";
@@ -341,12 +356,12 @@ public class ReceiptController {
         Double totalInvoiceAmount1;
         Double totalNoTaxAmount1;
 
-        totalInvoiceAmount1 = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        totalNoTaxAmount1 = invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        totalInvoiceAmount1 = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        totalNoTaxAmount1 = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
 
-        sumThisYearInvoiceAmount = thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumThisYearInvoiceAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        sumThisYearNoTaxAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
         Map<String, List<InvoiceVO>> invoiceTypMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));
         Map<String, List<InvoiceVO>> thisYearInvoiceTypMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));
@@ -467,7 +482,8 @@ public class ReceiptController {
     public void receiptGatherByInvoiceOffice(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
-        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(invoiceVO);
+        String year = getYear(invoiceVO);
+        List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
 
 
         List<InvoiceVO> list = new ArrayList<>();
@@ -483,12 +499,12 @@ public class ReceiptController {
         Double sumThisYearNoTaxAmount;
         Double sumThisYearInvoiceAmount;
 
-        sumCommonInvoiceAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        sumCommonInvoiceAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
         //不含税金额
-        sumCommonNoTaxAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumCommonNoTaxAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
-        sumThisYearInvoiceAmount = thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
-        sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
+        sumThisYearInvoiceAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        sumThisYearNoTaxAmount = DoubleUtil.getExactDouble(thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum());
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         //按开票人
@@ -498,7 +514,6 @@ public class ReceiptController {
             Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getInvoiceOffice));
             getReceiptGatherStatistics(list, contractUserMap, thisYearDepMap, "invoiceOffice");
 
-            //list = getReceiptGatherStatistics(contractUserMap, "invoiceOffice");
         } else {
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setInvoiceOffice(invoiceVO.getInvoiceOffice());
@@ -591,12 +606,12 @@ public class ReceiptController {
     }
 
     public Double getInvoiceAmount(List<InvoiceVO> list) {
-        return list.stream().mapToDouble(value -> value.getInvoiceAmount()).sum();
+        return  DoubleUtil.getExactDouble(list.stream().mapToDouble(value -> value.getInvoiceAmount()).sum());
     }
 
 
     public Double getNoTaxAmount(List<InvoiceVO> list) {
-        return list.stream().mapToDouble(value -> value.getNoTaxAmount()).sum();
+        return DoubleUtil.getExactDouble(list.stream().mapToDouble(value -> value.getNoTaxAmount()).sum());
     }
 
     @GetMapping("/gather/test")
@@ -668,7 +683,4 @@ public class ReceiptController {
     }
 
 
-    public void test3(){
-
-    }
 }

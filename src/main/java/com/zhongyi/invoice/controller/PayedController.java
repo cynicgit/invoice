@@ -8,6 +8,7 @@ import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
+import com.zhongyi.invoice.utils.DoubleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.function.ToDoubleFunction;
@@ -170,9 +172,9 @@ public class PayedController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = excelPath + "payedGatherInvoiceOff.xlsx";
-        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        Double sumInvoice = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
 
-        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+        Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
@@ -211,9 +213,9 @@ public class PayedController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = excelPath + "payedGatherConUser.xlsx";
-        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        Double sumInvoice = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
 
-        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+        Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
@@ -340,9 +342,9 @@ public class PayedController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
-        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+        Double sumInvoice = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
 
-        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+        Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
 
         String path = null;
         InvoiceVO invoiceVO1 = new InvoiceVO();
@@ -423,23 +425,12 @@ public class PayedController {
     }
 
     public Double getInvoiceAmount(List<InvoiceVO> list) {
-        return list.stream().mapToDouble(new ToDoubleFunction<InvoiceVO>() {
-            @Override
-            public double applyAsDouble(InvoiceVO value) {
-                return value.getInvoiceAmount();
-            }
-        }).sum();
+        return DoubleUtil.getExactDouble(list.stream().mapToDouble(value -> value.getInvoiceAmount()).sum());
     }
 
     public Double getReceivedAmount(List<InvoiceVO> list) {
-        return list.stream().mapToDouble(new ToDoubleFunction<InvoiceVO>() {
-            @Override
-            public double applyAsDouble(InvoiceVO value) {
-                if (value.getNoReceivedAmount() == null) {
-                    log.info(value.getId() + "");
-                }
-                return value.getReceivedAmount();
-            }
-        }).sum();
+        return DoubleUtil.getExactDouble(list.stream().mapToDouble(value -> value.getReceivedAmount()).sum());
     }
+
+
 }

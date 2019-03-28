@@ -31,9 +31,9 @@ public class InvoiceController {
                                   Integer type, String startDate, String endDate, String condition, HttpSession session){
         User user = (User) session.getAttribute("user");
         String name = "";
-        if (user.getType() == 2) {
-            name = user.getName();
-        }
+//        if (user.getType() == 2) {
+//            name = user.getName();
+//        }
         BasePageOutputDTO basePageOutputDTO = invoiceService.invoiceList(pageSize, pageNum,startDate,endDate,type,condition, name);
         return ZYResponse.success(basePageOutputDTO);
 

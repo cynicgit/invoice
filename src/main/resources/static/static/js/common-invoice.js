@@ -13,9 +13,21 @@ function getUser() {
 }
 
 function getDep() {
+    // ajax
+    // ({
+    //     url: '/system/dep/all',
+    //     success: function (res) {
+    //         if (res.result === 0) {
+    //             showDep(res.data);
+    //         } else if (res.result === 1) {
+    //             layer.msg(res.error);
+    //         }
+    //     }
+    // })
+
     ajax
     ({
-        url: '/system/dep/all',
+        url: '/system/dep/tree',
         success: function (res) {
             if (res.result === 0) {
                 showDep(res.data);
@@ -24,13 +36,28 @@ function getDep() {
             }
         }
     })
+
 }
 
 function showDep(list) {
-    for (var i = 0; i < list.length; i++) {
-        $('#depId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
-    }
+    // for (var i = 0; i < list.length; i++) {
+    //     $('#depId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
+    // }
     // $('#depId').searchableSelect();
+    var options = '<option value="">请选择</option>';
+    list.forEach(function (item) {
+        if (item.childrenDep.length === 0) {
+            options += '<optgroup label="'+ item.name +'">'
+                + '<option value="'+ item.id+ '">'+ item.name+ '</option></optgroup>'
+        } else {
+            options += '<optgroup label="'+ item.name +'">'
+            item.childrenDep.forEach(function (c) {
+                options +=  '<option value="'+ c.id+ '">'+ c.name+ '</option>'
+            })
+            options += '</optgroup>'
+        }
+    });
+    $('#depId').html(options);
 }
 
 
@@ -87,5 +114,11 @@ function validateNull(con, string) {
         return false;
     }
     return true;
-
 }
+
+$('#taxRate').on('change', function () {
+    var taxRate = $(this).val();
+    var invoiceAmount = $("#invoiceAmount").val();
+    var noTaxAmount = (100 - taxRate) * invoiceAmount / 100;
+    $("#noTaxAmount").val(noTaxAmount.toFixed(2));
+});

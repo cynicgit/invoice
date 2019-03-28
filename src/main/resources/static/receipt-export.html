@@ -117,6 +117,14 @@
 
 
         if (startDate !== '' && endDate !== '') {
+
+           var startYear = startDate.substring(0,3);
+           var endYear = endDate.substring(0,3);
+
+           if (startDate !== endDate){
+               layer.msg('日期不能跨越年份', {icon: 2, time: 1000});
+           }
+
             var start = new Date(startDate);
             var end = new Date(endDate);
             if (start.getMilliseconds() > end.getMilliseconds()) {

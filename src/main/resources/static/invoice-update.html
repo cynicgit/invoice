@@ -26,10 +26,10 @@
 <div class="page-container" id="student-list">
     <form action="" method="post" class="form form-horizontal" id="form-menu-add">
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<input type="text" class="input-text" value="" placeholder="" id="taskId" >-->
-            <!--</div>-->
+        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<input type="text" class="input-text" value="" placeholder="" id="taskId" >-->
+        <!--</div>-->
         <!--</div>-->
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 任务单号：</label>
@@ -41,10 +41,10 @@
         </div>
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<input type="text" class="input-text" value="" placeholder="" id="contractNumber" >-->
-            <!--</div>-->
+        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>合同号：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<input type="text" class="input-text" value="" placeholder="" id="contractNumber" >-->
+        <!--</div>-->
         <!--</div>-->
 
         <div class="row cl">
@@ -112,17 +112,17 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票单位：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice" >
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceOffice">
                 </div>
             </div>
         </div>
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2" style="margin-left:15px"><span class="c-red">*</span> 所属部门：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-6"> <span class="select-box">-->
-				<!--<select id="depId" name="depId" class="select">-->
-				<!--</select>-->
-				<!--</span></div>-->
+        <!--<label class="form-label col-xs-4 col-sm-2" style="margin-left:15px"><span class="c-red">*</span> 所属部门：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-6"> <span class="select-box">-->
+        <!--<select id="depId" name="depId" class="select">-->
+        <!--</select>-->
+        <!--</span></div>-->
         <!--</div>-->
 
         <div class="row cl">
@@ -142,7 +142,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject" >
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject">
                 </div>
             </div>
         </div>
@@ -151,7 +151,8 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 合同金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount" onblur="onblus(this)">
+                    <input type="text" class="input-text" value="" placeholder="" id="contractAmount"
+                           onblur="onblus(this)">
                 </div>
             </div>
         </div>
@@ -160,10 +161,29 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceAmount"
+                           onblur="onblus(this)">
                 </div>
             </div>
         </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 税率：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="select-box">
+                    <select id="taxRate" name="taxRate" class="select">
+                         <option value="0">0%</option>
+                         <option value="6">6%</option>
+                         <option value="9">9%</option>
+                         <option value="13">13%</option>
+                    </select>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 不含税金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -175,15 +195,15 @@
 
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2">项目负责人：</label>-->
-            <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<span class="select-box">-->
-                    <!--<select id="userId" name="userId" class="select">-->
-                    <!--</select>-->
-                    <!--</span>-->
-                <!--</div>-->
-            <!--</div>-->
+        <!--<label class="form-label col-xs-4 col-sm-2">项目负责人：</label>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<span class="select-box">-->
+        <!--<select id="userId" name="userId" class="select">-->
+        <!--</select>-->
+        <!--</span>-->
+        <!--</div>-->
+        <!--</div>-->
         <!--</div>-->
 
         <div class="row cl layui-form">
@@ -193,6 +213,7 @@
                     <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
                     <select id="userId" name="userId" class="select" lay-verify="" lay-search>
+
                     </select>
                     </span>
                     </div>
@@ -201,26 +222,25 @@
         </div>
 
 
-
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 签收人：</label>
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory" >
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceSignatory">
                 </div>
             </div>
         </div>
 
         <!--<div class="row cl">-->
-            <!--<label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>-->
+        <!--<label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>-->
 
-            <!--<div class="formControls col-xs-8 col-sm-9">-->
-                <!--<div class="formControls col-xs-8 col-sm-9">-->
-                    <!--&lt;!&ndash;<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">&ndash;&gt;-->
-                    <!--<input type="text" class="layui-input" id="invoiceSignatoryDate">-->
-                <!--</div>-->
-            <!--</div>-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--<div class="formControls col-xs-8 col-sm-9">-->
+        <!--&lt;!&ndash;<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">&ndash;&gt;-->
+        <!--<input type="text" class="layui-input" id="invoiceSignatoryDate">-->
+        <!--</div>-->
+        <!--</div>-->
         <!--</div>-->
 
         <div class="row cl">
@@ -228,7 +248,7 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber" >
+                    <input type="text" class="input-text" value="" placeholder="" id="reportNumber">
                 </div>
             </div>
         </div>
@@ -249,7 +269,8 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount" onblur="onblus(this)">
+                    <input type="text" class="input-text" value="" placeholder="" id="receivedAmount"
+                           onblur="onblus(this)">
                 </div>
             </div>
         </div>
@@ -283,7 +304,6 @@
                 </div>
             </div>
         </div>
-
 
 
         <div class="row cl">
@@ -356,13 +376,38 @@
             data: {},
             success: function (res) {
                 if (res.result === 0) {
-                    console.log(res);
+                    var depId = res.data.depId;
+                    ajax({
+                        url: "/system/dep/tree",
+                        type: "get",
+                        success: function (response) {
+                            if (response.result === 0) {
+                                var options = ''
+                                response.data.forEach(function (item) {
+
+                                    if (item.childrenDep.length === 0) {
+                                        var selected = item.id === depId ? 'selected' : ''
+                                        options += '<optgroup label="' + item.name + '">'
+                                            + '<option value="' + item.id + '"  ' + selected + '>' + item.name + '</option></optgroup>'
+                                    } else {
+                                        options += '<optgroup label="' + item.name + '">'
+                                        item.childrenDep.forEach(function (c) {
+                                            var selected = item.id === depId ? ' selected' : ''
+                                            options += '<option value="' + item.id + '"  ' + selected + '>' + c.name + '</option>'
+                                        })
+                                        options += '</optgroup>'
+                                    }
+                                });
+                                $('#depId').html(options);
+                            }
+                        }
+                    });
 
                     var reportNumber = res.data.reportNumber === null ? "" : res.data.reportNumber;
-                    var invoiceSignatoryDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.invoiceSignatoryDate);
-                    var invoiceDate = res.data.invoiceDate == null?"":dateFormat( res.data.invoiceDate);
-                    var reportDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.reportDate);
-                    var receivedDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.receivedDate);
+                    //  var invoiceSignatoryDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.invoiceSignatoryDate);
+                    var invoiceDate = res.data.invoiceDate == null ? "" : dateFormat(res.data.invoiceDate);
+                    var reportDate = res.data.reportDate == null ? "" : dateFormat(res.data.reportDate);
+                    var receivedDate = res.data.receivedDate == null ? "" : dateFormat(res.data.receivedDate);
 
 
                     $('#taskId').val(res.data.taskId);
@@ -372,7 +417,7 @@
                     $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");
                     $('#invoiceOffice').val(res.data.invoiceOffice);
 
-                    $("#depId").find("option[value=" + res.data.depId + "]").attr("selected", true);
+                    //  $("#depId").find("option[value=" + res.data.depId + "]").attr("selected", true);
 
                     $('#invoiceProject').val(res.data.invoiceProject);
                     $('#contractAmount').val(res.data.contractAmount);
@@ -380,15 +425,16 @@
 
 
                     $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
+                    $("#taxRate").find("option[value=" + res.data.taxRate + "]").attr("selected", true);
 
                     $('#invoiceSignatory').val(res.data.invoiceSignatory);
                     $('#reportNumber').val(reportNumber);
                     $('#receivedAmount').val(res.data.receivedAmount);
                     $('#reportDate').val(reportDate);
-                    $('#invoiceSignatoryDate').val(invoiceSignatoryDate);
+                    // $('#invoiceSignatoryDate').val(invoiceSignatoryDate);
                     $('#receivedDate').val(receivedDate);
-                    $('#invoiceDate').val(invoiceDate)
-                    $('#noReceivedAmount').val(res.data.receivedAmount);
+                    $('#invoiceDate').val(invoiceDate);
+                    $('#noReceivedAmount').val(res.data.noReceivedAmount);
                     $('#descprition').val(res.data.descprition);
                     $("#noTaxAmount").val(res.data.noTaxAmount);
                     $("#badAmount").val(res.data.badAmount);
@@ -414,12 +460,13 @@
         var type = $("input[name='type']:checked").val();
         var depId = $("#depId").val();
         var departmentName = $("#depId option:selected").text();
+        var parentDep = $("#depId option:selected").parent().attr("label");
+        departmentName = parentDep + '-' + departmentName;
         var invoiceProject = $("#invoiceProject").val();
         var contractAmount = $("#contractAmount").val();
         var invoiceAmount = $("#invoiceAmount").val();
         var userId = $("#userId").val();
         var contractUser = $("#userId option:selected").text();
-     //   var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
         var reportNumber = $("#reportNumber").val();
         var reportDate = $("#reportDate").val();
         var receivedAmount = $("#receivedAmount").val();
@@ -428,6 +475,7 @@
         var descprition = $("#descprition").val();
         var noTaxAmount = $("#noTaxAmount").val();
         var badAmount = $("#badAmount").val();
+        var taxRate = $("#taxRate").val();
 
         if (!validateNull(taskId, "任务号")) {
             return;
@@ -477,13 +525,13 @@
                 id: id,
                 taskId: taskId,
                 contractNumber: contractNumber,
-               // invoiceDate: invoiceDate,
+                invoiceDate: invoiceDate,
                 invoiceOffice: invoiceOffice,
                 invoiceNumber: invoiceNumber,
-                contractUser:contractUser,
+                contractUser: contractUser,
                 creditLimit: time,
-                creditType:target,
-                invoiceType:type,
+                creditType: target,
+                invoiceType: type,
                 depId: depId,
                 departmentName: departmentName,
                 invoiceProject: invoiceProject,
@@ -491,13 +539,14 @@
                 invoiceAmount: invoiceAmount,
                 userId: userId,
                 invoiceSignatory: invoiceSignatory,
-            //    invoiceSignatoryDate: invoiceSignatoryDate,
                 reportNumber: reportNumber,
                 reportDate: reportDate,
                 receivedAmount: receivedAmount,
                 receivedDate: receivedDate,
                 noReceivedAmount: noReceivedAmount,
-                badAmount:badAmount,
+                badAmount: badAmount,
+                taxRate: taxRate,
+                noTaxAmount: noTaxAmount,
                 descprition: descprition,
             },
             success: function (res) {

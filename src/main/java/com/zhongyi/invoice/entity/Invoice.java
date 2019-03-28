@@ -91,6 +91,8 @@ public class Invoice {
     @Excel(name = "坏账", orderNum = "20")
     private Double badAmount = 0.0;
 
+    private Integer taxRate;
+
     @Excel(name = "备注", orderNum = "21")
     private String descprition;
 
