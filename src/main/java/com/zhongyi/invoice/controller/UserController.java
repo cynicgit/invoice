@@ -1,14 +1,21 @@
 package com.zhongyi.invoice.controller;
 
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.annontion.OperateLog;
+import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.UserService;
+import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/system/user")
@@ -53,6 +60,23 @@ public class UserController {
     public ZYResponse getUserDeatil(@PathVariable Integer id) {
         User u = userService.getUserById(id);
         return ZYResponse.success(u);
+    }
+
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) throws IOException {
+        List<User> allUser = userService.getAllUser();
+        allUser.forEach(u -> {
+            if (u.getType() == 0) {
+                u.setTypeName("财务");
+            } else if (u.getType() == 1) {
+                u.setTypeName("商务经理");
+            } else if (u.getType() == 2) {
+                u.setTypeName("业务人员");
+            }
+        });
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        EasyPoiUtils.defaultExport(allUser, User.class,  "用户.xlsx", response, exportParams);
     }
 
 }

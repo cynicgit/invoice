@@ -280,24 +280,25 @@ public class ExcelUtil{
                 newCell.setCellValue(cellValue);
                 newCell.setCellStyle(cellStyle);
                 for (int j = 0; j < merges.length; j++) {
+
                     if (i == merges[j]) {
                         POIEntity oldPOI = listLinkedHashMap.get(merges[j]);
                         if (oldPOI == null) {
                             oldPOI = new POIEntity();
                             oldPOI.setRolIndex(i);
                             oldPOI.setRowIndex(rowIndex);
-                            oldPOI.setNewContent(cellValue);
+                            oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
                         } else {
-                            if(oldPOI.getNewContent().equals(cellValue)) {
+                            if(oldPOI.getNewContent().equals(jo.get("groupName") + "_"+ cellValue)) {
                                 oldPOI.setRolIndex(i);
                             } else if (rowIndex - 1 - oldPOI.getRowIndex() > 0 ) {
                                 // 合并
-                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex - 1, i, i));
-                                oldPOI.setNewContent(cellValue);
+                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex, i, i));
+                                oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
                                 oldPOI.setRowIndex(rowIndex);
                                 oldPOI.setRolIndex(i);
                             } else {
-                                oldPOI.setNewContent(cellValue);
+                                oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
                                 oldPOI.setRowIndex(rowIndex);
                                 oldPOI.setRolIndex(i);
                             }
