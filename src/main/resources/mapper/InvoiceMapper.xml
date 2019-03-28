@@ -426,12 +426,6 @@
         <if test="departmentName != null">
             and department_name LIKE concat('%',#{departmentName},'%')
         </if>
-        <if test="startDate != null and startDate != ''">
-            and invoice_date >= #{startDate}
-        </if>
-        <if test="endDate != null and endDate != ''">
-            and invoice_date &lt;= #{endDate}
-        </if>
     </select>
 
     <select id="selectReceiptDetail" resultType="com.zhongyi.invoice.entity.InvoiceVO">
