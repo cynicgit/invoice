@@ -101,8 +101,8 @@
                                     } else {
                                         options += '<optgroup label="'+ item.name +'">'
                                         item.childrenDep.forEach(function (c) {
-                                            var selected =  item.id === depId ? ' selected' : ''
-                                            options +=  '<option value="'+ item.id + '"  '+ selected+ '>'+ c.name+ '</option>'
+                                            var selected =  c.id === depId ? ' selected' : ''
+                                            options +=  '<option value="'+ c.id + '"  '+ selected+ '>'+ c.name+ '</option>'
                                         })
                                         options += '</optgroup>'
                                     }
