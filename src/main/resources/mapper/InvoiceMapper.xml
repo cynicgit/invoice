@@ -36,14 +36,14 @@
         invoice_office, department_name, dep_id, invoice_project, contract_amount,
         invoice_amount,no_tax_amount, contract_user, user_id, invoice_signatory, invoice_signatory_date,
         report_number, report_date, received_date,received_amount, no_received_amount,
-         invoice_type,descprition, bad_amount,tax_rate
+         invoice_type,descprition, bad_amount,tax_rate,project_id
     </sql>
     <select id="selectByPrimaryKey" resultType="com.zhongyi.invoice.entity.Invoice" parameterType="java.lang.Integer" >
         SELECT ti.id, ti.task_id, ti.contract_number, ti.invoice_date, ti.credit_type, ti.credit_limit, ti.invoice_number,
         ti.invoice_office, ti.department_name, ti.dep_id, ti.invoice_project, ti.contract_amount, ti.invoice_amount,
         ti.no_tax_amount, tu.name as contract_user, ti.user_id,  ti.invoice_signatory, ti.invoice_signatory_date,
         ti.report_number, ti.report_date, ti.received_date, ti.received_amount, ti.no_received_amount, ti.invoice_type,
-        ti.descprition,ti.bad_amount,ti.tax_rate
+        ti.descprition,ti.bad_amount,ti.tax_rate,ti.project_id
         FROM t_invoice ti left join t_user tu on ti.user_id = tu.id
         where ti.id = #{id,jdbcType=INTEGER}
     </select>
@@ -155,6 +155,9 @@
             <if test="taxRate != null" >
                 tax_rate,
             </if>
+            <if test="projectId != null" >
+                project_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="id != null" >
@@ -238,6 +241,9 @@
             <if test="taxRate != null" >
                 #{taxRate,jdbcType=INTEGER},
             </if>
+            <if test="projectId != null" >
+                #{projectId,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.zhongyi.invoice.entity.Invoice" >
@@ -320,6 +326,9 @@
             </if>
             <if test="taxRate != null" >
                 tax_rate = #{taxRate,jdbcType=INTEGER},
+            </if>
+            <if test="projectId != null" >
+                projectId = #{projectId,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

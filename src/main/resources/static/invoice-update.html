@@ -188,7 +188,7 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 不含税金额：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="noTaxAmount">
+                    <input type="text" class="input-text" value="" placeholder="" id="noTaxAmount" disabled>
                 </div>
             </div>
         </div>
@@ -341,7 +341,7 @@
     $(function () {
         getInvoice();
         getDep();
-        getUser();
+      //  getUser();
     });
 
     $(function () {
@@ -403,6 +403,8 @@
                         }
                     });
 
+                  //  $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
+                    getUser(res.data.userId);
                     var reportNumber = res.data.reportNumber === null ? "" : res.data.reportNumber;
                     //  var invoiceSignatoryDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.invoiceSignatoryDate);
                     var invoiceDate = res.data.invoiceDate == null ? "" : dateFormat(res.data.invoiceDate);
@@ -424,8 +426,11 @@
                     $('#invoiceAmount').val(res.data.invoiceAmount);
 
 
-                    $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
+
+
+
                     $("#taxRate").find("option[value=" + res.data.taxRate + "]").attr("selected", true);
+
 
                     $('#invoiceSignatory').val(res.data.invoiceSignatory);
                     $('#reportNumber').val(reportNumber);

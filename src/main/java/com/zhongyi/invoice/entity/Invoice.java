@@ -92,6 +92,7 @@ public class Invoice {
     private Double badAmount = 0.0;
 
     private Integer taxRate;
+    private Integer projectId;
 
     @Excel(name = "备注", orderNum = "21")
     private String descprition;

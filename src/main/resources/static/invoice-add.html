@@ -151,7 +151,11 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject">
+                     <span class="select-box">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceProject">-->
+                    <select id="projectId" name="invoiceProject" class="select">
+                    </select>
+                     </span>
                 </div>
             </div>
         </div>
@@ -357,7 +361,30 @@
 
 
         getDep();
-        getUser();
+        getUser(null);
+
+
+        $('#depId').on('change', function () {
+            var depId = $(this).val();
+            ajax({
+                url:"/project/dev/"+depId,
+                success: function (res) {
+                    if (res.result === 0) {
+
+                        var list = res.data;
+
+                        var options = '';
+                        for (let i = 0; i < list.length; i++) {
+                            options += '<option value="' + list[i].depId + '" >' + list[i].projectName + '</option>'
+                        }
+                        projectId.html(options);
+                    } else if (res.code === 0) {
+                        layer.msg(res.error);
+                    }
+                }
+            })
+        });
+
 
     });
 
@@ -378,7 +405,10 @@
         var departmentName = $("#depId option:selected").text();
         var parentDep = $("#depId option:selected").parent().attr("label");
         departmentName = parentDep + '-' + departmentName
-        var invoiceProject = $("#invoiceProject").val();
+       // var invoiceProject = $("#invoiceProject").val();
+        var projectId = $("#projectId").val();
+        var invoiceProject = $("#projectId option:selected").text();
+        var depId = $("#depId").val();
         var contractAmount = $("#contractAmount").val();
         var invoiceAmount = $("#invoiceAmount").val();
         var noTaxAmount = $("#noTaxAmount").val();
@@ -460,6 +490,7 @@
                 depId: depId,
                 departmentName: departmentName,
                 invoiceProject: invoiceProject,
+                projectId:projectId,
                 contractAmount: contractAmount,
                 invoiceAmount: invoiceAmount,
                 noTaxAmount: noTaxAmount,

@@ -1,10 +1,10 @@
-function getUser() {
+function getUser(selected) {
     ajax
     ({
         url: '/system/user/all',
         success: function (res) {
             if (res.result === 0) {
-                showUser(res.data);
+                showUser(res.data,selected);
             } else if (res.result === 1) {
                 layer.msg(res.error);
             }
@@ -61,10 +61,19 @@ function showDep(list) {
 }
 
 
-function showUser(list) {
+function showUser(list,selected) {
+
+    var options ;
     for (var i = 0; i < list.length; i++) {
-        $('#userId').append("<option value='" + list[i].id + "'>" + list[i].name + "</option>");
+        if (selected === list[i].id){
+            options += '<option value="' + list[i].id + '" selected >' + list[i].name + '</option>'
+            continue;
+        }
+         options += '<option value="' + list[i].id + '" >' + list[i].name + '</option>'
+
+
     }
+    $('#userId').html(options);
 }
 
 function onblus(tag) {
@@ -114,6 +123,26 @@ function validateNull(con, string) {
         return false;
     }
     return true;
+}
+
+function validateYear(startDate,endDate){
+    if (startDate !== '' && endDate !== '') {
+
+        var startYear = startDate.substring(0,3);
+        var endYear = endDate.substring(0,3);
+
+        if (startYear !== endYear){
+            layer.msg('日期不能跨越年份', {icon: 2, time: 1000});
+            return
+        }
+
+        var start = new Date(startDate);
+        var end = new Date(endDate);
+        if (start.getMilliseconds() > end.getMilliseconds()) {
+            layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+            return
+        }
+    }
 }
 
 $('#taxRate').on('change', function () {

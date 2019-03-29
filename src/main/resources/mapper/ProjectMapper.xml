@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.ProjectMapper">
+    <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, `project_name`, dep_id
+  </sql>
+
+
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Project" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="projectName != null">
+                `project_name`,
+            </if>
+            <if test="depId != null">
+                dep_id,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="projectName != null">
+                #{projectName},
+            </if>
+
+            <if test="depId != null">
+                #{depId},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateProject" parameterType="com.zhongyi.invoice.entity.Project" >
+        update t_project
+        <set>
+            <if test="projectName != null">
+                `project_name` = #{projectName,jdbcType=VARCHAR},
+            </if>
+
+            <if test="depId != null">
+               dep_id = #{depId},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <delete id="deleteProjectById">
+        DELETE FROM t_project where id = #{id}
+    </delete>
+
+    <select id="getProject" resultType="com.zhongyi.invoice.entity.Project">
+         select p.id, p.project_name, d.name depName, d.pid depPid, d.id depId FROM t_project p
+         left JOIN t_department d
+         ON p.dep_id = d.id
+         <where>
+             <if test="projectName != null and projectName  != ''">
+                 p.`project_name` LIKE concat('%',#{projectName},'%')
+             </if>
+         </where>
+    </select>
+    <select id="getProjectById" resultType="com.zhongyi.invoice.entity.Project">
+        select * FROM t_project where id = #{id}
+    </select>
+    <select id="getProjectByDepId" resultType="com.zhongyi.invoice.entity.Project">
+        select * from t_project where dep_id = #{depId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5shiv.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css"/>
+    <title>添加项目</title>
+
+
+</head>
+<body>
+
+<div class="page-container" id="student-list">
+    <form action="" method="post" class="form form-horizontal" id="form-menu-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>项目名：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="projectName">
+            </div>
+        </div>
+
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>部门：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <select id="dep-select" class="select"></select>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-2">
+                <input style="width:100px" class="btn btn-primary radius" id="submit-btn" type="submit" value="提交">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/jquery.md5.js"></script>
+<script>
+
+    $(function () {
+        ajax({
+            url: "/system/dep/tree",
+            type: "get",
+            success: function (response) {
+                if (response.result === 0) {
+                    var options = '<option value="">请选择</option>';
+                    response.data.forEach(function (item) {
+                        if (item.childrenDep.length === 0) {
+                            options += '<optgroup label="'+ item.name +'">'
+                                + '<option value="'+ item.id+ '">'+ item.name+ '</option></optgroup>'
+                        } else {
+                            options += '<optgroup label="'+ item.name +'">'
+                            item.childrenDep.forEach(function (c) {
+                                options +=  '<option value="'+ c.id+ '">'+ c.name+ '</option>'
+                            })
+                            options += '</optgroup>'
+                        }
+                    });
+                    $('#dep-select').html(options);
+                }
+            }
+        });
+
+        $('#submit-btn').click(function (e) {
+            e.preventDefault();
+            var projectName = $("#projectName").val();
+            var depId = $('#dep-select option:selected') .val();
+            if (!projectName || projectName == '') {
+                layer.msg('请输入项目名', {icon: 2, time: 1000});
+                return;
+            }
+            if (!depId || depId == '') {
+                layer.msg('请选择部门', {icon: 2, time: 1000});
+                return;
+            }
+
+
+            ajax({
+                url: "project",
+                type: "post",
+                data: {
+                    projectName: projectName,
+                    depId: depId
+                },
+                success: function (response) {
+                    if (response.result === 0) {
+                        layer.msg('添加成功');
+                        setTimeout(function () {
+                            parent.location.reload();
+                        }, 1500)
+                    }
+                }
+            });
+        });
+
+    });
+
+</script>
+</body>
+</html>

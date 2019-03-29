@@ -127,13 +127,7 @@
 
 
 
-        if (startDate !== '' && endDate !== '') {
-            var start = new Date(startDate);
-            var end = new Date(endDate);
-            if (start.getMilliseconds() > end.getMilliseconds()) {
-                layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
-            }
-        }
+       validateYear(startDate,endDate);
 
 
         if (type === '0') {
