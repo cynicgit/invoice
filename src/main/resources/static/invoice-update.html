@@ -425,7 +425,7 @@
                     $('#invoiceOffice').val(res.data.invoiceOffice);
 
 
-                    $('#invoiceProject').val(res.data.invoiceProject);
+                   // $('#invoiceProject').val(res.data.invoiceProject);
                     $('#contractAmount').val(res.data.contractAmount);
                     $('#invoiceAmount').val(res.data.invoiceAmount);
 
@@ -468,7 +468,8 @@
         var departmentName = $("#depId-select option:selected").text();
         var parentDep = $("#depId-select option:selected").parent().attr("label");
         departmentName = parentDep + '-' + departmentName;
-        var invoiceProject = $("#invoiceProject").val();
+        var projectId = $("#projectId").val();
+        var invoiceProject = $("#projectId option:selected").text();
         var contractAmount = $("#contractAmount").val();
         var invoiceAmount = $("#invoiceAmount").val();
         var userId = $("#userId").val();
@@ -541,6 +542,7 @@
                 depId: depId,
                 departmentName: departmentName,
                 invoiceProject: invoiceProject,
+                projectId:projectId,
                 contractAmount: contractAmount,
                 invoiceAmount: invoiceAmount,
                 userId: userId,

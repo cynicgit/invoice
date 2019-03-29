@@ -167,7 +167,7 @@ function getProject(depId,projectId) {
                 var list = res.data;
                 var options = '';
 
-                for (let i = 0; i < list.length; i++) {
+                for (var i = 0; i < list.length; i++) {
 
                     if(projectId === list[i].id){
                         options += '<option value="' + list[i].id + '" selected >' + list[i].projectName + '</option>'

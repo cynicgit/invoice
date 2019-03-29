@@ -77,4 +77,7 @@
         on p.id = c.pid
         where c.name = #{departmentName}
     </select>
+    <select id="getParentIdByChildId" resultType="java.lang.Integer">
+        select pid from t_department where id = #{childId}
+    </select>
 </mapper>

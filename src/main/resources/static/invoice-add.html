@@ -383,20 +383,18 @@
         var type = $("input[name='type']:checked").val();
         var target = $("input[name='target']:checked").val();
         var time = $("input[name='time']:checked").val();
-       // var depId = $("#depId-select").val();
+        var depId = $("#depId-select").val();
         var departmentName = $("#depId-select option:selected").text();
-        var parentDep = $("#depId option:selected").parent().attr("label");
+        var parentDep = $("#depId-select option:selected").parent().attr("label");
         departmentName = parentDep + '-' + departmentName
        // var invoiceProject = $("#invoiceProject").val();
         var projectId = $("#projectId").val();
         var invoiceProject = $("#projectId option:selected").text();
-        var depId = $("#depId").val();
         var contractAmount = $("#contractAmount").val();
         var invoiceAmount = $("#invoiceAmount").val();
         var noTaxAmount = $("#noTaxAmount").val();
         var userId = $("#userId").val();
         var contractUser = $("#userId option:selected").text();
-        //  var invoiceSignatoryDate = $("#invoiceSignatoryDate").val();
         var reportNumber = $("#reportNumber").val();
         var reportDate = $("#reportDate").val();
         var receivedAmount = $("#receivedAmount").val();
@@ -404,13 +402,8 @@
         var noReceivedAmount = $("#noReceivedAmount").val();
         var badAmount = $("#badAmount").val();
         var taxRate = $("#taxRate").val();
-
         var descprition = $("#descprition").val();
 
-        // if (taskId === null || taskId === ""){
-        //     layer.msg("不能为空", {icon: 2, time: 1000});
-        //     return;
-        // }
 
         if (!validateNull(taskId, "任务号")) {
             return;
@@ -443,13 +436,13 @@
             return;
         }
 
-        if (!validateNull(badAmount, "坏账") && !validateNum(badAmount, "坏账")) {
+        if (badAmount !== '' && !validateNum(badAmount, "坏账")) {
             return;
         }
-        if (!validateNum(receivedAmount, "回款金额")) {
+        if (receivedAmount !== '' && !validateNum(receivedAmount, "回款金额")) {
             return;
         }
-        if (!validateNum(noReceivedAmount, "未到账金额")) {
+        if (noReceivedAmount !== '' && !validateNum(noReceivedAmount, "未到账金额")) {
             return;
         }
 

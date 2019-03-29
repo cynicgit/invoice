@@ -234,12 +234,12 @@ public class InvoiceService {
         }
 
         invoice.setUserId(userByName.getId());
-        String name = departmentMapper.getParentName(invoice.getDepartmentName());
-        if (StringUtils.isEmpty(name)) {
-            invoice.setDepartmentName(invoice.getDepartmentName() + "-" + invoice.getDepartmentName());
-        } else {
-            invoice.setDepartmentName(name + "-" + invoice.getDepartmentName());
-        }
+//        String name = departmentMapper.getParentName(invoice.getDepartmentName());
+//        if (StringUtils.isEmpty(name)) {
+//            invoice.setDepartmentName(invoice.getDepartmentName() + "-" + invoice.getDepartmentName());
+//        } else {
+//            invoice.setDepartmentName(name + "-" + invoice.getDepartmentName());
+//        }
 
 
         invoiceMapper.insertSelective(invoice);

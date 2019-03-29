@@ -328,7 +328,7 @@
                 tax_rate = #{taxRate,jdbcType=INTEGER},
             </if>
             <if test="projectId != null" >
-                projectId = #{projectId,jdbcType=INTEGER},
+                project_id = #{projectId,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

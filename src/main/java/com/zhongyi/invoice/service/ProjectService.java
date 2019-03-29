@@ -46,7 +46,15 @@ public class ProjectService {
 
     public List<Project> getProjectByDepId(Integer depId) {
 
-        return projectMapper.getProjectByDepId(depId);
+        //通过子id找到父Id
+
+        Integer parentId = departmentMapper.getParentIdByChildId(depId);
+
+        if (parentId == 0){
+            parentId = depId;
+        }
+
+        return projectMapper.getProjectByDepId(parentId);
 
     }
 
