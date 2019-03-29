@@ -130,7 +130,7 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
-                    <select id="depId" name="depId" class="select">
+                    <select id="depId-select" name="depId-select" class="select">
                     </select>
                     </span>
                 </div>
@@ -142,7 +142,12 @@
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 项目：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <input type="text" class="input-text" value="" placeholder="" id="invoiceProject">
+                    <!--<input type="text" class="input-text" value="" placeholder="" id="depId-select">-->
+                    <span class="select-box">
+                    <select id="projectId" name="invoiceProject" class="select">
+                     <option value="">请选择</option>
+                    </select>
+                     </span>
                 </div>
             </div>
         </div>
@@ -341,7 +346,7 @@
     $(function () {
         getInvoice();
         getDep();
-      //  getUser();
+        //  getUser();
     });
 
     $(function () {
@@ -377,6 +382,7 @@
             success: function (res) {
                 if (res.result === 0) {
                     var depId = res.data.depId;
+                    var projectId = res.data.projectId;
                     ajax({
                         url: "/system/dep/tree",
                         type: "get",
@@ -398,15 +404,14 @@
                                         options += '</optgroup>'
                                     }
                                 });
-                                $('#depId').html(options);
+                                $('#depId-select').html(options);
                             }
                         }
                     });
 
-                  //  $("#userId").find("option[value=" + res.data.userId + "]").attr("selected", true);
+                    getProject(depId,projectId);
                     getUser(res.data.userId);
                     var reportNumber = res.data.reportNumber === null ? "" : res.data.reportNumber;
-                    //  var invoiceSignatoryDate = res.data.invoiceSignatoryDate == null?"":dateFormat( res.data.invoiceSignatoryDate);
                     var invoiceDate = res.data.invoiceDate == null ? "" : dateFormat(res.data.invoiceDate);
                     var reportDate = res.data.reportDate == null ? "" : dateFormat(res.data.reportDate);
                     var receivedDate = res.data.receivedDate == null ? "" : dateFormat(res.data.receivedDate);
@@ -419,14 +424,10 @@
                     $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");
                     $('#invoiceOffice').val(res.data.invoiceOffice);
 
-                    //  $("#depId").find("option[value=" + res.data.depId + "]").attr("selected", true);
 
                     $('#invoiceProject').val(res.data.invoiceProject);
                     $('#contractAmount').val(res.data.contractAmount);
                     $('#invoiceAmount').val(res.data.invoiceAmount);
-
-
-
 
 
                     $("#taxRate").find("option[value=" + res.data.taxRate + "]").attr("selected", true);
@@ -463,9 +464,9 @@
         var target = $("input[name='target']:checked").val();
         var time = $("input[name='time']:checked").val();
         var type = $("input[name='type']:checked").val();
-        var depId = $("#depId").val();
-        var departmentName = $("#depId option:selected").text();
-        var parentDep = $("#depId option:selected").parent().attr("label");
+        var depId = $("#depId-select").val();
+        var departmentName = $("#depId-select option:selected").text();
+        var parentDep = $("#depId-select option:selected").parent().attr("label");
         departmentName = parentDep + '-' + departmentName;
         var invoiceProject = $("#invoiceProject").val();
         var contractAmount = $("#contractAmount").val();

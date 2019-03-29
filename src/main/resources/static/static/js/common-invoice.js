@@ -57,7 +57,7 @@ function showDep(list) {
             options += '</optgroup>'
         }
     });
-    $('#depId').html(options);
+    $('#depId-select').html(options);
 }
 
 
@@ -151,3 +151,35 @@ $('#taxRate').on('change', function () {
     var noTaxAmount = (100 - taxRate) * invoiceAmount / 100;
     $("#noTaxAmount").val(noTaxAmount.toFixed(2));
 });
+
+$('#depId-select').on('change', function () {
+    var depId = $(this).val();
+    getProject(depId,null)
+});
+
+function getProject(depId,projectId) {
+    ajax({
+        url:"project/dep?depId="+depId,
+        type: 'get',
+        data: {},
+        success: function (res) {
+            if (res.result === 0) {
+                var list = res.data;
+                var options = '';
+
+                for (let i = 0; i < list.length; i++) {
+
+                    if(projectId === list[i].id){
+                        options += '<option value="' + list[i].id + '" selected >' + list[i].projectName + '</option>'
+                        continue;
+                    }
+                    options += '<option value="' + list[i].id + '" >' + list[i].projectName + '</option>'
+
+                }
+                $('#projectId').html(options);
+            } else if (res.code === 0) {
+                layer.msg(res.error);
+            }
+        }
+    })
+}

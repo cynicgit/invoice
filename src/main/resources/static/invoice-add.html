@@ -127,7 +127,7 @@
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
                     <span class="select-box">
-                    <select id="depId" name="depId" class="select">
+                    <select id="depId-select" name="depId-select" class="select">
                     <option value="">请选择</option>
                     </select>
                     </span>
@@ -135,16 +135,6 @@
             </div>
         </div>
 
-        <!--<div class="row cl">-->
-        <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 所属部门：</label>-->
-        <!--<div class="formControls col-xs-8 col-sm-9"> -->
-        <!--<span class="select-box">-->
-        <!--<select id="depId" name="depId" class="select">-->
-        <!--<option value="">请选择</option>-->
-        <!--</select>-->
-        <!--</span>-->
-        <!--</div>-->
-        <!--</div>-->
 
 
         <div class="row cl">
@@ -154,6 +144,7 @@
                      <span class="select-box">
                     <!--<input type="text" class="input-text" value="" placeholder="" id="invoiceProject">-->
                     <select id="projectId" name="invoiceProject" class="select">
+                     <option value="">请选择</option>
                     </select>
                      </span>
                 </div>
@@ -229,17 +220,6 @@
             </div>
         </div>
 
-        <!--<div class="row cl">-->
-        <!--<label class="form-label col-xs-4 col-sm-2"> 签收日期：</label>-->
-
-        <!--<div class="formControls col-xs-8 col-sm-9">-->
-        <!--<div class="formControls col-xs-8 col-sm-9">-->
-        <!--<input type="text" class="layui-input" id="invoiceSignatoryDate">-->
-        <!--&lt;!&ndash;<input type="text" class="input-text" value="" placeholder="" id="invoiceSignatoryDate">&ndash;&gt;-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"> 报告号：</label>
 
@@ -255,7 +235,6 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <!--<input type="text" class="input-text" value="" placeholder="" id="reportDate">-->
                     <input type="text" class="layui-input" id="reportDate">
                 </div>
             </div>
@@ -276,7 +255,6 @@
 
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
-                    <!--<input type="text" class="input-text" value="" placeholder="" id="receivedDate">-->
                     <input type="text" class="layui-input" id="receivedDate">
                 </div>
             </div>
@@ -364,10 +342,12 @@
         getUser(null);
 
 
-        $('#depId').on('change', function () {
+        $('#depId-select').on('change', function () {
             var depId = $(this).val();
             ajax({
-                url:"/project/dev/"+depId,
+                url:"project/dep?depId="+depId,
+                type: 'get',
+                data: {},
                 success: function (res) {
                     if (res.result === 0) {
 
@@ -377,7 +357,7 @@
                         for (let i = 0; i < list.length; i++) {
                             options += '<option value="' + list[i].depId + '" >' + list[i].projectName + '</option>'
                         }
-                        projectId.html(options);
+                        $('#projectId').html(options);
                     } else if (res.code === 0) {
                         layer.msg(res.error);
                     }
@@ -387,6 +367,8 @@
 
 
     });
+
+
 
 
     $('#submit-btn').click(function (e) {
@@ -401,8 +383,8 @@
         var type = $("input[name='type']:checked").val();
         var target = $("input[name='target']:checked").val();
         var time = $("input[name='time']:checked").val();
-        var depId = $("#depId").val();
-        var departmentName = $("#depId option:selected").text();
+       // var depId = $("#depId-select").val();
+        var departmentName = $("#depId-select option:selected").text();
         var parentDep = $("#depId option:selected").parent().attr("label");
         departmentName = parentDep + '-' + departmentName
        // var invoiceProject = $("#invoiceProject").val();

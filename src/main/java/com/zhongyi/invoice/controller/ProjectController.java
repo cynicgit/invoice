@@ -45,8 +45,8 @@ public class ProjectController {
         return ZYResponse.success();
     }
 
-    @GetMapping("/dep/{depId}")
-    public ZYResponse getProjectByDepId(@PathVariable Integer depId){
+    @GetMapping("/dep")
+    public ZYResponse getProjectByDepId(Integer depId){
         List<Project> projects = projectService.getProjectByDepId(depId);
         return ZYResponse.success(projects);
     }
