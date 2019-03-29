@@ -37,25 +37,27 @@ public class DateUtils {
 
     public static void main(String[] args) {
 
-        Map<String,String> map = new HashMap<>();
-       String string = "2018-01";
-        map.put(string,"1");
-        Date date1 = string2Date(string);
-        String string2 = "2018-02";
-        map.put(string2,"2");
-        Date date2 = string2Date(string2);
-        int i = date1.compareTo(date2);
-         System.out.println(i);
-        List<String> collect = map.keySet().stream().sorted(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                Date date1 = string2Date(o1);
-                Date date2 = string2Date(o2);
-                return date1.compareTo(date2);
-            }
-        }).collect(Collectors.toList());
+//        Map<String,String> map = new HashMap<>();
+//       String string = "2018-01";
+//        map.put(string,"1");
+//        Date date1 = string2Date(string);
+//        String string2 = "2018-02";
+//        map.put(string2,"2");
+//        Date date2 = string2Date(string2);
+//        int i = date1.compareTo(date2);
+//         System.out.println(i);
+//        List<String> collect = map.keySet().stream().sorted(new Comparator<String>() {
+//            @Override
+//            public int compare(String o1, String o2) {
+//                Date date1 = string2Date(o1);
+//                Date date2 = string2Date(o2);
+//                return date1.compareTo(date2);
+//            }
+//        }).collect(Collectors.toList());
+//
+//        collect.forEach(System.out::println);
 
-        collect.forEach(System.out::println);
+
 
     }
 }

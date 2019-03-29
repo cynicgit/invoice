@@ -2,6 +2,8 @@ package com.zhongyi.invoice.entity;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class InvoiceVO extends Invoice {
 

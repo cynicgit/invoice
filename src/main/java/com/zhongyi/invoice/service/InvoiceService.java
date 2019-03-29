@@ -259,8 +259,8 @@ public class InvoiceService {
         invoiceMapper.deleteByPrimaryKey(id);
     }
 
-    public List<InvoiceVO> receiptGatherYearStatistics(InvoiceVO invoiceVO) {
+    public List<InvoiceVO> receiptGatherYearStatistics(String date,InvoiceVO invoice) {
 
-       return invoiceMapper.listYearInvoices();
+       return invoiceMapper.listYearInvoices(date,invoice);
     }
 }

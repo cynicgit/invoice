@@ -89,24 +89,8 @@ public class ExcelController {
                 log.info(key);
                 InvoiceVO in = new InvoiceVO();
                 in.setDepartmentName(key);
-                Double invoiceAmount = list1.stream().mapToDouble(new ToDoubleFunction<InvoiceVO>() {
-                    @Override
-                    public double applyAsDouble(InvoiceVO value) {
-                        if (value.getInvoiceAmount() == null) {
-                            log.info(value.getId() + "");
-                        }
-                        return value.getInvoiceAmount();
-                    }
-                }).sum();
-                Double noReceive = list1.stream().mapToDouble(new ToDoubleFunction<InvoiceVO>() {
-                    @Override
-                    public double applyAsDouble(InvoiceVO value) {
-                        if (value.getNoReceivedAmount() == null) {
-                            log.info(value.getId() + "");
-                        }
-                        return value.getNoReceivedAmount();
-                    }
-                }).sum();
+                Double invoiceAmount = list1.stream().mapToDouble(value -> value.getInvoiceAmount()).sum();
+                Double noReceive = list1.stream().mapToDouble(value -> value.getNoReceivedAmount()).sum();
                 in.setTotalInvoice(invoiceAmount);
                 in.setNoReceiveTotalInvoice(noReceive);
                 list.add(in);
