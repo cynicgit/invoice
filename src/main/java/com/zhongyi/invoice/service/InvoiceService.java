@@ -81,6 +81,13 @@ public class InvoiceService {
                 }
 
 
+                if (invoice.getReceivedAmount() != null && invoice.getReceivedAmount() > 0) {
+                    if (invoice.getInvoiceAmount() - invoice.getReceivedAmount() < 0) {
+                        throw new BusinessException("回款金额大于发票金额");
+                    }
+
+                    invoice.setNoReceivedAmount(invoice.getInvoiceAmount() - invoice.getReceivedAmount());
+                }
                 invoice.setUserId(userByName.getId());
                 list.add(invoice);
             } catch (Exception e) {
@@ -158,7 +165,7 @@ public class InvoiceService {
         List<InvoiceVO> invoiceVOS = invoiceMapper.selectNoReceiveAmount(invoice);
         invoiceVOS.forEach(i -> {
             if (i.getReceivedAmount() < i.getInvoiceAmount()) {
-                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount() - i.getBadAmount());
+                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             }
         });
         return invoiceVOS;
@@ -168,7 +175,7 @@ public class InvoiceService {
         List<ReceivableStaticsInvoice> invoices = invoiceMapper.getInvoices(startDate, endDate);
         invoices.forEach(i -> {
             if (i.getReceivedAmount() < i.getInvoiceAmount()) {
-                i.setNoReceivedAmount(i.getInvoiceAmount());
+                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             }
         });
         return invoices;

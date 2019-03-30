@@ -101,7 +101,7 @@ public class ChanZhiController {
         double targetSum = targets.stream().mapToDouble(Target::getTarget).sum();
         hejiMap.put("个人目标产值", targetSum);
         if (targetSum > 0) {
-            hejiMap.put("个人累计完成率", leiji  / targetSum * 100);
+            hejiMap.put("个人累计完成率",  leiji  / targetSum * 100);
         } else {
             hejiMap.put("个人累计完成率", "");
         }
@@ -114,7 +114,7 @@ public class ChanZhiController {
             }
             List<Map<String,Object>> groupList = new ArrayList<>();
             Map<String, Object> xiaojiMap = new LinkedHashMap<>();
-            xiaojiMap.put("groupName", "");
+            xiaojiMap.put("groupName", g.getName());
             xiaojiMap.put("name", "小计");
             final double[] xiaojiGerren = {0.0};
             Optional<Target> target = groupTargets.stream().filter(t -> g.getName().equals(t.getName())).findAny();
@@ -181,9 +181,9 @@ public class ChanZhiController {
                 xiaojiMap.put("小组合计", "");
             }
 
-            if (target.isPresent()) {
+            if (target.isPresent() && target.get().getTarget()>0) {
                 xiaojiMap.put("小组目标产值", target.get().getTarget());
-                xiaojiMap.put("参考累计完成率", xiaojiLeiji[0] / target.get().getTarget() * 100);
+                xiaojiMap.put("参考累计完成率",  xiaojiLeiji[0] / target.get().getTarget() * 100);
             } else {
                 xiaojiMap.put("小组目标产值", "");
                 xiaojiMap.put("参考累计完成率", "");
@@ -202,7 +202,7 @@ public class ChanZhiController {
         hejiMap.put("小组合计", hejixiaozuleiji[0]);
         double sum = groupTargets.stream().mapToDouble(Target::getTarget).sum();
         hejiMap.put("小组目标产值", sum);
-        hejiMap.put("参考累计完成率",hejixiaozuleiji[0] / sum * 100);
+        hejiMap.put("参考累计完成率", sum > 0 ? hejixiaozuleiji[0] / sum * 100 : 0);
 
         ExcelUtil.downloadExcelFile("商务人员产值统计表", "期间：" + startDate + "--" + endDate, headerMap,ja, response, new int[]{0, headerMap.size() - 3, headerMap.size() - 2, headerMap.size() - 1});
 
@@ -256,6 +256,7 @@ public class ChanZhiController {
         });
         xiaojiMap.put("累计开票", xiaojiDep[0]);
         ja.add(xiaojiMap);
+
         ExcelUtil.downloadExcelFile("部门产值统计","期间：" + startDate + "--" + endDate, headerMap,ja, response, new int[]{});
 
     }

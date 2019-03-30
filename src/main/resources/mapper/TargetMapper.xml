@@ -95,6 +95,9 @@
             <if test="name != null and name !=''">
                 `name` like CONCAT('%',#{name},'%')
             </if>
+            <if test="year != null and year !=''">
+               and `year` = #{year}
+            </if>
         </where>
     </select>
     <select id="getTargetById" resultType="com.zhongyi.invoice.entity.Target">

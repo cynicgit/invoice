@@ -244,6 +244,7 @@ public class ExcelUtil{
         // 遍历集合数据，产生数据行
         int rowIndex = 0;
         Map<Integer, POIEntity> listLinkedHashMap = new LinkedHashMap<>();
+        int size = jsonArray.size();
         for (Object obj : jsonArray) {
             if(rowIndex == 65535 || rowIndex == 0){
                 if ( rowIndex != 0 ) sheet = workbook.createSheet();//如果数据超过了，则在第二页显示
@@ -292,6 +293,9 @@ public class ExcelUtil{
                     cellValue = getNum(o);
                     if (properties[i].contains("率")) cellValue = cellValue + "%";
                 } else cellValue = o.toString();
+                if (jsonArray.lastIndexOf(obj) == 70) {
+                    System.out.println("");
+                }
                 newCell.setCellValue(cellValue);
                 newCell.setCellStyle(cellStyle);
                 for (int j = 0; j < merges.length; j++) {
@@ -306,9 +310,9 @@ public class ExcelUtil{
                         } else {
                             if(oldPOI.getNewContent().equals(jo.get("groupName") + "_"+ cellValue)) {
                                 oldPOI.setRolIndex(i);
-                            } else if (rowIndex - 1 - oldPOI.getRowIndex() > 0 ) {
+                            } else if (rowIndex - 1 - oldPOI.getRowIndex() > 0) {
                                 // 合并
-                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex, i, i));
+                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex -1, i, i));
                                 oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
                                 oldPOI.setRowIndex(rowIndex);
                                 oldPOI.setRolIndex(i);
@@ -317,6 +321,11 @@ public class ExcelUtil{
                                 oldPOI.setRowIndex(rowIndex);
                                 oldPOI.setRolIndex(i);
                             }
+
+                            if ( jsonArray.lastIndexOf(obj) == size -1) {
+                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex , i, i));
+                            }
+
                         }
                         listLinkedHashMap.put(i, oldPOI);
                     }
