@@ -51,4 +51,5 @@ public class TargetService {
     public List<Target> getAllGroupTarget(String year) {
         return targetMapper.getAllGroupTarget(year);
     }
+
 }

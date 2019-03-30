@@ -88,6 +88,11 @@
         on tp.dep_id = td.id
         where dep_id = #{depId}
     </select>
+    <select id="getAllProject" resultType="com.zhongyi.invoice.entity.Project">
+       select p.id, p.project_name, d.name depName, d.pid depPid, d.id depId FROM t_project p
+         left JOIN t_department d
+         ON p.dep_id = d.id
+    </select>
 
 
 </mapper>

@@ -1,13 +1,22 @@
 package com.zhongyi.invoice.controller;
 
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Target;
+import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.TargetService;
+import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
+import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/system/target")
@@ -48,6 +57,17 @@ public class TargetController {
     public ZYResponse deleteTarget(@PathVariable Integer id) throws Exception {
         targetService.deleteTarget(id);
         return ZYResponse.success();
+    }
+
+    @GetMapping("/export")
+    public void export(HttpServletResponse response, String year) throws IOException {
+        List<Target> targets = targetService.getAllGroupTarget(year);
+        List<Target> targets2 = targetService.getAllUserTarget(year);
+        targets.addAll(targets2);
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setStyle(MyExcelExportStylerDefaultImpl.class);
+        EasyPoiUtils.defaultExport(targets, Target.class,  year+"年度目标.xlsx", response, exportParams);
     }
 
 }

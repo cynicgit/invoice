@@ -64,15 +64,8 @@
                 if (response.result === 0) {
                     var options = '<option value="">请选择</option>';
                     response.data.forEach(function (item) {
-                        if (item.childrenDep.length === 0) {
-                            options += '<optgroup label="'+ item.name +'">'
-                                + '<option value="'+ item.id+ '">'+ item.name+ '</option></optgroup>'
-                        } else {
-                            options += '<optgroup label="'+ item.name +'">'
-                            item.childrenDep.forEach(function (c) {
-                                options +=  '<option value="'+ c.id+ '">'+ c.name+ '</option>'
-                            })
-                            options += '</optgroup>'
+                        if (item.pid === 0) {
+                            options += '<option value="'+ item.id+ '">'+ item.name+ '</option></optgroup>'
                         }
                     });
                     $('#dep-select').html(options);

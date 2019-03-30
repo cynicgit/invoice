@@ -54,13 +54,13 @@ public class Invoice {
     @NotBlank(message = "项目不能为空！")
     private String invoiceProject;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "合同金额", orderNum = "10")
+    @Excel(name = "合同金额", orderNum = "10", numFormat = "0.00")
     private Double contractAmount;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "发票金额", orderNum = "11")
+    @Excel(name = "发票金额", orderNum = "11", numFormat = "0.00")
     private Double invoiceAmount;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "不含税金额", orderNum = "12")
+    @Excel(name = "不含税金额", orderNum = "12", numFormat = "0.00")
     private Double noTaxAmount;
     @NotBlank(message = "项目负责人不能为空！")
     @Excel(name = "项目负责人", orderNum = "13")
@@ -81,20 +81,20 @@ public class Invoice {
     @Excel(name = "回款日期", orderNum = "18",  format = "yyyy.MM.dd")
     private Date receivedDate;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "回款金额", orderNum = "19")
+    @Excel(name = "回款金额", orderNum = "19",numFormat = "0.00")
     private Double receivedAmount = 0.0;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "未到账", orderNum = "20")
+    @Excel(name = "未到账", orderNum = "20",numFormat = "0.00")
     private Double noReceivedAmount = 0.0;
 
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "坏账", orderNum = "20")
+    @Excel(name = "坏账", orderNum = "21", numFormat = "0.00")
     private Double badAmount = 0.0;
 
     private Integer taxRate;
     private Integer projectId;
 
-    @Excel(name = "备注", orderNum = "21")
+    @Excel(name = "备注", orderNum = "22")
     private String descprition;
 
     private Date gmtCreate;

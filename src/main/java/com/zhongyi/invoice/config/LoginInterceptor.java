@@ -5,6 +5,7 @@ import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,9 +16,15 @@ import java.io.PrintWriter;
 
 public class LoginInterceptor implements HandlerInterceptor {
 
+    @Value("${invoice.login:true}")
+    private boolean isLogin;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        if (!isLogin) {
+            return true;
+        }
         boolean isAjaxRequest = false;
         if(!StringUtils.isEmpty(request.getHeader("x-requested-with")) && request.getHeader("x-requested-with").equals("XMLHttpRequest")){
             isAjaxRequest = true;

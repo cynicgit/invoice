@@ -181,6 +181,20 @@ public class ExcelUtil{
         titleFont.setFontHeightInPoints((short) 20);
         titleFont.setBold(true);
         titleStyle.setFont(titleFont);
+
+        CellStyle subStyle = workbook.createCellStyle();
+        subStyle.setBorderBottom(BorderStyle.THIN);
+        subStyle.setBorderLeft(BorderStyle.THIN);
+        subStyle.setBorderRight(BorderStyle.THIN);
+        subStyle.setBorderTop(BorderStyle.THIN);
+        subStyle.setAlignment(HorizontalAlignment.CENTER);
+        Font subFont = workbook.createFont();
+        subFont.setFontHeightInPoints((short) 18);
+        subFont.setBold(true);
+        subStyle.setFont(subFont);
+
+
+
         // 列头样式
         CellStyle headerStyle = workbook.createCellStyle();
      //   headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -243,8 +257,8 @@ public class ExcelUtil{
                 sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headMap.size() - 1));
                 SXSSFRow subheadRow = sheet.createRow(1);
                 for (int i = 0; i < headMap.size(); i++) {
-                    subheadRow.createCell(i).setCellValue(subhead);
-                    subheadRow.getCell(i).setCellStyle(titleStyle);
+                    subheadRow.createCell(i).setCellValue(subhead + "     单位：万元");
+                    subheadRow.getCell(i).setCellStyle(subStyle);
                 }
                 sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, headMap.size() - 1));
 

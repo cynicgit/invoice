@@ -28,4 +28,7 @@ public interface ProjectMapper {
 
 
     List<Project> getProjectByDepId(@Param("depId") Integer depId);
+
+    List<Project> getAllProject();
+
 }

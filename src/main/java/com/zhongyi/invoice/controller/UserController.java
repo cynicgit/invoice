@@ -8,6 +8,7 @@ import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.UserService;
+import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -76,6 +77,7 @@ public class UserController {
         });
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
+        exportParams.setStyle(MyExcelExportStylerDefaultImpl.class);
         EasyPoiUtils.defaultExport(allUser, User.class,  "用户.xlsx", response, exportParams);
     }
 

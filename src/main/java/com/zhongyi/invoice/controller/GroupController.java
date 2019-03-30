@@ -1,13 +1,23 @@
 package com.zhongyi.invoice.controller;
 
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.annontion.OperateLog;
+import com.zhongyi.invoice.entity.Department;
 import com.zhongyi.invoice.entity.Group;
 import com.zhongyi.invoice.entity.ZYResponse;
+import com.zhongyi.invoice.mapper.GroupMapper;
 import com.zhongyi.invoice.service.GroupService;
+import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
+import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -60,5 +70,24 @@ public class GroupController {
         List<Group> group = groupService.getGroupAll();
         return ZYResponse.success(group);
     }
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) throws IOException {
+        List<Group> groups = groupService.getGroup("");
+        List<Group> list = new ArrayList<>();
+        groups.forEach(group -> {
+            if (!CollectionUtils.isEmpty(group.getUsers())) {
+                group.getUsers().forEach(user -> {
+                    Group g = new Group();
+                    g.setName(group.getName());
+                    g.setGroupMember(user.getName());
+                    list.add(g);
+                });
+            }
+        });
 
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setStyle(MyExcelExportStylerDefaultImpl.class);
+        EasyPoiUtils.defaultExport(list, Group.class,  "小组.xlsx", response, exportParams);
+    }
 }

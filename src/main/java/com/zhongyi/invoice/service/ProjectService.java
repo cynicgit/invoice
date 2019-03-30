@@ -58,6 +58,12 @@ public class ProjectService {
 
     }
 
+    public List<Project> getAllProject() {
+
+        return projectMapper.getAllProject();
+
+    }
+
     public PageInfo<Project> getProjectList(Integer pageNum, Integer pageSize, String projectName) {
         PageHelper.startPage(pageNum, pageSize);
         List<Project> list = projectMapper.getProject(projectName);

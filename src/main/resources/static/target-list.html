@@ -17,6 +17,12 @@
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
 	<link rel="stylesheet" type="text/css" href="static/css/main.css">
 	<title>用户管理</title>
+	<style>
+		body{padding: 20px;}
+		.demo-input{padding-left: 10px; height: 38px; min-width: 262px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+		.demo-footer{padding: 50px 0; color: #999; font-size: 14px;}
+		.demo-footer a{padding: 0 5px; color: #01AAED;}
+	</style>
 	<link rel="stylesheet" href="lib/laypage/1.2/skin/laypage.css">
 	<link rel="stylesheet" href="static/css/tax.css">
 </head>
@@ -26,9 +32,11 @@
 <div class="page-container" id="student-list">
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
 		<input id="search-name" type="text" style="width:150px" class="input-text radius" placeholder="小组/个人">
+		<input type="text" id="year"  class="demo-input" placeholder="请选择日期"  style="width: 100px" readonly>
 		<button id="search-btn" title="根据输入条件查询日志" class="btn btn-primary-outline radius" style="width:100px"><i class="Hui-iconfont">&#xe665;</i>查询</button>
 		<button id="add-btn1" class="btn btn-primary-outline radius" onclick="addGroupTarget()">添加小组目标</button>
 		<button id="add-btn2" class="btn btn-primary-outline radius" onclick="addUserTarget()">添加个人目标</button>
+		<button id="add-btn3" class="btn btn-primary-outline radius" onclick="exportTarget()" style="width: 100px">导出</button>
 		<span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
 	</div>
 	<div class="mt-20">
@@ -60,9 +68,23 @@
 <script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="lib/echarts.common.min.js"></script>
 <script type="text/javascript" src="static/js/common.js"></script>
-
+<script type="text/javascript" src="static/js/laydate/laydate.js"></script>
 
 	<script type="text/javascript">
+        laydate.render({
+            elem: '#year' //指定元素
+			,type: 'year'
+        });
+
+        function exportTarget() {
+            var year = $('#year').val();
+            if (!year ) {
+                layer.msg('请选择时间', {icon: 2, time: 1000});
+                return;
+            }
+            window.location.href = "/system/target/export?year="+year;
+        }
+
         var isPageInit = false
         var searchPara = {
             pageNum: 1,

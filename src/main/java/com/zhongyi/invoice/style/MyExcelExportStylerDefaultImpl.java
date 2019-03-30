@@ -20,9 +20,12 @@ public class MyExcelExportStylerDefaultImpl extends AbstractExcelExportStyler
     @Override
     public CellStyle getTitleStyle(short color) {
         CellStyle titleStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setBold(true);
+        titleStyle.setFont(font);
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
         titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        titleStyle.setWrapText(true);
         titleStyle.setBorderBottom(BorderStyle.THIN);
         titleStyle.setBorderLeft(BorderStyle.THIN);
         titleStyle.setBorderRight(BorderStyle.THIN);
@@ -40,9 +43,6 @@ public class MyExcelExportStylerDefaultImpl extends AbstractExcelExportStyler
         style.setBorderLeft(BorderStyle.THIN);
         style.setBorderRight(BorderStyle.THIN);
         style.setBorderTop(BorderStyle.THIN);
-        if (isWarp) {
-            style.setWrapText(true);
-        }
         return style;
     }
 
@@ -51,6 +51,7 @@ public class MyExcelExportStylerDefaultImpl extends AbstractExcelExportStyler
         CellStyle titleStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setFontHeightInPoints((short) 12);
+        font.setBold(true);
         titleStyle.setFont(font);
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
         titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -71,9 +72,6 @@ public class MyExcelExportStylerDefaultImpl extends AbstractExcelExportStyler
         style.setBorderTop(BorderStyle.THIN);
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
-        if (isWarp) {
-            style.setWrapText(true);
-        }
         return style;
     }
 

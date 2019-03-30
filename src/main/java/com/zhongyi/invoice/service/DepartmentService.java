@@ -24,7 +24,7 @@ public class DepartmentService {
     public void addDep(Department department) throws Exception {
         Department d = departmentMapper.getDepByName(department.getName());
         if (d != null) {
-            throw new Exception("名字已存在");
+            throw new RuntimeException("名字已存在");
         }
         departmentMapper.insertSelective(department);
     }

@@ -1,13 +1,22 @@
 package com.zhongyi.invoice.controller;
 
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.Department;
+import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.entity.ZYResponse;
 import com.zhongyi.invoice.service.DepartmentService;
+import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
+import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -66,6 +75,28 @@ public class DepartmentController {
     public ZYResponse allDep() {
         List<Department> allDep = departmentService.allDep();
         return ZYResponse.success(allDep);
+    }
+
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) throws IOException {
+        List<Department> list = departmentService.getTreeDep();
+        List<Department> allDep = new ArrayList<>();
+        list.forEach(department -> {
+            if (CollectionUtils.isEmpty(department.getChildrenDep())) {
+                department.setParentName(department.getName());
+                allDep.add(department);
+            } else {
+                department.getChildrenDep().forEach(c -> {
+                    c.setParentName(department.getName());
+                    allDep.add(c);
+                });
+            }
+        });
+
+        ExportParams exportParams = new ExportParams();
+        exportParams.setType(ExcelType.XSSF);
+        exportParams.setStyle(MyExcelExportStylerDefaultImpl.class);
+        EasyPoiUtils.defaultExport(allDep, Department.class,  "部门.xlsx", response, exportParams);
     }
 
 }
