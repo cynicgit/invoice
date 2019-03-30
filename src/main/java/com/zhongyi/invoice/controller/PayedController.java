@@ -291,8 +291,8 @@ public class PayedController {
             map.put("time", key);
             map.put("invoiceCount", "开票量");
             map.put("payed", "已回款");
-            map.put("totalInvoiceAmount", "t.total" + Md5Encrypt.string2MD5(key));
-            map.put("receiveTotalInvoice", "t.receive" + Md5Encrypt.string2MD5(key));
+            map.put("totalInvoiceAmount", "t.total" + key);
+            map.put("receiveTotalInvoice", "t.receive" +key);
             colList.add(map);
 
         });
@@ -305,8 +305,8 @@ public class PayedController {
             linkedMap.forEach((key, l) -> {
                 double totalInvoiceAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getInvoiceAmount).sum();
                 double totalReceivedAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getReceivedAmount).sum();
-                depMap.put("total" + Md5Encrypt.string2MD5(key), DoubleUtil.getNum(totalInvoiceAmount));
-                depMap.put("receive" + Md5Encrypt.string2MD5(key), DoubleUtil.getNum(totalReceivedAmount));
+                depMap.put("total" + key, DoubleUtil.getNum(totalInvoiceAmount));
+                depMap.put("receive" + key, DoubleUtil.getNum(totalReceivedAmount));
             });
             valList.add(depMap);
         });
