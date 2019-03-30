@@ -126,9 +126,6 @@ function validateNull(con, string) {
 }
 
 function validateYear(startDate,endDate){
-
-
-
     if (!startDate || startDate == '') {
         layer.msg('请选择开始时间', {icon: 2, time: 1000});
         return false;
@@ -157,6 +154,31 @@ function validateYear(startDate,endDate){
     }
     return true;
 }
+
+
+function validateYear2(startDate,endDate){
+    if (!startDate || startDate == '') {
+        layer.msg('请选择开始时间', {icon: 2, time: 1000});
+        return false;
+    }
+    if (!endDate || endDate == '') {
+        layer.msg('请选择结束时间', {icon: 2, time: 1000});
+        return false;
+    }
+
+    if (startDate !== '' && endDate !== '') {
+        var start = new Date(startDate);
+        var end = new Date(endDate);
+        if (start.getMilliseconds() > end.getMilliseconds()) {
+            layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
+            return false
+        }
+    }
+    return true;
+}
+
+
+
 
 $('#taxRate').on('change', function () {
     var taxRate = $(this).val();

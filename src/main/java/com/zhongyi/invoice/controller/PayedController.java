@@ -9,6 +9,7 @@ import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
 import com.zhongyi.invoice.utils.DoubleUtil;
+import com.zhongyi.invoice.utils.Md5Encrypt;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -290,8 +291,8 @@ public class PayedController {
             map.put("time", key);
             map.put("invoiceCount", "开票量");
             map.put("payed", "已回款");
-            map.put("totalInvoiceAmount", "t.total" + key);
-            map.put("receiveTotalInvoice", "t.receive" + key);
+            map.put("totalInvoiceAmount", "t.total" + Md5Encrypt.string2MD5(key));
+            map.put("receiveTotalInvoice", "t.receive" + Md5Encrypt.string2MD5(key));
             colList.add(map);
 
         });
@@ -304,8 +305,8 @@ public class PayedController {
             linkedMap.forEach((key, l) -> {
                 double totalInvoiceAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getInvoiceAmount).sum();
                 double totalReceivedAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getReceivedAmount).sum();
-                depMap.put("total" + key, totalInvoiceAmount);
-                depMap.put("receive" + key, totalReceivedAmount);
+                depMap.put("total" + Md5Encrypt.string2MD5(key), DoubleUtil.getNum(totalInvoiceAmount));
+                depMap.put("receive" + Md5Encrypt.string2MD5(key), DoubleUtil.getNum(totalReceivedAmount));
             });
             valList.add(depMap);
         });
@@ -317,8 +318,8 @@ public class PayedController {
         linkedMap.forEach((key, list3) -> {
             double sum = list3.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
             double sum1 = list3.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-            depMap2.put("total" + key, sum);
-            depMap2.put("receive" + key, sum1);
+            depMap2.put("total" + key, DoubleUtil.getNum(sum));
+            depMap2.put("receive" + key, DoubleUtil.getNum(sum1));
 
         });
         valList.add(depMap2);

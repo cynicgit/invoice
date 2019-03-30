@@ -1,6 +1,7 @@
 package com.zhongyi.invoice.utils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 /**
  * @author: huguanghui
@@ -15,4 +16,9 @@ public class DoubleUtil {
 //        BigDecimal b = new BigDecimal(num);
 //        return b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 //    }
+
+    public static String getNum(Object num) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format(num);
+    }
 }

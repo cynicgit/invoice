@@ -118,6 +118,7 @@
                 <th class="title-width" width="100">回款日期</th>
                 <th class="title-width" width="150">回款金额</th>
                 <th class="title-width" width="100">未到账</th>
+                <th class="title-width" width="100">坏账</th>
                 <th class="title-width" width="100" id="operate">操作</th>
             </tr>
             </thead>
@@ -222,6 +223,7 @@
                 '<td class="ellipsis-td">' + receivedDate + '</td>' +
                 '<td class="ellipsis-td">' + item.receivedAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
+                '<td class="ellipsis-td">' + item.badAmount + '</td>' +
                 ss +
                 '</tr>';
         }

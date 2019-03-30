@@ -365,7 +365,7 @@ public class ReceiptController {
         sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
         Map<String, List<InvoiceVO>> invoiceTypMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));
-        Map<String, List<InvoiceVO>> thisYearInvoiceTypMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));
+        Map<String, List<InvoiceVO>> thisYearInvoiceTypMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getInvoiceType));
 
 
         invoiceTypMap.forEach((key, list1) -> {
@@ -489,11 +489,6 @@ public class ReceiptController {
 
         List<InvoiceVO> list = new ArrayList<>();
         String path = excelPath + "receiptGatherOffice.xlsx";
-
-        //专票
-        //  List<InvoiceVO> specialInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "专".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
-        //普票
-        //  List<InvoiceVO> commonInvoices = invoiceVOS.stream().filter(invoiceVO1 -> "普".equals(invoiceVO1.getInvoiceType())).collect(Collectors.toList());
         Map<String, Object> map = new HashMap<>();
         Double sumCommonInvoiceAmount;
         Double sumCommonNoTaxAmount;
@@ -513,7 +508,7 @@ public class ReceiptController {
             Map<String, List<InvoiceVO>> contractUserMap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
 
             Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getInvoiceOffice));
-            getReceiptGatherStatistics(list, contractUserMap, thisYearDepMap, "invoiceOffice");
+            getReceiptGatherStatistics2(list, contractUserMap, thisYearDepMap);
 
         } else {
             InvoiceVO invoiceVO2 = new InvoiceVO();
@@ -555,6 +550,31 @@ public class ReceiptController {
         });
     }
 
+    public  List<InvoiceVO> getReceiptGatherStatistics2(List<InvoiceVO> list, Map<String, List<InvoiceVO>> map, Map<String, List<InvoiceVO>> thisYearMap) {
+        map.forEach((key, list1) -> {
+            log.info(key);
+
+            InvoiceVO in = new InvoiceVO();
+            in.setInvoiceOffice(key);
+            Double commonInvoiceAmount = getInvoiceAmount(list1);
+            in.setCommonInvoiceAmount(commonInvoiceAmount);
+            Double commonNoTaxAmount = getNoTaxAmount(list1);
+            in.setCommonNoTaxAmount(commonNoTaxAmount);
+
+            thisYearMap.forEach((key2, list2) -> {
+                if (key.equals(key2)) {
+                    Double thisYearInvoiceAmount = getInvoiceAmount(list2);
+                    Double thisYearNoTaxAmount = getNoTaxAmount(list2);
+                    in.setTotalThisYearNoTaxAmount(thisYearNoTaxAmount);
+                    in.setTotalThisYearInvoiceAmount(thisYearInvoiceAmount);
+                }
+            });
+
+            list.add(in);
+        });
+        return list;
+
+}
 
     public List<InvoiceVO> getReceiptGatherStatistics(List<InvoiceVO> list, Map<String, List<InvoiceVO>> map, Map<String, List<InvoiceVO>> thisYearMap, String condition) {
         //   List<InvoiceVO> list = new ArrayList<>();
