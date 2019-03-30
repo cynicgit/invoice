@@ -168,7 +168,7 @@ public class InvoiceService {
         List<ReceivableStaticsInvoice> invoices = invoiceMapper.getInvoices(startDate, endDate);
         invoices.forEach(i -> {
             if (i.getReceivedAmount() < i.getInvoiceAmount()) {
-                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount() - i.getBadAmount());
+                i.setNoReceivedAmount(i.getInvoiceAmount());
             }
         });
         return invoices;
