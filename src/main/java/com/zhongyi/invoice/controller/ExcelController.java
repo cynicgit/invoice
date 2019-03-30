@@ -42,7 +42,7 @@ public class ExcelController {
 
 
     @PostMapping
-    @OperateLog("导出数据")
+    @OperateLog("导入数据")
     public ZYResponse importExcel(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             return ZYResponse.success("文件为空");

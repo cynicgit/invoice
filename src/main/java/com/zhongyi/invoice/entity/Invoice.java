@@ -25,7 +25,7 @@ public class Invoice {
     @Excel(name = "合同号", orderNum = "1")
     private String contractNumber;
 
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     @Excel(name = "开票日期", orderNum = "2", format = "yyyy.MM.dd", databaseFormat= "yyyy.MM.dd",exportFormat="yyyy.MM.dd" )
     private Date invoiceDate;
     @NotBlank(message = "信用类别不能为空！")
@@ -69,32 +69,32 @@ public class Invoice {
     private Integer userId;
     @Excel(name = "签收人", orderNum = "14")
     private String invoiceSignatory;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "签收日期", orderNum = "15" , format = "yyyy.MM.dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+   // @Excel(name = "签收日期", orderNum = "14" , format = "yyyy.MM.dd")
     private Date invoiceSignatoryDate;
-    @Excel(name = "报告号", orderNum = "16")
+    @Excel(name = "报告号", orderNum = "15")
     private String reportNumber;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "报告日期", orderNum = "17", format = "yyyy.MM.dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Excel(name = "报告日期", orderNum = "16", format = "yyyy.MM.dd")
     private Date reportDate;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "回款日期", orderNum = "18",  format = "yyyy.MM.dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @Excel(name = "回款日期", orderNum = "17",  format = "yyyy.MM.dd")
     private Date receivedDate;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "回款金额", orderNum = "19",numFormat = "0.00")
+    @Excel(name = "回款金额", orderNum = "18",numFormat = "0.00")
     private Double receivedAmount = 0.0;
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "未到账", orderNum = "20",numFormat = "0.00")
+    @Excel(name = "未到账", orderNum = "19",numFormat = "0.00")
     private Double noReceivedAmount = 0.0;
 
     @Pattern(regexp = "^\\d+(\\.\\d+)?$",message = "请输入正确数字")
-    @Excel(name = "坏账", orderNum = "21", numFormat = "0.00")
+    @Excel(name = "坏账", orderNum = "20", numFormat = "0.00")
     private Double badAmount = 0.0;
 
     private Integer taxRate;
     private Integer projectId;
 
-    @Excel(name = "备注", orderNum = "22")
+    @Excel(name = "备注", orderNum = "21")
     private String descprition;
 
     private Date gmtCreate;

@@ -16,6 +16,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -288,7 +289,7 @@ public class ExcelUtil{
                 if(o==null) cellValue = "";
                 else if(o instanceof Date) cellValue = new SimpleDateFormat(datePattern).format(o);
                 else if(o instanceof Float || o instanceof Double) {
-                    cellValue = new BigDecimal(o.toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    cellValue = getNum(o);
                     if (properties[i].contains("率")) cellValue = cellValue + "%";
                 } else cellValue = o.toString();
                 newCell.setCellValue(cellValue);
@@ -334,6 +335,11 @@ public class ExcelUtil{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String getNum(Object num) {
+        DecimalFormat df = new DecimalFormat("0.00");//设置两位小数
+        return df.format(num);
     }
     //Web 导出excel
     public static void downloadExcelFile(String title,String subhead, Map<String,String> headMap,JSONArray ja,HttpServletResponse response, int[] merges){

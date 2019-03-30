@@ -49,6 +49,7 @@ public class NoReceivableStaticsInvoiceController {
     @OperateLog("未回款明细导出")
     public void exportExcel(InvoiceVO invoiceVO, int type, HttpServletResponse response) throws IOException {
         List<InvoiceVO> invoiceVOS = invoiceService.noReceiveAmount(invoiceVO);
+        invoiceVOS = invoiceVOS.stream().filter(invoiceVO1 -> invoiceVO1.getNoReceivedAmount() > 0).collect(Collectors.toList());
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
         String name = "未回款明细-";
@@ -81,6 +82,7 @@ public class NoReceivableStaticsInvoiceController {
     @OperateLog("未回款汇总导出")
     public void exportExcelNoAmountStatistics(InvoiceVO invoiceVO, @RequestParam(required = true) int type, HttpServletResponse response) throws IOException {
         List<ReceivableStaticsInvoice> invoiceVOS = invoiceService.getInvoices(invoiceVO.getStartDate(), invoiceVO.getEndDate());
+        invoiceVOS = invoiceVOS.stream().filter(invoiceVO1 -> invoiceVO1.getNoReceivedAmount() > 0).collect(Collectors.toList());
         Map<String, Object> map = null;
         if (type == 1) {
             ExportNoReceiver exportNoReceiver1 = new ExportNoReceiver();
@@ -152,25 +154,28 @@ public class NoReceivableStaticsInvoiceController {
 
             Double invoiceAmount = list1.stream().mapToDouble(ReceivableStaticsInvoice::getInvoiceAmount).sum();
             Double noReceive = list1.stream().mapToDouble(ReceivableStaticsInvoice::getNoReceivedAmount).sum();
+            Double badAmount = list1.stream().filter(i -> i.getNoReceivedAmount() > 0).mapToDouble(ReceivableStaticsInvoice::getBadAmount).sum();
             exportNoReceiver.setTotalInvoice(invoiceAmount);
             exportNoReceiver.setNoReceiveTotalInvoice(noReceive);
+            exportNoReceiver.setBadInvoice(badAmount);
             list.add(exportNoReceiver);
+
         });
         final Double[] sumInvoice = {0.0};
         final Double[] sumNoReceiveInvoice = {0.0};
+        final Double[] badAmount = {0.0};
         collect.values().forEach(lists -> {
             sumInvoice[0] = sumInvoice[0] + lists.stream().mapToDouble(ReceivableStaticsInvoice::getInvoiceAmount).sum();
             sumNoReceiveInvoice[0] = sumNoReceiveInvoice[0] + lists.stream().mapToDouble(ReceivableStaticsInvoice::getNoReceivedAmount).sum();
+            badAmount[0] = badAmount[0] + lists.stream().mapToDouble(ReceivableStaticsInvoice::getBadAmount).sum();
         });
-
         ExportNoReceiver exportNoReceiver = new ExportNoReceiver();
         exportNoReceiver.setKey("合计");
         exportNoReceiver.setTotalInvoice(sumInvoice[0]);
         exportNoReceiver.setNoReceiveTotalInvoice(sumNoReceiveInvoice[0]);
+        exportNoReceiver.setBadInvoice(badAmount[0]);
         list.add(exportNoReceiver);
         map.put("list", list);
-        map.put("sumInvoice", sumInvoice[0]);
-        map.put("sumNoReceiveInvoice", sumNoReceiveInvoice);
         return map;
     }
 

@@ -2,8 +2,11 @@ package com.zhongyi.invoice.mapper;
 
 import com.zhongyi.invoice.entity.Project;
 import com.zhongyi.invoice.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -11,6 +14,8 @@ import java.util.List;
  * Created by huguanghui on 2019/3/29.
  * @Description:
  */
+@Mapper
+@Component
 public interface ProjectMapper {
 
    // Project getUserByName(@Param("name") String name);
@@ -31,4 +36,5 @@ public interface ProjectMapper {
 
     List<Project> getAllProject();
 
+    List<Project> getProjectByName(@Param( "projectName") String projectName);
 }

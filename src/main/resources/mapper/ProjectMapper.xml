@@ -82,6 +82,10 @@
     <select id="getProjectById" resultType="com.zhongyi.invoice.entity.Project">
         select * FROM t_project where id = #{id}
     </select>
+
+    <select id="getProjectByName" resultType="com.zhongyi.invoice.entity.Project">
+        select * FROM t_project where project_name = #{projectName}
+    </select>
     <select id="getProjectByDepId" resultType="com.zhongyi.invoice.entity.Project">
         select * from t_project tp
         left join t_department td

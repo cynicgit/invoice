@@ -6,6 +6,7 @@ import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.expection.BusinessException;
 import com.zhongyi.invoice.mapper.DepartmentMapper;
 import com.zhongyi.invoice.mapper.InvoiceMapper;
+import com.zhongyi.invoice.mapper.ProjectMapper;
 import com.zhongyi.invoice.mapper.UserMapper;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +17,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +30,9 @@ public class InvoiceService {
 
     @Autowired
     private DepartmentMapper departmentMapper;
+
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -57,6 +58,9 @@ public class InvoiceService {
                 String departmentName = invoice.getDepartmentName();
                 log.info(invoice.getTaskId());
                 String[] split = departmentName.split("-");
+                if (split.length !=2) {
+                    throw new BusinessException("部门格式不对");
+                }
                 Department depByName = departmentMapper.getDepByName(split[1]);
                 if (depByName == null) {
                     throw new BusinessException("部门不存在");
@@ -66,6 +70,17 @@ public class InvoiceService {
                 if (userByName == null) {
                     throw new BusinessException("未找到对应员工");
                 }
+                List<Project> projects = projectMapper.getProjectByName(invoice.getInvoiceProject());
+                if (CollectionUtils.isEmpty(projects)) {
+                    throw new BusinessException("未找到对应项目");
+                }
+                Integer depId = depByName.getPid() == 0 ? depByName.getId() : depByName.getPid();
+                boolean anyMatch = projects.stream().anyMatch(project -> Objects.equals(depId, project.getDepId()));
+                if (!anyMatch) {
+                    throw new BusinessException("项目不属于该部门");
+                }
+
+
                 invoice.setUserId(userByName.getId());
                 list.add(invoice);
             } catch (Exception e) {
@@ -105,9 +120,16 @@ public class InvoiceService {
             throw new Exception("开票日期不能为空格式不正确");
         }if (StringUtils.isEmpty(invoice.getCreditType())) {
             throw new Exception("信用类别不能为空");
-        }if (StringUtils.isEmpty(invoice.getCreditLimit())) {
+        }
+        if (StringUtils.isEmpty(invoice.getCreditLimit())) {
             throw new Exception("信用期限不能为空");
-        }if (StringUtils.isEmpty(invoice.getInvoiceType())) {
+        } else {
+            if (!"3个月".equals(invoice.getCreditLimit()) && !"6个月".equals(invoice.getCreditLimit())) {
+                throw new Exception("信用期限错误");
+            }
+        }
+
+        if (StringUtils.isEmpty(invoice.getInvoiceType())) {
             throw new Exception("发票类型不能为空");
         }if (StringUtils.isEmpty(invoice.getInvoiceNumber())) {
             throw new Exception("发票号不能为空");
@@ -136,7 +158,7 @@ public class InvoiceService {
         List<InvoiceVO> invoiceVOS = invoiceMapper.selectNoReceiveAmount(invoice);
         invoiceVOS.forEach(i -> {
             if (i.getReceivedAmount() < i.getInvoiceAmount()) {
-                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
+                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount() - i.getBadAmount());
             }
         });
         return invoiceVOS;
@@ -146,7 +168,7 @@ public class InvoiceService {
         List<ReceivableStaticsInvoice> invoices = invoiceMapper.getInvoices(startDate, endDate);
         invoices.forEach(i -> {
             if (i.getReceivedAmount() < i.getInvoiceAmount()) {
-                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
+                i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount() - i.getBadAmount());
             }
         });
         return invoices;

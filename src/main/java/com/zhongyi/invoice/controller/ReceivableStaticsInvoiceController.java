@@ -56,7 +56,7 @@ public class ReceivableStaticsInvoiceController {
         });
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("list", list);
-        map.put("sum", new BigDecimal( sum[0] / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+        map.put("sum",  sum[0] / 10000);
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(excelPath + "receivableStaticsInvoice.xlsx");
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
@@ -80,6 +80,7 @@ public class ReceivableStaticsInvoiceController {
         double summary4 = 0.00f;
         double summary5 = 0.00f;
         double summary6 = 0.00f;
+        double badAmount = 0.00f;
         for (ReceivableStaticsInvoice i : list) {
             i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             sum = sum + i.getNoReceivedAmount();
@@ -100,15 +101,17 @@ public class ReceivableStaticsInvoiceController {
                 summary6 = summary6 + (i.getInvoiceAmount() - i.getReceivedAmount());
             }
         }
+        badAmount = list.stream().mapToDouble(ReceivableStaticsInvoice::getBadAmount).sum();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("sum", new BigDecimal( sum / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary0", new BigDecimal( summary0 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary1", new BigDecimal( summary1 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary2", new BigDecimal( summary2 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary3", new BigDecimal( summary3 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary4", new BigDecimal( summary4 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary5", new BigDecimal( summary5 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-        map.put("summary6", new BigDecimal( summary6 / 10000).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+        map.put("sum",  sum / 10000);
+        map.put("summary0",  summary0 / 10000);
+        map.put("summary1", summary1 / 10000);
+        map.put("summary2",  summary2 / 10000);
+        map.put("summary3",  summary3 / 10000);
+        map.put("summary4",  summary4 / 10000);
+        map.put("summary5",  summary5 / 10000);
+        map.put("summary6",  summary6 / 10000);
+        map.put("badAmount",  badAmount / 10000);
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(excelPath + "receivableStaticsInvoiceSummary.xlsx");
         Workbook workbook = ExcelExportUtil.exportExcel(params, map);
