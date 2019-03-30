@@ -89,7 +89,7 @@
         var searchPara = {
             pageNum: 1,
             pageSize: 10,
-            name: "",
+            year: "",
             type: -1
         }
 
@@ -249,8 +249,7 @@
         $('#search-btn').click(function(){
             searchPara.pageNum = 1
             isPageInit = false
-            searchPara.name = $('#search-name').val().trim()
-            searchPara.phone = $('#search-phone').val()
+            searchPara.year = $('#year').val()
             getData(searchPara)
 
         })

@@ -101,7 +101,7 @@ public class ChanZhiController {
         double targetSum = targets.stream().mapToDouble(Target::getTarget).sum();
         hejiMap.put("个人目标产值", targetSum);
         if (targetSum > 0) {
-            hejiMap.put("个人累计完成率", leiji  / targetSum * 100);
+            hejiMap.put("个人累计完成率", targetSum > 0 ? leiji  / targetSum * 100 : 0);
         } else {
             hejiMap.put("个人累计完成率", "");
         }
@@ -202,7 +202,7 @@ public class ChanZhiController {
         hejiMap.put("小组合计", hejixiaozuleiji[0]);
         double sum = groupTargets.stream().mapToDouble(Target::getTarget).sum();
         hejiMap.put("小组目标产值", sum);
-        hejiMap.put("参考累计完成率",hejixiaozuleiji[0] / sum * 100);
+        hejiMap.put("参考累计完成率", sum > 0 ? hejixiaozuleiji[0] / sum * 100 : 0);
 
         ExcelUtil.downloadExcelFile("商务人员产值统计表", "期间：" + startDate + "--" + endDate, headerMap,ja, response, new int[]{0, headerMap.size() - 3, headerMap.size() - 2, headerMap.size() - 1});
 
