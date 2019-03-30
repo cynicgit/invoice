@@ -48,10 +48,10 @@
     <update id="updateUser" parameterType="com.zhongyi.invoice.entity.User" >
         update t_user
         <set>
-            <if test="name != null">
+            <if test="name != null and name != ''">
                 `name` = #{name,jdbcType=VARCHAR},
             </if>
-            <if test="password != null">
+            <if test="password != null and password != ''">
                 `password` = #{password,jdbcType=VARCHAR},
             </if>
             <if test="type != null">
