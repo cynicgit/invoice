@@ -99,7 +99,7 @@ function onblus(tag) {
         receivedAmount = 0
     }
 
-    $("#noReceivedAmount").val(invoiceAmount - receivedAmount - badAmount);
+    $("#noReceivedAmount").val(invoiceAmount - receivedAmount);
 
     if (id === 'invoiceAmount'){
         var taxRate = $("#taxRate").val();
