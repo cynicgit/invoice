@@ -88,6 +88,7 @@
 <script type="text/javascript" src="static/js/common.js"></script>
 <script type="text/javascript" src="static/js/jquery.md5.js"></script>
 <script type="text/javascript" src="static/layui/layui.js"></script>
+<script type="text/javascript" src="static/js/common-invoice.js"></script>
 <script>
 
     $(function () {
@@ -116,12 +117,15 @@
         var type = $("#type").val();
 
 
-        validateYear(startDate,endDate);
+        if (!validateYear(startDate,endDate)) {
+            return;
+        };
 
 
 
 
         if (type === '0') {
+            layer.msg( "请选择类型", {icon: 2, time: 1000});
             return;
         } else if (type === '1') {
             url = "receipt/detail/dep";

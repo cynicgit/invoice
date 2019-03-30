@@ -118,10 +118,13 @@
 
 
 
-        validateYear(startDate,endDate);
+        if (!validateYear(startDate,endDate)) {
+            return;
+        };
 
 
         if (type === '0') {
+            layer.msg( "请选择类型", {icon: 2, time: 1000});
             return;
         } else if (type === '1') {
            // condition = $("#dep").val();

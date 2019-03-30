@@ -342,28 +342,28 @@
         getUser(null);
 
 
-        $('#depId-select').on('change', function () {
-            var depId = $(this).val();
-            ajax({
-                url:"project/dep?depId="+depId,
-                type: 'get',
-                data: {},
-                success: function (res) {
-                    if (res.result === 0) {
-
-                        var list = res.data;
-
-                        var options = '';
-                        for (let i = 0; i < list.length; i++) {
-                            options += '<option value="' + list[i].depId + '" >' + list[i].projectName + '</option>'
-                        }
-                        $('#projectId').html(options);
-                    } else if (res.code === 0) {
-                        layer.msg(res.error);
-                    }
-                }
-            })
-        });
+        // $('#depId-select').on('change', function () {
+        //     var depId = $(this).val();
+        //     ajax({
+        //         url:"project/dep?depId="+depId,
+        //         type: 'get',
+        //         data: {},
+        //         success: function (res) {
+        //             if (res.result === 0) {
+        //
+        //                 var list = res.data;
+        //
+        //                 var options = '';
+        //                 for (let i = 0; i < list.length; i++) {
+        //                     options += '<option value="' + list[i].depId + '" >' + list[i].projectName + '</option>'
+        //                 }
+        //                 $('#projectId').html(options);
+        //             } else if (res.code === 0) {
+        //                 layer.msg(res.error);
+        //             }
+        //         }
+        //     })
+        // });
 
 
     });

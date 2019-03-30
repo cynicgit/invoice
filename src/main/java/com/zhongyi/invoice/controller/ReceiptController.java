@@ -47,13 +47,13 @@ public class ReceiptController {
 
     @GetMapping("/detail/dep")
     @OperateLog("发票统计明细导出")
-    public void receiptDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
-
+    public void receiptDetailByDepId(InvoiceVO invoiceVO,String condition, HttpServletResponse response,HttpServletRequest request) throws IOException {
+        invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
-        if (invoiceVO.getDepId() != null) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+        if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
+            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
         }
 
         Map<String, Object> mapParms = new HashMap<>();
@@ -72,8 +72,8 @@ public class ReceiptController {
 
     @GetMapping("/detail/contractUser")
     @OperateLog("发票统计明细导出")
-    public void receiptDetailByContractUser(InvoiceVO invoiceVO, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+    public void receiptDetailByContractUser(InvoiceVO invoiceVO, String condition,HttpServletResponse response, HttpServletRequest request) throws IOException {
+        invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
@@ -96,8 +96,8 @@ public class ReceiptController {
 
     @GetMapping("/detail/invoiceType")
     @OperateLog("发票统计明细导出")
-    public void receiptDetailByInvoiceType(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
-
+    public void receiptDetailByInvoiceType(InvoiceVO invoiceVO,String condition, HttpServletResponse response,HttpServletRequest request) throws IOException {
+        invoiceVO.setInvoiceType(condition);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -129,8 +129,9 @@ public class ReceiptController {
 
     @GetMapping("/detail/invoiceOffice")
     @OperateLog("发票统计明细导出")
-    public void receiptDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
+    public void receiptDetailByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
+        invoiceVO.setInvoiceOffice(condition);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -201,7 +202,7 @@ public class ReceiptController {
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         //按部门统计
-        if (invoiceVO.getDepId() == null) {
+        if (StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
             Map<String, List<InvoiceVO>> depMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
             Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
             getReceiptGatherStatistics(list, depMap, thisYearDepMap, "departmentName");
@@ -337,7 +338,7 @@ public class ReceiptController {
     @GetMapping("/gather/invoiceType")
     @OperateLog("发票汇总导出")
     public void receiptGatherByInvoiceType(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
-        invoiceVO.setContractUser(condition);
+        invoiceVO.setInvoiceType(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
         String year = getYear(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);

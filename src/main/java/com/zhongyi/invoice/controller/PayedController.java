@@ -50,14 +50,14 @@ public class PayedController {
 
     @GetMapping("/detail/dep")
     @OperateLog("已回款明细")
-    public void payedDetailByDepId(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
-
+    public void payedDetailByDepId(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按部门
-        if (invoiceVO.getDepId() != null) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> String.valueOf(invoiceVO2.getDepId())));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepId()));
+        if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice :: getDepartmentName));
+            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
         }
 
         Map<String, Object> mapParms = new HashMap<>();
@@ -75,8 +75,8 @@ public class PayedController {
 
     @GetMapping("/detail/creditLimit")
     @OperateLog("已回款明细")
-    public void payedDetailByCreditLimit(InvoiceVO invoiceVO, HttpServletResponse response, HttpServletRequest request) throws IOException {
-
+    public void payedDetailByCreditLimit(InvoiceVO invoiceVO, String condition,HttpServletResponse response, HttpServletRequest request) throws IOException {
+        invoiceVO.setCreditLimit(condition);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -110,8 +110,9 @@ public class PayedController {
 
     @GetMapping("/detail/invoiceOffice")
     @OperateLog("已回款明细")
-    public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO, HttpServletResponse response,HttpServletRequest request) throws IOException {
+    public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response,HttpServletRequest request) throws IOException {
 
+        invoiceVO.setInvoiceOffice(condition);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -141,7 +142,8 @@ public class PayedController {
 
     @GetMapping("/detail/contractUser")
     @OperateLog("已回款明细")
-    public void payedDetailByContractUser(InvoiceVO invoiceVO, HttpServletResponse response) throws IOException {
+    public void payedDetailByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+       invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按项目负责人
@@ -240,7 +242,7 @@ public class PayedController {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
         response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("已回款汇总按部门统计.xlsx", "UTF-8"));
+                "attachment;filename=" + URLEncoder.encode("已回款汇总按项目负责人统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
     }
 
@@ -347,11 +349,12 @@ public class PayedController {
         Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
 
         String path = null;
+        path = excelPath + "payedGatherCreateLimit.xlsx";
         InvoiceVO invoiceVO1 = new InvoiceVO();
         if (StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
             list = getPayedGatherStatistics(map, "creditLimit");
-            path = excelPath + "payedGatherCreateLimit.xlsx";
+
         }else {
             String createLimitPart = null;
             InvoiceVO invoiceVO2 = new InvoiceVO();
@@ -365,6 +368,7 @@ public class PayedController {
             }
 
             invoiceVO2.setCreateLimitPart(createLimitPart);
+            invoiceVO2.setCreditLimit(invoiceVO.getCreditLimit());
             invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
