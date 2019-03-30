@@ -140,8 +140,8 @@ function validateYear(startDate,endDate){
 
     if (startDate !== '' && endDate !== '') {
 
-        var startYear = startDate.substring(0,3);
-        var endYear = endDate.substring(0,3);
+        var startYear = startDate.substring(0,4);
+        var endYear = endDate.substring(0,4);
 
         if (startYear !== endYear){
             layer.msg('日期不能跨越年份', {icon: 2, time: 1000});

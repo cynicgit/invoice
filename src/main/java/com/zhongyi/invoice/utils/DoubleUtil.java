@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 public class DoubleUtil {
 
     //保留2位小数
-    public static Double getExactDouble(Double num){
-
-        BigDecimal b = new BigDecimal(num);
-        return b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
+//    public static Double getExactDouble(Double num){
+//
+//        BigDecimal b = new BigDecimal(num);
+//        return b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+//    }
 }

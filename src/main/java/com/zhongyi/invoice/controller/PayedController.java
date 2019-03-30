@@ -174,9 +174,9 @@ public class PayedController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = excelPath + "payedGatherInvoiceOff.xlsx";
-        Double sumInvoice = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
-        Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
+        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
@@ -215,9 +215,9 @@ public class PayedController {
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = excelPath + "payedGatherConUser.xlsx";
-        Double sumInvoice = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
-        Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
+        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
         if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
@@ -344,9 +344,9 @@ public class PayedController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
-        Double sumInvoice = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum());
+        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
 
-        Double sumReceivedAmount = DoubleUtil.getExactDouble(invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum());
+        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
 
         String path = null;
         path = excelPath + "payedGatherCreateLimit.xlsx";
@@ -429,11 +429,11 @@ public class PayedController {
     }
 
     public Double getInvoiceAmount(List<InvoiceVO> list) {
-        return DoubleUtil.getExactDouble(list.stream().mapToDouble(value -> value.getInvoiceAmount()).sum());
+        return list.stream().mapToDouble(value -> value.getInvoiceAmount()).sum();
     }
 
     public Double getReceivedAmount(List<InvoiceVO> list) {
-        return DoubleUtil.getExactDouble(list.stream().mapToDouble(value -> value.getReceivedAmount()).sum());
+        return list.stream().mapToDouble(value -> value.getReceivedAmount()).sum();
     }
 
 
