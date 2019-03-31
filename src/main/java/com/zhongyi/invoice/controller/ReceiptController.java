@@ -8,7 +8,6 @@ import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
-import com.zhongyi.invoice.utils.DoubleUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,8 +50,9 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
+//            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
         }
 
         Map<String, Object> mapParms = new HashMap<>();
@@ -77,8 +76,9 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getContractUser()));
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
+//            invoiceVOS = map.get(String.valueOf(invoiceVO.getContractUser()));
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
@@ -138,8 +138,9 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getInvoiceOffice()));
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
+//            invoiceVOS = map.get(String.valueOf(invoiceVO.getInvoiceOffice()));
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.toList());
         }
 
         if (user.getType() == 2){
@@ -163,12 +164,16 @@ public class ReceiptController {
     @OperateLog("发票汇总导出")
     public void receiptGatherByDepId(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setDepartmentName(condition);
+
         List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
 
         String year = getYear(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
 
-
+        if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())){
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
+            thisYear = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
+        }
 
         List<InvoiceVO> list = new ArrayList<>();
         String path =  excelPath + "receiptGatherDep.xlsx";
@@ -201,13 +206,11 @@ public class ReceiptController {
         sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
-        //按部门统计
-        if (StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
-            Map<String, List<InvoiceVO>> depMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
-            Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
-            getReceiptGatherStatistics(list, depMap, thisYearDepMap, "departmentName");
-            //  getReceiptGatherThisYearStatistics(list,thisYearDepMap);
-        } else {
+
+
+        Map<String, List<InvoiceVO>> depMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
+
+        if (depMap.size() == 1){
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setDepartmentName(invoiceVOS.get(0).getDepartmentName());
             invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
@@ -219,7 +222,15 @@ public class ReceiptController {
             invoiceVO2.setTotalThisYearInvoiceAmount(sumThisYearInvoiceAmount);
             invoiceVO2.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
             list.add(invoiceVO2);
+        } else {
+            Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
+            getReceiptGatherStatistics(list, depMap, thisYearDepMap, "departmentName");
         }
+
+        //按部门统计
+//        if (StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
+//            Map<String, List<InvoiceVO>> depMap = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
+//        }
         invoiceVO1.setDepartmentName("合计");
 
 
@@ -252,6 +263,13 @@ public class ReceiptController {
 
         String year = getYear(invoiceVO);
          List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
+
+
+        if (!StringUtils.isEmpty(invoiceVO.getContractUser())){
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
+            thisYear = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
+        }
+
         List<InvoiceVO> list = new ArrayList<>();
         String path = excelPath + "receiptGatherUser.xlsx";
         Map<String, Object> mapParms = new HashMap<>();
@@ -284,15 +302,12 @@ public class ReceiptController {
 
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
-        //按开票人
-        if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> contractUserMap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getContractUser));
-            getReceiptGatherStatistics(list, contractUserMap, thisYearDepMap, "contractUser");
 
-        } else {
+        Map<String, List<InvoiceVO>> contractUserMap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
+
+        if (contractUserMap.size() == 1){
             InvoiceVO invoiceVO2 = new InvoiceVO();
-            invoiceVO2.setContractUser(invoiceVO.getContractUser());
+            invoiceVO2.setContractUser(invoiceVOS.get(0).getContractUser());
             invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
             invoiceVO2.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
             invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
@@ -302,7 +317,18 @@ public class ReceiptController {
             invoiceVO2.setTotalThisYearInvoiceAmount(sumThisYearInvoiceAmount);
             invoiceVO2.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
             list.add(invoiceVO2);
+        }else {
+            Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getContractUser));
+            getReceiptGatherStatistics(list, contractUserMap, thisYearDepMap, "contractUser");
+
         }
+
+        //按开票人
+//        if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
+//
+//        } else {
+//
+//        }
         invoiceVO1.setContractUser("合计");
         invoiceVO1.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
         invoiceVO1.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
@@ -486,6 +512,10 @@ public class ReceiptController {
         String year = getYear(invoiceVO);
         List<InvoiceVO> thisYear = invoiceService.receiptGatherYearStatistics(year,invoiceVO);
 
+        if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())){
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.toList());
+            thisYear = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.toList());
+        }
 
         List<InvoiceVO> list = new ArrayList<>();
         String path = excelPath + "receiptGatherOffice.xlsx";
@@ -503,24 +533,29 @@ public class ReceiptController {
         sumThisYearNoTaxAmount = thisYear.stream().mapToDouble(InvoiceVO::getNoTaxAmount).sum();
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
-        //按开票人
-        if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
-            Map<String, List<InvoiceVO>> contractUserMap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
 
-            Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getInvoiceOffice));
-            getReceiptGatherStatistics2(list, contractUserMap, thisYearDepMap);
+        Map<String, List<InvoiceVO>> contractUserMap = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
 
-        } else {
+        if (contractUserMap.size() == 1){
             InvoiceVO invoiceVO2 = new InvoiceVO();
-            invoiceVO2.setInvoiceOffice(invoiceVO.getInvoiceOffice());
-//            invoiceVO2.setSpecialInvoiceAmount(sumSpecialInvoiceAmount);
-//            invoiceVO2.setSpecialNoTaxAmount(sumSpecialNoTaxAmount);
+            invoiceVO2.setInvoiceOffice(invoiceVOS.get(0).getInvoiceOffice());
             invoiceVO2.setCommonInvoiceAmount(sumCommonInvoiceAmount);
             invoiceVO2.setCommonNoTaxAmount(sumCommonNoTaxAmount);
             invoiceVO2.setTotalThisYearInvoiceAmount(sumThisYearInvoiceAmount);
             invoiceVO2.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
             list.add(invoiceVO2);
+        }else {
+
+            Map<String, List<InvoiceVO>> thisYearDepMap = thisYear.stream().collect(Collectors.groupingBy(Invoice::getInvoiceOffice));
+            getReceiptGatherStatistics2(list, contractUserMap, thisYearDepMap);
         }
+
+//        if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
+//
+//
+//        } else {
+//
+//        }
         invoiceVO1.setInvoiceOffice("合计");
 
 

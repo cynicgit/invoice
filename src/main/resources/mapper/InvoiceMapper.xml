@@ -404,18 +404,18 @@
         <include refid="Base_Column_List"/>
         FROM t_invoice
         <where>
-            <if test="invoiceType != '' and invoiceType != null">
-                and invoice_type = #{invoiceType}
-            </if>
-            <if test="contractUser != null and contractUser != ''">
-                and contract_user = #{contractUser}
-            </if>
-            <if test="invoiceOffice != null and invoiceOffice != ''">
-                and invoice_office = #{invoiceOffice}
-            </if>
-            <if test="departmentName != null">
-                and department_name LIKE concat('%',#{departmentName},'%')
-            </if>
+            <!--<if test="invoiceType != '' and invoiceType != null">-->
+                <!--and invoice_type = #{invoiceType}-->
+            <!--</if>-->
+            <!--<if test="contractUser != null and contractUser != ''">-->
+                <!--and contract_user = #{contractUser}-->
+            <!--</if>-->
+            <!--<if test="invoiceOffice != null and invoiceOffice != ''">-->
+                <!--and invoice_office = #{invoiceOffice}-->
+            <!--</if>-->
+            <!--<if test="departmentName != null">-->
+                <!--and department_name LIKE concat('%',#{departmentName},'%')-->
+            <!--</if>-->
             <if test="startDate != null and startDate != ''">
                 and invoice_date >= #{startDate}
             </if>
@@ -429,44 +429,25 @@
         select
         <include refid="Base_Column_List"/>
         from `t_invoice` where YEAR(invoice_date)= #{year}
-        <if test="invoice.invoiceType != '' and invoice.invoiceType != null">
-            and invoice_type = #{invoice.invoiceType}
-        </if>
-        <if test="invoice.contractUser != null and invoice.contractUser != ''">
-            and contract_user = #{invoice.contractUser}
-        </if>
-        <if test="invoice.invoiceOffice != null and invoice.invoiceOffice != ''">
-            and invoice_office = #{invoice.invoiceOffice}
-        </if>
-        <if test="invoice.departmentName != null">
-            and department_name LIKE concat('%',#{invoice.departmentName},'%')
-        </if>
+        <!--<if test="invoice.invoiceType != '' and invoice.invoiceType != null">-->
+            <!--and invoice_type = #{invoice.invoiceType}-->
+        <!--</if>-->
+        <!--<if test="invoice.contractUser != null and invoice.contractUser != ''">-->
+            <!--and contract_user = #{invoice.contractUser}-->
+        <!--</if>-->
+        <!--<if test="invoice.invoiceOffice != null and invoice.invoiceOffice != ''">-->
+            <!--and invoice_office = #{invoice.invoiceOffice}-->
+        <!--</if>-->
+        <!--<if test="invoice.departmentName != null">-->
+            <!--and department_name LIKE concat('%',#{invoice.departmentName},'%')-->
+        <!--</if>-->
     </select>
 
     <select id="selectReceiptDetail" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_invoice
-     <!--   <where>
-            <if test="invoiceType != '' and invoiceType != null">
-                and invoice_type = #{invoiceType}
-            </if>
-            <if test="contractUser != null and contractUser != ''">
-                and contract_user = #{contractUser}
-            </if>
-            <if test="depId != null">
-                and dep_id = #{depId}
-            </if>
-            <if test="invoiceOffice != null and invoiceOffice != ''">
-                and invoice_office = #{invoiceOffice}
-            </if>
-            <if test="startDate != null and startDate != ''">
-                and invoice_date >= #{startDate}
-            </if>
-            <if test="endDate != null and endDate != ''">
-                and invoice_date &lt;= #{endDate}
-            </if>
-        </where> -->
+
      <where>
          <if test="startDate != null and startDate != ''">
              and invoice_date >= #{startDate}
@@ -519,18 +500,18 @@
         <include refid="Base_Column_List"/>
         FROM t_invoice
         <where>
-            <if test="contractUser != null and contractUser != ''">
-                and contract_user = #{contractUser}
-            </if>
-            <if test="departmentName != null">
-                and department_name LIKE concat('%',#{departmentName},'%')
-            </if>
-            <if test="creditLimit != null and creditLimit != ''">
-                and credit_limit = #{creditLimit}
-            </if>
-            <if test="invoiceOffice != null and invoiceOffice != ''">
-                and invoice_office LIKE concat('%',#{invoiceOffice},'%')
-            </if>
+            <!--<if test="contractUser != null and contractUser != ''">-->
+                <!--and contract_user = #{contractUser}-->
+            <!--</if>-->
+            <!--<if test="departmentName != null">-->
+                <!--and department_name LIKE concat('%',#{departmentName},'%')-->
+            <!--</if>-->
+            <!--<if test="creditLimit != null and creditLimit != ''">-->
+                <!--and credit_limit = #{creditLimit}-->
+            <!--</if>-->
+            <!--<if test="invoiceOffice != null and invoiceOffice != ''">-->
+                <!--and invoice_office LIKE concat('%',#{invoiceOffice},'%')-->
+            <!--</if>-->
             <if test="startDate != null and startDate != ''">
                 and received_date >= #{startDate}
             </if>
