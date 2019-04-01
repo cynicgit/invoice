@@ -48,7 +48,6 @@ public class ChanZhiController {
     @GetMapping("/chanzhi/user")
     @OperateLog("商务人员产值统计")
     public void getChanzhi(String startDate, String endDate, HttpServletResponse response, HttpServletRequest request) {
-        System.out.println(request.getRequestURI());
         List<ReceivableStaticsInvoice> invoices = invoiceService.getInvoices(startDate, endDate);
         invoices.forEach(i -> i.setInvoiceAmount(i.getInvoiceAmount() / 10000));
         Map<String, String> headerMap = new LinkedHashMap<>();
@@ -56,6 +55,7 @@ public class ChanZhiController {
         headerMap.put("name", "商务人员");
         List<Map<String, Object>> value = new ArrayList<>();
         List<User> allUser = userService.getAllUser();
+        allUser = allUser.stream().filter(u -> u.getType() != 0).collect(Collectors.toList());
         JSONArray ja = new JSONArray();
         List<Group> group = groupService.getGroup("");
         List<Target> targets = targetService.getAllUserTarget(endDate.split("-")[0]);
