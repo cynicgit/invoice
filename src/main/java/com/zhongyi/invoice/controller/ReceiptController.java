@@ -41,7 +41,8 @@ public class ReceiptController {
     @Value("${excelPath}")
     private String excelPath;
 
-
+    @Value("${invoice.login:true}")
+    private boolean isLogin;
 
     @GetMapping("/detail/dep")
     @OperateLog("发票统计明细导出")
@@ -80,6 +81,16 @@ public class ReceiptController {
 //            invoiceVOS = map.get(String.valueOf(invoiceVO.getContractUser()));
             invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
         }
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if ( isLogin && user.getType() == 2) {
+            String name = user.getName();
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().equals(name)).collect(Collectors.toList());
+        }
+
+
+
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
         String path =  excelPath + "receiptDetail.xlsx";

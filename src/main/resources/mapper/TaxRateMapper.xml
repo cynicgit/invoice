@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.TaxRateMapper">
+
+
+
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.TaxRate" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_taxrate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="taxRate != null">
+                tax_rate,
+            </if>
+
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="taxRate != null">
+                #{taxRate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateTaxRate" parameterType="com.zhongyi.invoice.entity.TaxRate" >
+        update t_taxrate
+        <set>
+            <if test="taxRate != null">
+                tax_rate = #{taxRate,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteTaxRateById">
+         DELETE FROM t_taxrate where id = #{id}
+    </delete>
+
+
+
+
+    <select id="getTaxRateById"  resultType="com.zhongyi.invoice.entity.TaxRate">
+       select id, tax_rate FROM t_taxrate
+         where id = #{id}
+    </select>
+
+
+    <select id="getTaxRateAll" resultType="com.zhongyi.invoice.entity.TaxRate">
+        SELECT * FROM  t_taxrate
+    </select>
+
+</mapper>

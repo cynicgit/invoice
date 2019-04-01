@@ -103,7 +103,8 @@ function onblus(tag) {
 
     if (id === 'invoiceAmount'){
         var taxRate = $("#taxRate").val();
-        var noTaxAmount = (100 - taxRate) * invoiceAmount / 100;
+        var num = (100 + parseInt(taxRate)) / 100;
+        var noTaxAmount = invoiceAmount / num  ;
         $("#noTaxAmount").val(noTaxAmount.toFixed(2));
     }
 }
@@ -178,12 +179,36 @@ function validateYear2(startDate,endDate){
 }
 
 
+function getTaxRate(taxRate){
+    ajax
+    ({
+        url: '/taxrate/all',
+        success: function (res) {
+            if (res.result === 0) {
+                var list = res.data;
+                var options = '';
+                for (var i = 0; i < list.length; i++) {
+                    if(taxRate === list[i].taxRate){
+                        options += '<option value="' + list[i].taxRate + '" selected >' + list[i].taxRate + '</option>'
+                        continue;
+                    }
+                    options += '<option value="' + list[i].taxRate + '" >' + list[i].taxRate + '</option>'
+
+                }
+                $('#taxRate').html(options);
+            } else if (res.result === 1) {
+                layer.msg(res.error);
+            }
+        }
+    })
+}
 
 
 $('#taxRate').on('change', function () {
     var taxRate = $(this).val();
     var invoiceAmount = $("#invoiceAmount").val();
-    var noTaxAmount = (100 - taxRate) * invoiceAmount / 100;
+    var num = (100 + parseInt(taxRate)) / 100;
+    var noTaxAmount = invoiceAmount / num  ;
     $("#noTaxAmount").val(noTaxAmount.toFixed(2));
 });
 

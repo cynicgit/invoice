@@ -93,6 +93,13 @@
 
     $(function () {
 
+        var usertype = $.cookie('type');
+
+        if (usertype === '2'){
+            $("#condition").hide();
+            $("#type").hide();
+        }
+
         layui.use('laydate', function(){
             var laydate = layui.laydate;
             laydate.render({
@@ -122,6 +129,14 @@
         };
 
 
+
+
+        var usertype = $.cookie('type');
+        if (usertype === '2'){
+            url = "receipt/detail/contractUser";
+            window.location.href = url + "?startDate="+startDate + "&endDate=" + endDate + "&condition=" + condition;
+            return;
+        }
 
 
         if (type === '0') {

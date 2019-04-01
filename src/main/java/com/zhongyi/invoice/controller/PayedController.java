@@ -9,7 +9,6 @@ import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
 import com.zhongyi.invoice.utils.DoubleUtil;
-import com.zhongyi.invoice.utils.Md5Encrypt;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -23,12 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -51,19 +47,24 @@ public class PayedController {
 
     @GetMapping("/detail/dep")
     @OperateLog("已回款明细")
-    public void payedDetailByDepId(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void payedDetailByDepId(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按部门
+//        if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice :: getDepartmentName));
+//            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
+//        }
+
+
         if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice :: getDepartmentName));
-            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
         }
 
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        String path = excelPath +  "receiptDetail.xlsx";
+        String path = excelPath + "receiptDetail.xlsx";
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -76,7 +77,7 @@ public class PayedController {
 
     @GetMapping("/detail/creditLimit")
     @OperateLog("已回款明细")
-    public void payedDetailByCreditLimit(InvoiceVO invoiceVO, String condition,HttpServletResponse response, HttpServletRequest request) throws IOException {
+    public void payedDetailByCreditLimit(InvoiceVO invoiceVO, String condition, HttpServletResponse response, HttpServletRequest request) throws IOException {
         invoiceVO.setCreditLimit(condition);
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
@@ -84,20 +85,24 @@ public class PayedController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按信用日期
-        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
-            invoiceVOS = map.get(invoiceVO.getCreditLimit());
+//        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
+//            invoiceVOS = map.get(invoiceVO.getCreditLimit());
+//
+//        }
 
+        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getCreditLimit().contains(invoiceVO.getCreditLimit())).collect(Collectors.toList());
         }
 
-        if (user.getType() == 2){
+        if (user.getType() == 2) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
             invoiceVOS = map.get(user.getName());
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        String path = excelPath +  "receiptDetail.xlsx";
-       // String path =    "static/excel/receiptDetail.xlsx";
+        String path = excelPath + "receiptDetail.xlsx";
+        // String path =    "static/excel/receiptDetail.xlsx";
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -111,7 +116,7 @@ public class PayedController {
 
     @GetMapping("/detail/invoiceOffice")
     @OperateLog("已回款明细")
-    public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response,HttpServletRequest request) throws IOException {
+    public void payedDetailByInvoiceOffice(InvoiceVO invoiceVO, String condition, HttpServletResponse response, HttpServletRequest request) throws IOException {
 
         invoiceVO.setInvoiceOffice(condition);
         HttpSession session = request.getSession();
@@ -119,18 +124,22 @@ public class PayedController {
 
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
+//        if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
+//            invoiceVOS = map.get(invoiceVO.getInvoiceOffice());
+//        }
+
         if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            invoiceVOS = map.get(invoiceVO.getInvoiceOffice());
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.toList());
         }
 
-        if (user.getType() == 2){
+        if (user.getType() == 2) {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
             invoiceVOS = map.get(user.getName());
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        String path = excelPath +  "receiptDetail.xlsx";
+        String path = excelPath + "receiptDetail.xlsx";
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
         Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
@@ -143,18 +152,21 @@ public class PayedController {
 
     @GetMapping("/detail/contractUser")
     @OperateLog("已回款明细")
-    public void payedDetailByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
-       invoiceVO.setContractUser(condition);
+    public void payedDetailByContractUser(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         //按项目负责人
+//        if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
+//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
+//            invoiceVOS = map.get(invoiceVO.getContractUser());
+//        }
         if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            invoiceVOS = map.get(invoiceVO.getContractUser());
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
         }
         Map<String, Object> mapParms = new HashMap<>();
         mapParms.put("list", invoiceVOS);
-        String path = excelPath +  "receiptDetail.xlsx";
+        String path = excelPath + "receiptDetail.xlsx";
 
         TemplateExportParams params = new TemplateExportParams();
         params.setTemplateUrl(path);
@@ -169,9 +181,13 @@ public class PayedController {
 
     @GetMapping("/gather/invoiceOffice")
     @OperateLog("已回款汇总")
-    public void payedGatherByInvoiceOffice(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void payedGatherByInvoiceOffice(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setInvoiceOffice(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
+
+        if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getInvoiceOffice().contains(invoiceVO.getInvoiceOffice())).collect(Collectors.toList());
+        }
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = excelPath + "payedGatherInvoiceOff.xlsx";
@@ -180,17 +196,26 @@ public class PayedController {
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
-        if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
-            list = getPayedGatherStatistics(map, "invoiceOffice");
 
-        }else {
+
+        Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
+
+        if (map.size() == 1){
             InvoiceVO invoiceVO2 = new InvoiceVO();
-            invoiceVO2.setInvoiceOffice(invoiceVO.getInvoiceOffice());
+            invoiceVO2.setInvoiceOffice(invoiceVOS.get(0).getInvoiceOffice());
             invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
+        }else {
+            list = getPayedGatherStatistics(map, "invoiceOffice");
         }
+
+//        if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
+//
+//
+//        } else {
+//
+//        }
         invoiceVO1.setInvoiceOffice("合计");
         invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
@@ -210,9 +235,14 @@ public class PayedController {
 
     @GetMapping("/gather/contractUser")
     @OperateLog("已回款汇总")
-    public void payedGatherByContractUser(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void payedGatherByContractUser(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
+
+        if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getContractUser().contains(invoiceVO.getContractUser())).collect(Collectors.toList());
+        }
+
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         String path = excelPath + "payedGatherConUser.xlsx";
@@ -221,16 +251,23 @@ public class PayedController {
         Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
 
         InvoiceVO invoiceVO1 = new InvoiceVO();
-        if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
-            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-            list = getPayedGatherStatistics(map, "contractUser");
-        }else {
+
+        Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
+        if (map.size() == 1){
             InvoiceVO invoiceVO2 = new InvoiceVO();
-            invoiceVO2.setContractUser(invoiceVO.getContractUser());
+            invoiceVO2.setContractUser(invoiceVOS.get(0).getContractUser());
             invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
+        }else {
+            list = getPayedGatherStatistics(map, "contractUser");
         }
+
+//        if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
+//
+//        } else {
+//
+//        }
         invoiceVO1.setContractUser("合计");
         invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
@@ -249,14 +286,18 @@ public class PayedController {
 
     @GetMapping("/gather/dep")
     @OperateLog("已回款汇总")
-    public void payedGatherByDep(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void payedGatherByDep(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
 
 
         String path = excelPath + "payedGatherDep.xlsx";
         log.info(path);
-       // FileInputStream fileInputStream = new FileInputStream(path);
+        // FileInputStream fileInputStream = new FileInputStream(path);
         invoiceVO.setDepartmentName(condition);
-        List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
+        List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
+
+        if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
+        }
 
 
         invoiceVOS.forEach(invoiceVO2 -> {
@@ -281,9 +322,9 @@ public class PayedController {
         }).collect(Collectors.toList());
 
 
-        LinkedMap<String,List<InvoiceVO>> linkedMap = new LinkedMap();
-        keys.forEach(key ->{
-            linkedMap.put(key,collect1.get(key));
+        LinkedMap<String, List<InvoiceVO>> linkedMap = new LinkedMap();
+        keys.forEach(key -> {
+            linkedMap.put(key, collect1.get(key));
         });
 
         linkedMap.forEach((key, list3) -> {
@@ -340,9 +381,14 @@ public class PayedController {
 
     @GetMapping("/gather/creditLimit")
     @OperateLog("已回款汇总")
-    public void payedGatherByCreditLimit(InvoiceVO invoiceVO,String condition, HttpServletResponse response) throws IOException {
+    public void payedGatherByCreditLimit(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setCreditLimit(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
+
+        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getCreditLimit().contains(invoiceVO.getCreditLimit())).collect(Collectors.toList());
+        }
+
         List<InvoiceVO> list = new ArrayList<>();
         Map<String, Object> mapParms = new HashMap<>();
         Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
@@ -356,20 +402,23 @@ public class PayedController {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
             list = getPayedGatherStatistics(map, "creditLimit");
 
-        }else {
+        } else {
             String createLimitPart = null;
             InvoiceVO invoiceVO2 = new InvoiceVO();
+            String key = null;
             invoiceVO2.setCreateLimitPart(invoiceVO.getCreditLimit());
-            if ("3个月".equals(invoiceVO.getCreditLimit())){
+            if ("3个月".contains(invoiceVO.getCreditLimit())) {
                 createLimitPart = "企业";
-            }else if ("6个月".equals(invoiceVO.getCreditLimit())){
+                key = "3个月";
+            } else if ("6个月".contains(invoiceVO.getCreditLimit())) {
                 createLimitPart = "政府";
-            }else {
+                key = "6个月";
+            } else {
                 createLimitPart = "无";
             }
 
             invoiceVO2.setCreateLimitPart(createLimitPart);
-            invoiceVO2.setCreditLimit(invoiceVO.getCreditLimit());
+            invoiceVO2.setCreditLimit(key);
             invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);

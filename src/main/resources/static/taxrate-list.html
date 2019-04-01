@@ -1,0 +1,202 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="lib/html5shiv.js"></script>
+	<script type="text/javascript" src="lib/respond.min.js"></script>
+	<![endif]-->
+	<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+	<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/main.css">
+	<title>税率管理</title>
+	<link rel="stylesheet" href="lib/laypage/1.2/skin/laypage.css">
+	<link rel="stylesheet" href="static/css/tax.css">
+</head>
+<body>
+
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 用户列表<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container" id="student-list">
+	<div class="cl pd-5 bg-1 bk-gray mt-20">
+		<input id="search-name" type="text" style="width:150px" class="input-text radius" placeholder="用户名">
+		<button id="search-btn" title="根据输入条件查询日志" class="btn btn-primary-outline radius" style="width:100px"><i class="Hui-iconfont">&#xe665;</i>查询</button>
+		<button id="add-btn" class="btn btn-primary-outline radius" onclick="addTaxRate()" style="width:100px">添加</button>
+		<span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
+	</div>
+	<div class="mt-20">
+		<table class="table table-bordered table-border table-hover table-bg" id="user-table">
+			<thead class="text-c">
+				<tr >
+					<th width="50">序号</th>
+					<th width="80">税率</th>
+					<th width="80">操作</th>
+				</tr>
+			</thead>
+			<tbody id="taxrate-tbody" class="text-c">
+			</tbody>
+		</table>
+
+		<div class="pagination r mt-20" id="pagination"></div>
+		<div class="nodata" id="nodata">
+			<img src="static/images/nodata.svg" alt="">
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/layer/2.4/layer.js"></script>
+<script type="text/javascript"  src="lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="lib/echarts.common.min.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+
+	<script type="text/javascript">
+        var isPageInit = false
+        var searchPara = {
+            pageNum: 1,
+            pageSize: 10,
+        }
+
+        function getData(data){
+            $('#pagination').hide()
+            ajax({
+                url: 'taxrate/page',
+                data: data,
+                success: function(response){
+                    layer.closeAll()
+                    var status = response.result
+                    if(status === 0){
+                        var data = response.data
+                        if(data.total > 0 && data.list.length > 0){
+                            showTable(data)
+                        } else if (data.list.length === 0 && searchPara.pageNum > 1) {
+                            searchPara.pageNum = 1
+							initData()
+						} else {
+                            showNodata()
+                        }
+                    } 
+                }
+            })
+        }
+
+		function deleteTaxRate(id) {
+
+            layer.confirm('确定删除！', {
+                btn: ['确定','取消'] //按钮
+				,title: "提示"
+            }, function(){
+                ajax({
+                    url:"/taxrate?id=" + id,
+                    type: "delete",
+                    success: function(response) {
+                        if (response.result === 0) {
+                            initData();
+                        }
+                    }
+                });
+            });
+
+        }
+
+        function getTaxRateDetail(id) {
+            $.cookie("taxrateId", id);
+            var index = layer.open({
+                type: 2,
+                title: '税率详情',
+                content: 'taxrate-update.html'
+            });
+            layer_index = index;
+            layer.full(index);
+        }
+
+        function addTaxRate() {
+            var index = layer.open({
+                type: 2,
+                title: '添加税率',
+                content: 'taxrate-add.html'
+            });
+            layer_index = index;
+            layer.full(index);
+        }
+
+        function showTable(data){
+            $('#nodata').hide()
+
+            var list = data.list
+
+            var trs = ''
+            $('#taxrate-tbody').children().remove()
+            if(list.length === 0){
+                $('#nodata').show()
+            }
+
+            for(var i=0; i< list.length; i++){
+                var item = list[i]
+                var sequence = (searchPara.pageNum-1)*searchPara.pageSize+i+1
+
+                trs += 	'<tr>'+
+                    '<td>'+ sequence + '</td>'+
+                    '<td>'+ item.taxRate + '</td>'+
+                	'<td>'+
+					'<button onclick="getTaxRateDetail(\''+item.id + '\')"  class="btn btn-secondary-outline radius btn_edit">'+
+					'<i class="Hui-iconfont"></i>修改' +
+					'<button onclick="deleteTaxRate(\''+item.id + '\')" class="btn btn-secondary-outline radius ">'+
+					'<i class="Hui-iconfont"></i>删除'+
+                    '</td>'+
+                    '</tr>'
+
+            }
+
+            $('#taxrate-tbody').append(trs)
+
+            $('#data-num').text(data.total)
+            if(data.total > searchPara.pageSize){
+                $('#pagination').show()
+                if(!isPageInit){
+
+                    var pages = Math.ceil(data.total/searchPara.pageSize)
+                    laypage({
+                        cont: 'pagination',
+                        curr: 1,
+                        pages: pages,
+                        groups: 5,
+                        jump: function(obj,first) {
+                            if(!first){
+                                searchPara.pageNum = obj.curr
+                                getData(searchPara)
+                            }
+                        }
+                    })
+                }
+            }
+            isPageInit = true
+        }
+        $(function(){
+            searchPara.pageNum = 1
+            initData()
+        })
+
+		function initData() {
+            getData(searchPara)
+        }
+
+
+        $('#search-btn').click(function(){
+            searchPara.pageNum = 1
+            isPageInit = false;
+            getData(searchPara)
+        })
+
+
+	</script>
+</body>
+</html>

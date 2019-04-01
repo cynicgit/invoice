@@ -50,8 +50,7 @@
                 <option value="7">按发票号</option>
             </select>
 
-            <!--<input type="text" class="layui-input" placeholder="" name="sdate" id="sdate">-->
-            <!--<input type="text" class="layui-input" placeholder="" name="edate" id="edate">-->
+            <span style="margin-left: 15px;">开票日期：</span>
             <div class="layui-inline">
                 开始时间
                 <div class="layui-input-inline">
@@ -197,11 +196,17 @@
             }
 
             var reportNumber = item.reportNumber === null ? "" : item.reportNumber;
-            var invoiceSignatoryDate = item.invoiceSignatoryDate == null?"":dateFormat(item.invoiceSignatoryDate);
+           // var invoiceSignatoryDate = item.invoiceSignatoryDate == null?"":dateFormat(item.invoiceSignatoryDate);
             var invoiceDate = item.invoiceDate == null?"":dateFormat(item.invoiceDate);
             var reportDate = item.reportDate == null?"":dateFormat(item.reportDate);
             var receivedDate = item.receivedDate == null?"":dateFormat(item.receivedDate);
             var invoiceSignatory = item.invoiceSignatory === null ? "" : item.invoiceSignatory;
+            var contractAmount = item.contractAmount === null ? "" : item.contractAmount.toFixed(2);
+            var invoiceAmount = item.invoiceAmount === null ? "" : item.invoiceAmount.toFixed(2);
+            var noTaxAmount = item.noTaxAmount === null ? "" : item.noTaxAmount.toFixed(2);
+            var receivedAmount = item.receivedAmount === null ? "" : item.receivedAmount.toFixed(2);
+            var noReceivedAmount = item.noReceivedAmount === null ? "" : item.noReceivedAmount.toFixed(2);
+            var badAmount = item.badAmount === null ? "" : item.badAmount.toFixed(2);
             trs += '<tr>' +
                 '<td class="ellipsis-td">' + item.taskId + '</td>' +
                 '<td class="ellipsis-td">' + item.contractNumber + '</td>' +
@@ -213,17 +218,17 @@
                 '<td class="ellipsis-td">' + item.invoiceOffice + '</td>' +
                 '<td class="ellipsis-td">' + item.departmentName + '</td>' +
                 '<td class="ellipsis-td">' + item.invoiceProject + '</td>' +
-                '<td class="ellipsis-td">' + item.contractAmount + '</td>' +
-                '<td class="ellipsis-td">' + item.invoiceAmount + '</td>' +
-                '<td class="ellipsis-td">' + item.noTaxAmount + '</td>' +
+                '<td class="ellipsis-td">' + contractAmount + '</td>' +
+                '<td class="ellipsis-td">' + invoiceAmount + '</td>' +
+                '<td class="ellipsis-td">' + noTaxAmount + '</td>' +
                 '<td class="ellipsis-td">' + item.contractUser + '</td>' +
                 '<td class="ellipsis-td">' + invoiceSignatory + '</td>' +
                 '<td class="ellipsis-td">' + reportNumber+'</td>' +
                 '<td class="ellipsis-td">' + reportDate + '</td>' +
                 '<td class="ellipsis-td">' + receivedDate + '</td>' +
-                '<td class="ellipsis-td">' + item.receivedAmount + '</td>' +
-                '<td class="ellipsis-td">' + item.noReceivedAmount + '</td>' +
-                '<td class="ellipsis-td">' + item.badAmount + '</td>' +
+                '<td class="ellipsis-td">' + receivedAmount + '</td>' +
+                '<td class="ellipsis-td">' + noReceivedAmount + '</td>' +
+                '<td class="ellipsis-td">' + badAmount + '</td>' +
                 ss +
                 '</tr>';
         }

@@ -411,6 +411,7 @@
 
                     getProject(depId,projectId);
                     getUser(res.data.userId);
+                    getTaxRate(res.data.taxRate);
                     var reportNumber = res.data.reportNumber === null ? "" : res.data.reportNumber;
                     var invoiceDate = res.data.invoiceDate == null ? "" : dateFormat(res.data.invoiceDate);
                     var reportDate = res.data.reportDate == null ? "" : dateFormat(res.data.reportDate);

@@ -175,10 +175,10 @@
                 <div class="formControls col-xs-8 col-sm-9">
                     <span class="select-box">
                     <select id="taxRate" name="taxRate" class="select">
-                         <option value="0">0%</option>
-                         <option value="6">6%</option>
-                         <option value="9">9%</option>
-                         <option value="13">13%</option>
+                         <!--<option value="0">0%</option>-->
+                         <!--<option value="6">6%</option>-->
+                         <!--<option value="9">9%</option>-->
+                         <!--<option value="13">13%</option>-->
                     </select>
                     </span>
                 </div>
@@ -340,31 +340,7 @@
 
         getDep();
         getUser(null);
-
-
-        // $('#depId-select').on('change', function () {
-        //     var depId = $(this).val();
-        //     ajax({
-        //         url:"project/dep?depId="+depId,
-        //         type: 'get',
-        //         data: {},
-        //         success: function (res) {
-        //             if (res.result === 0) {
-        //
-        //                 var list = res.data;
-        //
-        //                 var options = '';
-        //                 for (let i = 0; i < list.length; i++) {
-        //                     options += '<option value="' + list[i].depId + '" >' + list[i].projectName + '</option>'
-        //                 }
-        //                 $('#projectId').html(options);
-        //             } else if (res.code === 0) {
-        //                 layer.msg(res.error);
-        //             }
-        //         }
-        //     })
-        // });
-
+        getTaxRate(null);
 
     });
 
