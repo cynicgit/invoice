@@ -3,6 +3,7 @@ package com.zhongyi.invoice.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -16,6 +17,7 @@ public class TaxRate {
 
     private Integer id;
 
-    @Pattern(regexp = "/^100$|^(\\d|[1-9]\\d)$",message = "请输入0-100的整数")
+    @NotNull(message = "请输入税率")
     private Integer taxRate;
+
 }
