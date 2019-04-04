@@ -200,24 +200,18 @@ public class PayedController {
 
         Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
 
-        if (map.size() == 1){
+        if (map.size() == 1) {
             InvoiceVO invoiceVO2 = new InvoiceVO();
-            invoiceVO2.setInvoiceOffice(invoiceVOS.get(0).getInvoiceOffice());
+            // invoiceVO2.setInvoiceOffice(invoiceVOS.get(0).getInvoiceOffice());
             invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
-        }else {
+        } else {
             list = getPayedGatherStatistics(map, "invoiceOffice");
         }
 
-//        if (StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
-//
-//
-//        } else {
-//
-//        }
         invoiceVO1.setInvoiceOffice("合计");
-        invoiceVO1.setTotalInvoice(sumInvoice);
+        //   invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
         list.add(invoiceVO1);
         mapParms.put("list", list);
@@ -253,13 +247,13 @@ public class PayedController {
         InvoiceVO invoiceVO1 = new InvoiceVO();
 
         Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
-        if (map.size() == 1){
+        if (map.size() == 1) {
             InvoiceVO invoiceVO2 = new InvoiceVO();
             invoiceVO2.setContractUser(invoiceVOS.get(0).getContractUser());
-            invoiceVO2.setTotalInvoice(sumInvoice);
+          //  invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
-        }else {
+        } else {
             list = getPayedGatherStatistics(map, "contractUser");
         }
 
@@ -269,7 +263,7 @@ public class PayedController {
 //
 //        }
         invoiceVO1.setContractUser("合计");
-        invoiceVO1.setTotalInvoice(sumInvoice);
+      //  invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
         list.add(invoiceVO1);
         mapParms.put("list", list);
@@ -330,10 +324,10 @@ public class PayedController {
         linkedMap.forEach((key, list3) -> {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("time", key);
-            map.put("invoiceCount", "开票量");
+          //  map.put("invoiceCount", "开票量");
             map.put("payed", "已回款");
-            map.put("totalInvoiceAmount", "t.total" + key);
-            map.put("receiveTotalInvoice", "t.receive" +key);
+          //  map.put("totalInvoiceAmount", "t.total" + key);
+            map.put("receiveTotalInvoice", "t.receive" + key);
             colList.add(map);
 
         });
@@ -346,7 +340,7 @@ public class PayedController {
             linkedMap.forEach((key, l) -> {
                 double totalInvoiceAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getInvoiceAmount).sum();
                 double totalReceivedAmount = depList.stream().filter(i -> key.equals(i.getInvoiceDateTime())).mapToDouble(Invoice::getReceivedAmount).sum();
-                depMap.put("total" + key, DoubleUtil.getNum(totalInvoiceAmount));
+               // depMap.put("total" + key, DoubleUtil.getNum(totalInvoiceAmount));
                 depMap.put("receive" + key, DoubleUtil.getNum(totalReceivedAmount));
             });
             valList.add(depMap);
@@ -359,7 +353,7 @@ public class PayedController {
         linkedMap.forEach((key, list3) -> {
             double sum = list3.stream().mapToDouble(value2 -> value2.getInvoiceAmount()).sum();
             double sum1 = list3.stream().mapToDouble(value2 -> value2.getReceivedAmount()).sum();
-            depMap2.put("total" + key, DoubleUtil.getNum(sum));
+           // depMap2.put("total" + key, DoubleUtil.getNum(sum));
             depMap2.put("receive" + key, DoubleUtil.getNum(sum1));
 
         });
@@ -419,13 +413,13 @@ public class PayedController {
 
             invoiceVO2.setCreateLimitPart(createLimitPart);
             invoiceVO2.setCreditLimit(key);
-            invoiceVO2.setTotalInvoice(sumInvoice);
+         //   invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
         }
         invoiceVO1.setCreateLimitPart("合计");
         invoiceVO1.setCreditLimit("");
-        invoiceVO1.setTotalInvoice(sumInvoice);
+       // invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
         list.add(invoiceVO1);
         mapParms.put("list", list);
@@ -471,7 +465,7 @@ public class PayedController {
 
             Double invoiceAmount = getInvoiceAmount(list1);
             Double receivedAmount = getReceivedAmount(list1);
-            in.setTotalInvoice(invoiceAmount);
+           // in.setTotalInvoice(invoiceAmount);
             in.setReceiveTotalInvoice(receivedAmount);
             list.add(in);
         });
