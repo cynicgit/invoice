@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: huguanghui
@@ -67,7 +69,7 @@ public class ProjectController {
     @GetMapping("/export")
     public void export(HttpServletResponse response) throws IOException {
         List<Project> allProject = projectService.getAllProject();
-
+        allProject = allProject.stream().sorted(Comparator.comparingInt(Project::getDepId)).collect(Collectors.toList());
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
         exportParams.setStyle(MyExcelExportStylerDefaultImpl.class);

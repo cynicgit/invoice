@@ -82,6 +82,7 @@ public class NoReceivableStaticsInvoiceController {
     @OperateLog("未回款汇总导出")
     public void exportExcelNoAmountStatistics(InvoiceVO invoiceVO, @RequestParam(required = true) int type, HttpServletResponse response) throws IOException {
         List<ReceivableStaticsInvoice> invoiceVOS = invoiceService.getInvoices(invoiceVO.getStartDate(), invoiceVO.getEndDate());
+        invoiceVOS = invoiceVOS.stream().filter(invoiceVO1 -> invoiceVO1.getNoReceivedAmount() > 0).collect(Collectors.toList());
         Map<String, Object> map = null;
         if (type == 1) {
             ExportNoReceiver exportNoReceiver1 = new ExportNoReceiver();
