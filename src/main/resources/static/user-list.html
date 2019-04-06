@@ -29,8 +29,20 @@
 		<button id="search-btn" title="根据输入条件查询日志" class="btn btn-primary-outline radius" style="width:100px"><i class="Hui-iconfont">&#xe665;</i>查询</button>
 		<button id="add-btn" class="btn btn-primary-outline radius" onclick="addUser()" style="width:100px">添加</button>
 		<a id="export-btn" class="btn btn-primary-outline radius" href="/system/user/export" style="width:100px">导出</a>
+		<div style="margin-top: 8px;">
+
+                <span class="btn-upload form-group">
+			    <a href="javascript:void(0)" class="btn btn-primary radius">
+				<i class="Hui-iconfont">&#xe642;</i> 浏览文件
+                </a>
+				<input type="file" multiple name="file" class="input-file" id="file">
+		        </span>
+
+			<button id="import-btn" class="btn btn-primary-outline radius"  hidden>导入用户</button>
+		</div>
 		<span class="r">共有数据：<strong id="data-num">0</strong> 条</span>
 	</div>
+
 	<div class="mt-20">
 		<table class="table table-bordered table-border table-hover table-bg" id="user-table">
 			<thead class="text-c">
@@ -227,6 +239,40 @@
 
         })
 
+
+        $('#import-btn').click(function (e) {
+            var fileObj = document.getElementById('file').files; // js 获取文件对象
+            if (typeof (fileObj) == "undefined" || fileObj.length <= 0) {
+                layer.msg("请选择文件");
+                return;
+            }
+            var formFile = new FormData();
+            formFile.append("file", fileObj[0]); //加入文件对象
+
+            ajax({
+                url: 'system/user/import',
+                data: formFile,
+                type: "Post",
+                dataType: "json",
+                timeout: 600 * 1000,
+                cache: false,//上传文件无需缓存
+                processData: false,//用于对data参数进行序列化处理 这里必须false
+                contentType: false, //必须
+                success: function (response) {
+                    var data = response.data;
+
+                        layer.open({
+                            type: 0 //Page层类型
+                            ,area: ['500px', '300px']
+                            ,title: '出现错误'
+                            ,shade: 0.6 //遮罩透明度
+                            ,anim: 1 //0-6的动画形式，-1不开启
+                            ,content: '<div style="padding:10px;">'+data+'</div>'
+                        });
+
+                }
+            })
+        });
 
 	</script>
 </body>

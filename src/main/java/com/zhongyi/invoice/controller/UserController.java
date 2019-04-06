@@ -12,11 +12,13 @@ import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/system/user")
@@ -79,6 +81,22 @@ public class UserController {
         exportParams.setType(ExcelType.XSSF);
         exportParams.setStyle(MyExcelExportStylerDefaultImpl.class);
         EasyPoiUtils.defaultExport(allUser, User.class,  "用户.xlsx", response, exportParams);
+    }
+
+
+    @PostMapping("/import")
+    @OperateLog("用户导入")
+    public ZYResponse importExcel(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return ZYResponse.success("文件为空");
+        }
+
+        if (!file.getOriginalFilename().endsWith("xlsx")
+                && !file.getOriginalFilename().endsWith("xls")) {
+            return ZYResponse.success("文件格式不支持");
+        }
+        String map = userService.importExcel(file);
+        return ZYResponse.success(map);
     }
 
 }
