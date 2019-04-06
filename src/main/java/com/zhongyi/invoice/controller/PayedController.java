@@ -295,7 +295,7 @@ public class PayedController {
 
 
         invoiceVOS.forEach(invoiceVO2 -> {
-            String dateString = DateUtils.date2String(invoiceVO2.getInvoiceDate());
+            String dateString = DateUtils.date2String(invoiceVO2.getReceivedDate());
             invoiceVO2.setInvoiceDateTime(dateString);
         });
 
