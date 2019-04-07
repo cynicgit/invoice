@@ -343,13 +343,10 @@
 
 
     var id = $.cookie("invoice_id");
-    $(function () {
-        getInvoice();
-        getDep();
-        //  getUser();
-    });
 
     $(function () {
+
+        getInvoice();
         layui.use('laydate', function () {
             var laydate = layui.laydate;
             laydate.render({
@@ -369,8 +366,11 @@
             });
             layui.use('form', function () {
                 var form = layui.form;
+                form.render();
             });
         });
+
+
     })
 
     function getInvoice() {

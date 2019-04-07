@@ -63,7 +63,7 @@ function showDep(list) {
 
 function showUser(list,selected) {
 
-    var options ;
+    var options='' ;
     for (var i = 0; i < list.length; i++) {
         if (selected === list[i].id){
             options += '<option value="' + list[i].id + '" selected >' + list[i].name + '</option>'
@@ -73,6 +73,7 @@ function showUser(list,selected) {
 
 
     }
+    console.log(options);
     $('#userId').html(options);
 }
 
