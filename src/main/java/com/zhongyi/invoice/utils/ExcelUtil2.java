@@ -1,8 +1,8 @@
 package com.zhongyi.invoice.utils;
 
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import lombok.Data;
 import org.apache.poi.hpsf.SummaryInformation;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
@@ -16,25 +16,26 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class ExcelUtil{
+public class ExcelUtil2 {
     public static String NO_DEFINE = "no_define";//未定义的字段
-    public static String DEFAULT_DATE_PATTERN="yyyy年MM月dd日";//默认日期格式
+    public static String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";//默认日期格式
     public static int DEFAULT_COLOUMN_WIDTH = 17;
+
     /**
      * 导出Excel 97(.xls)格式 ，少量数据
-     * @param title 标题行 
-     * @param headMap 属性-列名
-     * @param jsonArray 数据集
+     *
+     * @param title       标题行
+     * @param headMap     属性-列名
+     * @param jsonArray   数据集
      * @param datePattern 日期格式，null则用默认日期格式
-     * @param colWidth 列宽 默认 至少17个字节
-     * @param out 输出流
+     * @param colWidth    列宽 默认 至少17个字节
+     * @param out         输出流
      */
     public static void exportExcel(String title, Map<String, String> headMap, JSONArray jsonArray, String datePattern, int colWidth, OutputStream out) {
-        if(datePattern==null) datePattern = DEFAULT_DATE_PATTERN;
+        if (datePattern == null) datePattern = DEFAULT_DATE_PATTERN;
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         workbook.createInformationProperties();
@@ -47,7 +48,7 @@ public class ExcelUtil{
         si.setTitle("POI导出Excel"); //填加xls文件标题信息
         si.setSubject("POI导出Excel");//填加文件主题信息
         si.setCreateDateTime(new Date());
-         //表头样式
+        //表头样式
         HSSFCellStyle titleStyle = workbook.createCellStyle();
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
         HSSFFont titleFont = workbook.createFont();
@@ -56,7 +57,7 @@ public class ExcelUtil{
         titleStyle.setFont(titleFont);
         // 列头样式
         HSSFCellStyle headerStyle = workbook.createCellStyle();
-      //  headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        //   headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         headerStyle.setBorderBottom(BorderStyle.THIN);
         headerStyle.setBorderLeft(BorderStyle.THIN);
         headerStyle.setBorderRight(BorderStyle.THIN);
@@ -68,7 +69,7 @@ public class ExcelUtil{
         headerStyle.setFont(headerFont);
         // 单元格样式
         HSSFCellStyle cellStyle = workbook.createCellStyle();
-      //  cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        //  cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
@@ -90,29 +91,29 @@ public class ExcelUtil{
         // 设置注释作者，当鼠标移动到单元格上是可以在状态栏中看到该内容.
         comment.setAuthor("JACK");
         //设置列宽
-        int minBytes = colWidth<DEFAULT_COLOUMN_WIDTH?DEFAULT_COLOUMN_WIDTH:colWidth;//至少字节数
+        int minBytes = colWidth < DEFAULT_COLOUMN_WIDTH ? DEFAULT_COLOUMN_WIDTH : colWidth;//至少字节数
         int[] arrColWidth = new int[headMap.size()];
         // 产生表格标题行,以及设置列宽
         String[] properties = new String[headMap.size()];
         String[] headers = new String[headMap.size()];
         int ii = 0;
         for (Iterator<String> iter = headMap.keySet().iterator(); iter
-                .hasNext();) {
+                .hasNext(); ) {
             String fieldName = iter.next();
 
             properties[ii] = fieldName;
             headers[ii] = fieldName;
 
             int bytes = fieldName.getBytes().length;
-            arrColWidth[ii] =  bytes < minBytes ? minBytes : bytes;
-            sheet.setColumnWidth(ii,arrColWidth[ii]*256);
+            arrColWidth[ii] = bytes < minBytes ? minBytes : bytes;
+            sheet.setColumnWidth(ii, arrColWidth[ii] * 256);
             ii++;
         }
         // 遍历集合数据，产生数据行
         int rowIndex = 0;
         for (Object obj : jsonArray) {
-            if(rowIndex == 65535 || rowIndex == 0){
-                if ( rowIndex != 0 ) sheet = workbook.createSheet();//如果数据超过了，则在第二页显示
+            if (rowIndex == 65535 || rowIndex == 0) {
+                if (rowIndex != 0) sheet = workbook.createSheet();//如果数据超过了，则在第二页显示
 
                 HSSFRow titleRow = sheet.createRow(0);//表头 rowIndex=0
                 titleRow.createCell(0).setCellValue(title);
@@ -120,8 +121,7 @@ public class ExcelUtil{
                 sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headMap.size() - 1));
 
                 HSSFRow headerRow = sheet.createRow(1); //列头 rowIndex =1
-                for(int i=0;i<headers.length;i++)
-                {
+                for (int i = 0; i < headers.length; i++) {
                     headerRow.createCell(i).setCellValue(headers[i]);
                     headerRow.getCell(i).setCellStyle(headerStyle);
 
@@ -130,14 +130,13 @@ public class ExcelUtil{
             }
             JSONObject jo = (JSONObject) JSONObject.toJSON(obj);
             HSSFRow dataRow = sheet.createRow(rowIndex);
-            for (int i = 0; i < properties.length; i++)
-            {
+            for (int i = 0; i < properties.length; i++) {
                 HSSFCell newCell = dataRow.createCell(i);
 
-                Object o =  jo.get(properties[i]);
-                String cellValue = ""; 
-                if(o==null) cellValue = "";
-                else if(o instanceof Date) cellValue = new SimpleDateFormat(datePattern).format(o);
+                Object o = jo.get(properties[i]);
+                String cellValue = "";
+                if (o == null) cellValue = "";
+                else if (o instanceof Date) cellValue = new SimpleDateFormat(datePattern).format(o);
                 else cellValue = o.toString();
 
                 newCell.setCellValue(cellValue);
@@ -156,49 +155,33 @@ public class ExcelUtil{
             e.printStackTrace();
         }
     }
+
     /**
      * 导出Excel 2007 OOXML (.xlsx)格式
-     * @param title 标题行
-     * @param headMap 属性-列头
-     * @param jsonArray 数据集
+     *
+     * @param title       标题行
+     * @param headMap     属性-列头
+     * @param jsonArray   数据集
      * @param datePattern 日期格式，传null值则默认 年月日
-     * @param colWidth 列宽 默认 至少17个字节
-     * @param out 输出流
-     * @param merges
+     * @param colWidth    列宽 默认 至少17个字节
+     * @param out         输出流
      */
-    public static void exportExcelX(String title, String subhead, Map<String, String> headMap, JSONArray jsonArray, String datePattern, int colWidth, OutputStream out, int[] merges) {
-        if(datePattern==null) datePattern = DEFAULT_DATE_PATTERN;
+    public static void exportExcelX(String title, Map<String, String> headMap, JSONArray jsonArray, String datePattern, int colWidth, OutputStream out) {
+        if (datePattern == null) datePattern = DEFAULT_DATE_PATTERN;
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(1000);//缓存
         workbook.setCompressTempFiles(true);
-         //表头样式
+        //表头样式
         CellStyle titleStyle = workbook.createCellStyle();
-        titleStyle.setBorderBottom(BorderStyle.THIN);
-        titleStyle.setBorderLeft(BorderStyle.THIN);
-        titleStyle.setBorderRight(BorderStyle.THIN);
-        titleStyle.setBorderTop(BorderStyle.THIN);
         titleStyle.setAlignment(HorizontalAlignment.CENTER);
         Font titleFont = workbook.createFont();
         titleFont.setFontHeightInPoints((short) 20);
         titleFont.setBold(true);
+
         titleStyle.setFont(titleFont);
-
-        CellStyle subStyle = workbook.createCellStyle();
-        subStyle.setBorderBottom(BorderStyle.THIN);
-        subStyle.setBorderLeft(BorderStyle.THIN);
-        subStyle.setBorderRight(BorderStyle.THIN);
-        subStyle.setBorderTop(BorderStyle.THIN);
-        subStyle.setAlignment(HorizontalAlignment.CENTER);
-        Font subFont = workbook.createFont();
-        subFont.setFontHeightInPoints((short) 18);
-        subFont.setBold(true);
-        subStyle.setFont(subFont);
-
-
-
         // 列头样式
         CellStyle headerStyle = workbook.createCellStyle();
-     //   headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        // headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         headerStyle.setBorderBottom(BorderStyle.THIN);
         headerStyle.setBorderLeft(BorderStyle.THIN);
         headerStyle.setBorderRight(BorderStyle.THIN);
@@ -210,7 +193,7 @@ public class ExcelUtil{
         headerStyle.setFont(headerFont);
         // 单元格样式
         CellStyle cellStyle = workbook.createCellStyle();
-    //    cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        //  cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
@@ -223,113 +206,81 @@ public class ExcelUtil{
         // 生成一个(带标题)表格
         SXSSFSheet sheet = workbook.createSheet();
         //设置列宽
-        int minBytes = colWidth<DEFAULT_COLOUMN_WIDTH?DEFAULT_COLOUMN_WIDTH:colWidth;//至少字节数
+        int minBytes = colWidth < DEFAULT_COLOUMN_WIDTH ? DEFAULT_COLOUMN_WIDTH : colWidth;//至少字节数
         int[] arrColWidth = new int[headMap.size()];
         // 产生表格标题行,以及设置列宽
         String[] properties = new String[headMap.size()];
         String[] headers = new String[headMap.size()];
         int ii = 0;
         for (Iterator<String> iter = headMap.keySet().iterator(); iter
-                .hasNext();) {
+                .hasNext(); ) {
             String fieldName = iter.next();
 
             properties[ii] = fieldName;
             headers[ii] = headMap.get(fieldName);
 
             int bytes = fieldName.getBytes().length;
-            arrColWidth[ii] =  bytes < minBytes ? minBytes : bytes;
-            sheet.setColumnWidth(ii,arrColWidth[ii]*256);
+            arrColWidth[ii] = bytes < minBytes ? minBytes : bytes;
+            sheet.setColumnWidth(ii, arrColWidth[ii] * 256);
             ii++;
         }
         // 遍历集合数据，产生数据行
         int rowIndex = 0;
-        Map<Integer, POIEntity> listLinkedHashMap = new LinkedHashMap<>();
-        int size = jsonArray.size();
         for (Object obj : jsonArray) {
-            if(rowIndex == 65535 || rowIndex == 0){
-                if ( rowIndex != 0 ) sheet = workbook.createSheet();//如果数据超过了，则在第二页显示
+            if (rowIndex == 65535 || rowIndex == 0) {
+                if (rowIndex != 0) sheet = workbook.createSheet();//如果数据超过了，则在第二页显示
 
-                SXSSFRow titleRow = sheet.createRow(0);//表头 rowIndex=0
+//                SXSSFRow titleRow = sheet.createRow(0);//表头 rowIndex=0
+//                titleRow.createCell(0).setCellValue(title);
+//                titleRow.getCell(0).setCellStyle(titleStyle);
+//                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headMap.size() - 1));
 
-                for (int i = 0; i < headMap.size(); i++) {
-                    titleRow.createCell(i).setCellValue(title);
-                    titleRow.getCell(i).setCellStyle(titleStyle);
-                }
-
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, headMap.size() - 1));
-                SXSSFRow subheadRow = sheet.createRow(1);
-                for (int i = 0; i < headMap.size(); i++) {
-                    subheadRow.createCell(i).setCellValue(subhead + "     单位：万元");
-                    subheadRow.getCell(i).setCellStyle(subStyle);
-                }
-                sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, headMap.size() - 1));
-
-                SXSSFRow headerRow = sheet.createRow(2); //列头 rowIndex =1
-                for(int i=0;i<headers.length;i++)
-                {
+                SXSSFRow headerRow = sheet.createRow(0); //列头 rowIndex =1
+                for (int i = 0; i < headers.length; i++) {
                     headerRow.createCell(i).setCellValue(headers[i]);
                     headerRow.getCell(i).setCellStyle(headerStyle);
 
                 }
-                rowIndex = 3;//数据内容从 rowIndex=2开始
+                rowIndex = 1;//数据内容从 rowIndex=2开始
             }
-
-
-
             JSONObject jo = (JSONObject) JSONObject.toJSON(obj);
             SXSSFRow dataRow = sheet.createRow(rowIndex);
-
-//            for (int i = 0; i < merges.length; i++) {
-//                listLinkedHashMap.put(merges[i], new ArrayList<>());
-//            }
-            for (int i = 0; i < properties.length; i++)
-            {
+            for (int i = 0; i < properties.length; i++) {
                 SXSSFCell newCell = dataRow.createCell(i);
-                Object o =  jo.get(properties[i]);
+
+                Object o = jo.get(properties[i]);
                 String cellValue = "";
-                if(o==null) cellValue = "";
-                else if(o instanceof Date) cellValue = new SimpleDateFormat(datePattern).format(o);
-                else if(o instanceof Float || o instanceof Double) {
-                    cellValue = getNum(o);
-                    if (properties[i].contains("率")) cellValue = cellValue + "%";
-                } else cellValue = o.toString();
-                if (jsonArray.lastIndexOf(obj) == 70) {
-                    System.out.println("");
-                }
-                newCell.setCellValue(cellValue);
-                newCell.setCellStyle(cellStyle);
-                for (int j = 0; j < merges.length; j++) {
+                if (o == null) {
+                    cellValue = "";
+                } else if (o instanceof Date) {
+                    cellValue = new SimpleDateFormat(datePattern).format(o);
+                } else if (o instanceof Float || o instanceof Double) {
+                    cellValue = new BigDecimal(o.toString()).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                } else if (o instanceof JSONObject) {
+                    JSONObject j = (JSONObject) o;
+                    long date = (long) ((JSONObject) j.get("loginInfo1")).get("date") * 1000;
+                    cellValue = new SimpleDateFormat(datePattern).format(date);
+                } else {
+                    if (o.toString().matches("^\\d{13}$")) {
+                        try {
+                            cellValue = new SimpleDateFormat(datePattern).format(o);
 
-                    if (i == merges[j]) {
-                        POIEntity oldPOI = listLinkedHashMap.get(merges[j]);
-                        if (oldPOI == null) {
-                            oldPOI = new POIEntity();
-                            oldPOI.setRolIndex(i);
-                            oldPOI.setRowIndex(rowIndex);
-                            oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
-                        } else {
-                            if(oldPOI.getNewContent().equals(jo.get("groupName") + "_"+ cellValue)) {
-                                oldPOI.setRolIndex(i);
-                            } else if (rowIndex - 1 - oldPOI.getRowIndex() > 0) {
-                                // 合并
-                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex -1, i, i));
-                                oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
-                                oldPOI.setRowIndex(rowIndex);
-                                oldPOI.setRolIndex(i);
-                            } else {
-                                oldPOI.setNewContent(jo.get("groupName") + "_" + cellValue);
-                                oldPOI.setRowIndex(rowIndex);
-                                oldPOI.setRolIndex(i);
-                            }
-
-                            if ( jsonArray.lastIndexOf(obj) == size -1) {
-                                sheet.addMergedRegion(new CellRangeAddress(oldPOI.getRowIndex(), rowIndex , i, i));
-                            }
-
+                        } catch (Exception e) {
+                            cellValue = o.toString();
                         }
-                        listLinkedHashMap.put(i, oldPOI);
+                    } else if (o.toString().matches("^\\d{10}$")) {
+                        try {
+                            cellValue = new SimpleDateFormat(datePattern).format(new Date(Integer.parseInt(o.toString()) * 1000L));
+                        } catch (Exception e) {
+                            cellValue = o.toString();
+                        }
+                    } else {
+                        cellValue = o.toString();
                     }
                 }
+
+                newCell.setCellValue(cellValue);
+                newCell.setCellStyle(cellStyle);
             }
             rowIndex++;
         }
@@ -346,22 +297,23 @@ public class ExcelUtil{
         }
     }
 
-    private static String getNum(Object num) {
-        DecimalFormat df = new DecimalFormat("0.00");//设置两位小数
-        return df.format(num);
+    public static void exportExcelX(String title, Map<String, String> headMap, List list, OutputStream out) {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.addAll(list);
+        exportExcelX(title, headMap, jsonArray, null, 0, out);
     }
+
     //Web 导出excel
-    public static void downloadExcelFile(String title,String subhead, Map<String,String> headMap,JSONArray ja,HttpServletResponse response, int[] merges){
+    public static void downloadExcelFile(String title, Map<String, String> headMap, JSONArray ja, HttpServletResponse response) {
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ExcelUtil.exportExcelX(title,subhead,headMap,ja,null,0,os, merges);
+            ExcelUtil2.exportExcelX(title, headMap, ja, null, 0, os);
             byte[] content = os.toByteArray();
             InputStream is = new ByteArrayInputStream(content);
             // 设置response参数，可以打开下载页面
             response.reset();
-
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
-            response.setHeader("Content-Disposition", "attachment;filename="+ new String((title + ".xlsx").getBytes(), "iso-8859-1"));
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String((title + ".xlsx").getBytes(), "iso-8859-1"));
             response.setContentLength(content.length);
             ServletOutputStream outputStream = response.getOutputStream();
             BufferedInputStream bis = new BufferedInputStream(is);
@@ -376,42 +328,45 @@ public class ExcelUtil{
             bos.close();
             outputStream.flush();
             outputStream.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static void downloadExcelFile(String title, Map<String, String> headMap, List list, HttpServletResponse response) {
+        JSONArray ja = new JSONArray();
+        ja.addAll(list);
+        downloadExcelFile(title, headMap, ja, response);
+    }
 
+    public static Map<String,String> getHeaderMap(){
+        Map<String,String> headMap = new LinkedHashMap<>();
+        headMap.put("taskId", "任务单号");
+        headMap.put("contractNumber", "合同号");
+        headMap.put("invoiceDate", "开票日期");
+        headMap.put("creditType", "信用类别");
+        headMap.put("creditLimit", "信用期限");
+        headMap.put("invoiceNumber", "发票号");
+        headMap.put("invoiceOffice", "开票单位");
+        headMap.put("departmentName", "所属部门");
+        headMap.put("invoiceProject", "项目");
+        headMap.put("contractAmount", "合同金额");
+        headMap.put("invoiceAmount", "发票金额");
+        headMap.put("noTaxAmount", "不含税金额");
+        headMap.put("contractUser", "项目负责人");
+        headMap.put("invoiceSignatory", "签收人");
+        headMap.put("reportNumber", "报告号");
+        headMap.put("reportDate", "报告日期");
+        headMap.put("receivedDate", "回款日期");
+        headMap.put("receivedAmount", "回款金额");
+        headMap.put("noReceivedAmount", "未到账");
+        headMap.put("badAmount", "坏账");
+        headMap.put("descprition", "备注");
+        return headMap;
+    }
 
     public static void main(String[] args) throws IOException {
-        int count = 100000;
-        JSONArray ja = new JSONArray();
 
-        Map<String,String> headMap = new LinkedHashMap<String,String>();
-        headMap.put("name","姓名");
-        headMap.put("age","年龄");
-        headMap.put("birthday","生日");
-        headMap.put("height","身高");
-        headMap.put("weight","体重");
-        headMap.put("sex","性别");        
-
-        String title = "测试";
-
-        OutputStream outXlsx = new FileOutputStream("E://b.xlsx");
-        System.out.println("正在导出xlsx....");
-        Date d2 = new Date();
-        ExcelUtil.exportExcelX(title,",", headMap, ja,null,0,outXlsx, new int[]{});
-        System.out.println("共"+count+"条数据,执行"+(new Date().getTime()-d2.getTime())+"ms");
-        outXlsx.close();
 
     }
-
-    @Data
-    public static class POIEntity {
-        private String oldContent;
-        private String newContent;
-        private int rolIndex;
-        private int rowIndex;
-    }
-
 }

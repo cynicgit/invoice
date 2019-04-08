@@ -97,6 +97,9 @@
          left JOIN t_department d
          ON p.dep_id = d.id
     </select>
+    <select id="findByDepIdAndName" resultType="java.lang.Integer">
+        select id from t_project where dep_id = #{depId} and project_name = #{projectName}
+    </select>
 
 
 </mapper>

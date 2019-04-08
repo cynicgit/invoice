@@ -8,6 +8,8 @@ import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
+import com.zhongyi.invoice.utils.ExcelUtil;
+import com.zhongyi.invoice.utils.ExcelUtil2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,23 +53,24 @@ public class ReceiptController {
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelReceiptDetail(invoiceVO);
         setCreateLimitPart(invoiceVOS);
         if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
-//            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice::getDepartmentName));
-//            invoiceVOS = map.get(String.valueOf(invoiceVO.getDepartmentName()));
             invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getDepartmentName().contains(invoiceVO.getDepartmentName())).collect(Collectors.toList());
         }
 
-        Map<String, Object> mapParms = new HashMap<>();
-        mapParms.put("list", invoiceVOS);
-        String path = excelPath + "receiptDetail.xlsx";
+//        Map<String, Object> mapParms = new HashMap<>();
+//        mapParms.put("list", invoiceVOS);
+//        String path = excelPath + "receiptDetail.xlsx";
+//
+//        TemplateExportParams params = new TemplateExportParams();
+//        params.setTemplateUrl(path);
+//        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
+//        response.setCharacterEncoding("UTF-8");
+//        response.setHeader("content-Type", "application/vnd.ms-excel");
+//        response.setHeader("Content-Disposition",
+//                "attachment;filename=" + URLEncoder.encode("发票统计明细按部门统计.xlsx", "UTF-8"));
+//        workbook.write(response.getOutputStream());
 
-        TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(path);
-        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("发票统计明细按部门统计.xlsx", "UTF-8"));
-        workbook.write(response.getOutputStream());
+        String title = "发票统计明细按部门统计";
+        ExcelUtil2.downloadExcelFile(title, ExcelUtil2.getHeaderMap(), invoiceVOS, response);
     }
 
     @GetMapping("/detail/contractUser")
@@ -90,18 +93,21 @@ public class ReceiptController {
         }
 
 
-        Map<String, Object> mapParms = new HashMap<>();
-        mapParms.put("list", invoiceVOS);
-        String path = excelPath + "receiptDetail.xlsx";
+//        Map<String, Object> mapParms = new HashMap<>();
+//        mapParms.put("list", invoiceVOS);
+//        String path = excelPath + "receiptDetail.xlsx";
+//
+//        TemplateExportParams params = new TemplateExportParams();
+//        params.setTemplateUrl(path);
+//        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
+//        response.setCharacterEncoding("UTF-8");
+//        response.setHeader("content-Type", "application/vnd.ms-excel");
+//        response.setHeader("Content-Disposition",
+//                "attachment;filename=" + URLEncoder.encode("发票统计明细按项目负责人统计.xlsx", "UTF-8"));
+//        workbook.write(response.getOutputStream());
 
-        TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(path);
-        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("发票统计明细按项目负责人统计.xlsx", "UTF-8"));
-        workbook.write(response.getOutputStream());
+        String title = "发票统计明细按项目负责人统计";
+        ExcelUtil2.downloadExcelFile(title, ExcelUtil2.getHeaderMap(), invoiceVOS, response);
     }
 
     @GetMapping("/detail/invoiceType")
@@ -123,18 +129,20 @@ public class ReceiptController {
             invoiceVOS = map.get(user.getName());
         }
 
-        Map<String, Object> mapParms = new HashMap<>();
-        mapParms.put("list", invoiceVOS);
-        String path = excelPath + "receiptDetail.xlsx";
-
-        TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(path);
-        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("发票统计明细按发票类型统计.xlsx", "UTF-8"));
-        workbook.write(response.getOutputStream());
+//        Map<String, Object> mapParms = new HashMap<>();
+//        mapParms.put("list", invoiceVOS);
+//        String path = excelPath + "receiptDetail.xlsx";
+//
+//        TemplateExportParams params = new TemplateExportParams();
+//        params.setTemplateUrl(path);
+//        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
+//        response.setCharacterEncoding("UTF-8");
+//        response.setHeader("content-Type", "application/vnd.ms-excel");
+//        response.setHeader("Content-Disposition",
+//                "attachment;filename=" + URLEncoder.encode("发票统计明细按发票类型统计.xlsx", "UTF-8"));
+//        workbook.write(response.getOutputStream());
+        String title = "发票统计明细按发票类型统计";
+        ExcelUtil2.downloadExcelFile(title, ExcelUtil2.getHeaderMap(), invoiceVOS, response);
     }
 
     @GetMapping("/detail/invoiceOffice")
@@ -157,17 +165,19 @@ public class ReceiptController {
             Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(invoiceVO2 -> invoiceVO2.getContractUser()));
             invoiceVOS = map.get(user.getName());
         }
-        Map<String, Object> mapParms = new HashMap<>();
-        mapParms.put("list", invoiceVOS);
-        String path = excelPath + "receiptDetail.xlsx";
-        TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(path);
-        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("发票统计明细按开票单位统计.xlsx", "UTF-8"));
-        workbook.write(response.getOutputStream());
+//        Map<String, Object> mapParms = new HashMap<>();
+//        mapParms.put("list", invoiceVOS);
+//        String path = excelPath + "receiptDetail.xlsx";
+//        TemplateExportParams params = new TemplateExportParams();
+//        params.setTemplateUrl(path);
+//        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
+//        response.setCharacterEncoding("UTF-8");
+//        response.setHeader("content-Type", "application/vnd.ms-excel");
+//        response.setHeader("Content-Disposition",
+//                "attachment;filename=" + URLEncoder.encode("发票统计明细按开票单位统计.xlsx", "UTF-8"));
+//        workbook.write(response.getOutputStream());
+        String title = "发票统计明细按开票单位统计";
+        ExcelUtil2.downloadExcelFile(title, ExcelUtil2.getHeaderMap(), invoiceVOS, response);
     }
 
     @GetMapping("/gather/dep")
@@ -254,7 +264,7 @@ public class ReceiptController {
         invoiceVO1.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
         list.add(invoiceVO1);
         map.put("list", list);
-        String thisYearCom = yearStartDate + "至" + invoiceVO.getEndDate();
+        String thisYearCom = "年度累计：" + yearStartDate + "至" + invoiceVO.getEndDate();
         map.put("thisYearCom", thisYearCom);
         String currentCom = "合计收入：" + invoiceVO.getStartDate() + "至" + invoiceVO.getEndDate();
         map.put("currentCom", currentCom);
@@ -354,7 +364,7 @@ public class ReceiptController {
         invoiceVO1.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
         list.add(invoiceVO1);
         map.put("list", list);
-        String thisYearCom = yearStartDate + "至" + invoiceVO.getEndDate();
+        String thisYearCom = "年度累计：" + yearStartDate + "至" + invoiceVO.getEndDate();
         map.put("thisYearCom", thisYearCom);
         String currentCom = "合计收入：" + invoiceVO.getStartDate() + "至" + invoiceVO.getEndDate();
         map.put("currentCom", currentCom);
@@ -442,7 +452,7 @@ public class ReceiptController {
         invoiceVO1.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
         list.add(invoiceVO1);
         mapParms.put("list", list);
-        String thisYearCom = yearStartDate + "至" + invoiceVO.getEndDate();
+        String thisYearCom = "年度累计：" + yearStartDate + "至" + invoiceVO.getEndDate();
         mapParms.put("thisYearCom", thisYearCom);
         String currentCom = "合计收入：" + invoiceVO.getStartDate() + "至" + invoiceVO.getEndDate();
         mapParms.put("currentCom", currentCom);
@@ -590,7 +600,7 @@ public class ReceiptController {
         invoiceVO1.setTotalThisYearNoTaxAmount(sumThisYearNoTaxAmount);
         list.add(invoiceVO1);
         map.put("list", list);
-        String thisYearCom = yearStartDate + "至" + invoiceVO.getEndDate();
+        String thisYearCom = "年度累计：" + yearStartDate + "至" + invoiceVO.getEndDate();
         map.put("thisYearCom", thisYearCom);
         String currentCom = "合计收入：" + invoiceVO.getStartDate() + "至" + invoiceVO.getEndDate();
         map.put("currentCom", currentCom);

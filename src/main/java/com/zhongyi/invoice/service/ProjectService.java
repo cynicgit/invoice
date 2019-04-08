@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.entity.Department;
 import com.zhongyi.invoice.entity.Project;
 import com.zhongyi.invoice.entity.User;
+import com.zhongyi.invoice.expection.BusinessException;
 import com.zhongyi.invoice.mapper.DepartmentMapper;
 import com.zhongyi.invoice.mapper.ProjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class ProjectService {
     private DepartmentMapper departmentMapper;
 
     public void addProject(Project project) {
+        Integer id = projectMapper.findByDepIdAndName(project);
+        if (id != null){
+            throw new BusinessException("该项目已存在");
+        }
         projectMapper.insertSelective(project);
     }
 
@@ -36,6 +41,12 @@ public class ProjectService {
     }
 
     public void updateProject(Project project) {
+
+        Integer id = projectMapper.findByDepIdAndName(project);
+        if (id != null){
+            throw new BusinessException("该项目已存在");
+        }
+
         projectMapper.updateProject(project);
     }
 

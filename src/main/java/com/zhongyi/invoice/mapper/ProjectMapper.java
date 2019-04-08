@@ -37,4 +37,6 @@ public interface ProjectMapper {
     List<Project> getAllProject();
 
     List<Project> getProjectByName(@Param( "projectName") String projectName);
+
+    Integer findByDepIdAndName(Project project);
 }
