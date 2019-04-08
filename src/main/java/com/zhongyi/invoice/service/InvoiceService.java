@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.expection.BusinessException;
-import com.zhongyi.invoice.mapper.DepartmentMapper;
-import com.zhongyi.invoice.mapper.InvoiceMapper;
-import com.zhongyi.invoice.mapper.ProjectMapper;
-import com.zhongyi.invoice.mapper.UserMapper;
+import com.zhongyi.invoice.mapper.*;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ public class InvoiceService {
 
     @Autowired
     private DepartmentMapper departmentMapper;
+
+    @Autowired
+    private CreditMapper creditMapper;
 
     @Autowired
     private ProjectMapper projectMapper;
@@ -262,6 +262,8 @@ public class InvoiceService {
             throw new BusinessException("未找到对应员工");
         }
 
+        Credit credit = creditMapper.findByCreditLimit(invoice.getCreditLimit());
+        invoice.setCreditType(credit.getCreditType());
         invoice.setUserId(userByName.getId());
 //        String name = departmentMapper.getParentName(invoice.getDepartmentName());
 //        if (StringUtils.isEmpty(name)) {
@@ -276,6 +278,8 @@ public class InvoiceService {
 
     @Transactional(rollbackFor = Exception.class)
     public void updateInvoice(Invoice invoice) {
+        Credit credit = creditMapper.findByCreditLimit(invoice.getCreditLimit());
+        invoice.setCreditType(credit.getCreditType());
         invoiceMapper.updateByPrimaryKeySelective(invoice);
     }
 

@@ -16,13 +16,13 @@
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
 	<link rel="stylesheet" type="text/css" href="static/css/main.css">
-	<title>税率管理</title>
+	<title>企业信用管理</title>
 	<link rel="stylesheet" href="lib/laypage/1.2/skin/laypage.css">
 	<link rel="stylesheet" href="static/css/tax.css">
 </head>
 <body>
 
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 税率管理 <span class="c-gray en">&gt;</span> 税率列表<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 企业信用管理 <span class="c-gray en">&gt;</span> 企业信用列表<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container" id="student-list">
 	<div class="cl pd-5 bg-1 bk-gray mt-20">
 		<!--<input id="search-name" type="text" style="width:150px" class="input-text radius" placeholder="用户名">-->
@@ -35,7 +35,8 @@
 			<thead class="text-c">
 				<tr >
 					<th width="50">序号</th>
-					<th width="80">税率</th>
+					<th width="80">信用类别</th>
+					<th width="80">信用期限</th>
 					<th width="80">操作</th>
 				</tr>
 			</thead>
@@ -68,11 +69,11 @@
         function getData(data){
             $('#pagination').hide()
             ajax({
-                url: 'taxrate/page',
+                url: 'credit/page',
                 data: data,
                 success: function(response){
                     layer.closeAll()
-                    var status = response.result
+                    var status = response.result;
                     if(status === 0){
                         var data = response.data
                         if(data.total > 0 && data.list.length > 0){
@@ -88,14 +89,14 @@
             })
         }
 
-		function deleteTaxRate(id) {
+		function deleteCredit(id) {
 
             layer.confirm('确定删除！', {
                 btn: ['确定','取消'] //按钮
 				,title: "提示"
             }, function(){
                 ajax({
-                    url:"/taxrate?id=" + id,
+                    url:"/credit?id=" + id,
                     type: "delete",
                     success: function(response) {
                         if (response.result === 0) {
@@ -107,12 +108,12 @@
 
         }
 
-        function getTaxRateDetail(id) {
-            $.cookie("taxrateId", id);
+        function getCreditDetail(id) {
+            $.cookie("creditId", id);
             var index = layer.open({
                 type: 2,
-                title: '税率详情',
-                content: 'taxrate-update.html'
+                title: '信用详情',
+                content: 'credit-update.html'
             });
             layer_index = index;
             layer.full(index);
@@ -121,8 +122,8 @@
         function addTaxRate() {
             var index = layer.open({
                 type: 2,
-                title: '添加税率',
-                content: 'taxrate-add.html'
+                title: '添加信用期限',
+                content: 'credit-add.html'
             });
             layer_index = index;
             layer.full(index);
@@ -145,11 +146,12 @@
 
                 trs += 	'<tr>'+
                     '<td>'+ sequence + '</td>'+
-                    '<td>'+ item.taxRate + '%' +'</td>'+
+                    '<td>'+ item.creditType +'</td>'+
+                    '<td>'+ item.creditLimit + '</td>'+
                 	'<td>'+
-					'<button onclick="getTaxRateDetail(\''+item.id + '\')"  class="btn btn-secondary-outline radius btn_edit">'+
+					'<button onclick="getCreditDetail(\''+item.id + '\')"  class="btn btn-secondary-outline radius btn_edit">'+
 					'<i class="Hui-iconfont"></i>修改' +
-					'<button onclick="deleteTaxRate(\''+item.id + '\')" class="btn btn-secondary-outline radius ">'+
+					'<button onclick="deleteCredit(\''+item.id + '\')" class="btn btn-secondary-outline radius ">'+
 					'<i class="Hui-iconfont"></i>删除'+
                     '</td>'+
                     '</tr>'

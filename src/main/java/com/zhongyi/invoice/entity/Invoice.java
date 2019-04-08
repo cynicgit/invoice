@@ -18,9 +18,12 @@ import java.util.Date;
 public class Invoice {
 
     private Integer id;
+
     @NotBlank(message = "任务单号不能为空！")
     @Excel(name = "任务单号", orderNum = "0")
     private String taskId;
+
+
     @NotBlank(message = "合同号不能为空！")
     @Excel(name = "合同号", orderNum = "1")
     private String contractNumber;

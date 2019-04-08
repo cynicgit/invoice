@@ -70,30 +70,46 @@
             </div>
         </div>
 
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>信用类别：</label>
-            <div>
-                <div class="radio-box">
-                    <input name="target" type="radio" id="company" value="企业" checked>
-                    <label for="company">企业</label>
-                </div>
-                <div class="radio-box">
-                    <input name="target" type="radio" id="government" value="政府">
-                    <label for="government">政府</label>
-                </div>
-            </div>
-        </div>
+        <!--<div class="row cl">-->
+            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>信用类别：</label>-->
+            <!--<div>-->
+                <!--<div class="radio-box">-->
+                    <!--<input name="target" type="radio" id="company" value="企业" checked>-->
+                    <!--<label for="company">企业</label>-->
+                <!--</div>-->
+                <!--<div class="radio-box">-->
+                    <!--<input name="target" type="radio" id="government" value="政府">-->
+                    <!--<label for="government">政府</label>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="row cl">-->
+            <!--<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>信用期限：</label>-->
+            <!--<div>-->
+                <!--<div class="radio-box">-->
+                    <!--<input name="time" type="radio" id="three-radio" value="3个月" checked>-->
+                    <!--<label for="three-radio">3个月</label>-->
+                <!--</div>-->
+                <!--<div class="radio-box">-->
+                    <!--<input name="time" type="radio" id="six-radio" value="6个月">-->
+                    <!--<label for="six-radio">6个月</label>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
 
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>信用期限：</label>
-            <div>
-                <div class="radio-box">
-                    <input name="time" type="radio" id="three-radio" value="3个月" checked>
-                    <label for="three-radio">3个月</label>
-                </div>
-                <div class="radio-box">
-                    <input name="time" type="radio" id="six-radio" value="6个月">
-                    <label for="six-radio">6个月</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 信用期限：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <span class="select-box">
+                    <select id="credit" name="taxRate" class="select">
+                         <!--<option value="0">0%</option>-->
+                        <!--<option value="6">6%</option>-->
+                        <!--<option value="9">9%</option>-->
+                        <!--<option value="13">13%</option>-->
+                    </select>
+                    </span>
                 </div>
             </div>
         </div>
@@ -335,12 +351,14 @@
 
         layui.use('form', function () {
             var form = layui.form;
+            form.render();
         });
 
 
         getDep();
         getUser(null);
         getTaxRate(null);
+        getCredit(null);
 
     });
 
@@ -357,8 +375,9 @@
         var invoiceOffice = $("#invoiceOffice").val();
         var invoiceNumber = $("#invoiceNumber").val();
         var type = $("input[name='type']:checked").val();
-        var target = $("input[name='target']:checked").val();
-        var time = $("input[name='time']:checked").val();
+      //  var target = $("input[name='target']:checked").val();
+      //  var time = $("input[name='time']:checked").val();
+        var credit = $("#credit").val();
         var depId = $("#depId-select").val();
         var departmentName = $("#depId-select option:selected").text();
         var parentDep = $("#depId-select option:selected").parent().attr("label");
@@ -433,9 +452,9 @@
                 invoiceDate: invoiceDate,
                 invoiceOffice: invoiceOffice,
                 invoiceNumber: invoiceNumber,
-                creditType: target,
+               // creditType: target,
                 contractUser: contractUser,
-                creditLimit: time,
+                creditLimit: credit,
                 invoiceType: type,
                 taskId: taskId,
                 depId: depId,

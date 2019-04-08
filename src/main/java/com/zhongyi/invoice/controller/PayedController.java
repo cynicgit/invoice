@@ -3,9 +3,12 @@ package com.zhongyi.invoice.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.zhongyi.invoice.annontion.OperateLog;
+import com.zhongyi.invoice.entity.Credit;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
+import com.zhongyi.invoice.mapper.CreditMapper;
+import com.zhongyi.invoice.service.CreditService;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
 import com.zhongyi.invoice.utils.DoubleUtil;
@@ -44,6 +47,10 @@ public class PayedController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private CreditService creditService;
+
 
 
     @GetMapping("/detail/dep")
@@ -410,22 +417,18 @@ public class PayedController {
             list = getPayedGatherStatistics(map, "creditLimit");
 
         } else {
-            String createLimitPart = null;
-            InvoiceVO invoiceVO2 = new InvoiceVO();
-            String key = null;
-            invoiceVO2.setCreateLimitPart(invoiceVO.getCreditLimit());
-            if ("3个月".contains(invoiceVO.getCreditLimit())) {
-                createLimitPart = "企业";
-                key = "3个月";
-            } else if ("6个月".contains(invoiceVO.getCreditLimit())) {
-                createLimitPart = "政府";
-                key = "6个月";
-            } else {
-                createLimitPart = "无";
-            }
 
-            invoiceVO2.setCreateLimitPart(createLimitPart);
-            invoiceVO2.setCreditLimit(key);
+            InvoiceVO invoiceVO2 = new InvoiceVO();
+            invoiceVO2.setCreateLimitPart(invoiceVO.getCreditLimit());
+
+            Credit credit = creditService.findCreditByCreditLimit(invoiceVO.getCreditLimit());
+            if (credit != null){
+                invoiceVO2.setCreateLimitPart(credit.getCreditType());
+
+            }else {
+                invoiceVO2.setCreateLimitPart("无");
+            }
+            invoiceVO2.setCreditLimit(invoiceVO.getCreditLimit());
          //   invoiceVO2.setTotalInvoice(sumInvoice);
             invoiceVO2.setReceiveTotalInvoice(sumReceivedAmount);
             list.add(invoiceVO2);
@@ -463,8 +466,8 @@ public class PayedController {
             InvoiceVO in = new InvoiceVO();
 
             if ("creditLimit".equals(condition)) {
-                String createLimitPart = "3个月".equals(key) ? "企业" : "政府";
-                in.setCreateLimitPart(createLimitPart);
+               // String createLimitPart = "3个月".equals(key) ? "企业" : "政府";
+                in.setCreateLimitPart(list1.get(0).getCreditType());
                 in.setCreditLimit(key);
             } else if ("invoiceOffice".equals(condition)) {
                 in.setInvoiceOffice(key);

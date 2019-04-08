@@ -244,3 +244,28 @@ function getProject(depId,projectId) {
         }
     })
 }
+
+
+function getCredit(credit) {
+    ajax
+    ({
+        url: '/credit/all',
+        success: function (res) {
+            if (res.result === 0) {
+                var list = res.data;
+                var options = '';
+                for (var i = 0; i < list.length; i++) {
+                    if(credit === list[i].creditLimit){
+                        options += '<option value="' + list[i].creditLimit + '" selected >' + list[i].creditLimit + '</option>'
+                        continue;
+                    }
+                    options += '<option value="' + list[i].creditLimit + '" >' + list[i].creditLimit + '</option>'
+
+                }
+                $('#credit').html(options);
+            } else if (res.result === 1) {
+                layer.msg(res.error);
+            }
+        }
+    })
+}

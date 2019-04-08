@@ -71,6 +71,7 @@ public class ReceiptController {
 
         String title = "发票统计明细按部门统计";
         ExcelUtil2.downloadExcelFile(title, ExcelUtil2.getHeaderMap(), invoiceVOS, response);
+
     }
 
     @GetMapping("/detail/contractUser")

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongyi.invoice.mapper.CreditMapper">
+
+
+
+    <insert id="insertSelective" parameterType="com.zhongyi.invoice.entity.Credit" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_credit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="creditType != null">
+                credit_type,
+            </if>
+            <if test="creditLimit != null">
+                credit_limit,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="creditType != null">
+                #{creditType},
+            </if>
+            <if test="creditLimit != null">
+                #{creditLimit},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateCredit" parameterType="com.zhongyi.invoice.entity.Credit" >
+        update t_credit
+        <set>
+            <if test="creditType != null">
+                credit_type = #{creditType},
+            </if>
+            <if test="creditLimit != null">
+                credit_limit = #{creditLimit},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteCreditById">
+         DELETE FROM t_credit where id = #{id}
+    </delete>
+
+
+
+
+    <select id="getCreditById"  resultType="com.zhongyi.invoice.entity.Credit">
+       select id, credit_type,credit_limit FROM t_credit
+         where id = #{id}
+    </select>
+
+
+    <select id="getCreditAll" resultType="com.zhongyi.invoice.entity.Credit">
+        SELECT * FROM  t_credit
+    </select>
+    <select id="findByCreditLimit" resultType="com.zhongyi.invoice.entity.Credit">
+         SELECT * FROM  t_credit where credit_limit = #{creditLimit}
+    </select>
+
+</mapper>
