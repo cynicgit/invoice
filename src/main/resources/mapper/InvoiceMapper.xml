@@ -428,9 +428,20 @@
     <select id="listYearInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         select
         <include refid="Base_Column_List"/>
-        from `t_invoice` where YEAR(invoice_date)= #{year}
+        from `t_invoice`
+        <where>
+            <if test="startDate != null and startDate != ''">
+                and invoice_date >= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and invoice_date &lt;= #{endDate}
+            </if>
+        </where>
+
+
+        <!--    YEAR(invoice_date)= #{year} -->
         <!--<if test="invoice.invoiceType != '' and invoice.invoiceType != null">-->
-            <!--and invoice_type = #{invoice.invoiceType}-->
+        <!--and invoice_type = #{invoice.invoiceType}-->
         <!--</if>-->
         <!--<if test="invoice.contractUser != null and invoice.contractUser != ''">-->
             <!--and contract_user = #{invoice.contractUser}-->

@@ -288,8 +288,8 @@ public class InvoiceService {
         invoiceMapper.deleteByPrimaryKey(id);
     }
 
-    public List<InvoiceVO> receiptGatherYearStatistics(String date,InvoiceVO invoice) {
+    public List<InvoiceVO> receiptGatherYearStatistics(String startDate,String endDate) {
 
-       return invoiceMapper.listYearInvoices(date,invoice);
+       return invoiceMapper.listYearInvoices(startDate,endDate);
     }
 }

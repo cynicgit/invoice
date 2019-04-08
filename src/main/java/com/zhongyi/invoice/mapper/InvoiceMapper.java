@@ -40,7 +40,7 @@ public interface InvoiceMapper {
     List<ReceivableStaticsInvoice> getInvoices(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
     List<InvoiceVO> listInvoices(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("condition") String condition, @Param("name")String name);
-    List<InvoiceVO> listYearInvoices(@Param("year")String year,@Param("invoice") InvoiceVO invoice);
+    List<InvoiceVO> listYearInvoices(@Param("startDate")String startDate,@Param("endDate")String endDate);
 
     Integer findByTaskId(String taskId);
 
