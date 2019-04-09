@@ -7,6 +7,7 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import com.alibaba.fastjson.JSONArray;
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
+import com.zhongyi.invoice.service.CreditService;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
@@ -39,6 +40,9 @@ public class NoReceivableStaticsInvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private CreditService creditService;
 
     /**
      * 未回款详情
@@ -152,8 +156,14 @@ public class NoReceivableStaticsInvoiceController {
             log.info(key);
             ExportNoReceiver exportNoReceiver = new ExportNoReceiver();
             exportNoReceiver.setKey(key);
-            if (type == 2) {
-                exportNoReceiver.setKeyDesc(key.equals(Const.CreditLimit3) ? Const.CreditTypeOffice : Const.CreditTypeOrg);
+           // if (type == 2) {
+            //    exportNoReceiver.setKeyDesc(key.equals(Const.CreditLimit3) ? Const.CreditTypeOffice : Const.CreditTypeOrg);
+            //}
+            Credit credit = creditService.findCreditByCreditLimit(key);
+            if (credit != null){
+                exportNoReceiver.setKeyDesc(credit.getCreditType());
+            } else {
+                exportNoReceiver.setKeyDesc("无");
             }
 
             Double invoiceAmount = list1.stream().mapToDouble(ReceivableStaticsInvoice::getInvoiceAmount).sum();
