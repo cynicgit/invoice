@@ -7,7 +7,6 @@ import com.zhongyi.invoice.entity.Credit;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
-import com.zhongyi.invoice.mapper.CreditMapper;
 import com.zhongyi.invoice.service.CreditService;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.utils.DateUtils;
@@ -58,7 +57,7 @@ public class PayedController {
     public void payedDetailByDepId(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setDepartmentName(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
-        setCreateLimitPart(invoiceVOS);
+        // setCreateLimitPart(invoiceVOS);
         //按部门
 //        if (!StringUtils.isEmpty(invoiceVO.getDepartmentName())) {
 //            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(Invoice :: getDepartmentName));
@@ -95,7 +94,7 @@ public class PayedController {
         User user = (User) session.getAttribute("user");
 
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
-        setCreateLimitPart(invoiceVOS);
+       // setCreateLimitPart(invoiceVOS);
         //按信用日期
 //        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
 //            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
@@ -137,7 +136,7 @@ public class PayedController {
         User user = (User) session.getAttribute("user");
 
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
-        setCreateLimitPart(invoiceVOS);
+       // setCreateLimitPart(invoiceVOS);
 //        if (!StringUtils.isEmpty(invoiceVO.getInvoiceOffice())) {
 //            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceOffice));
 //            invoiceVOS = map.get(invoiceVO.getInvoiceOffice());
@@ -172,7 +171,7 @@ public class PayedController {
     public void payedDetailByContractUser(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
         invoiceVO.setContractUser(condition);
         List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedDetail(invoiceVO);
-        setCreateLimitPart(invoiceVOS);
+       // setCreateLimitPart(invoiceVOS);
         //按项目负责人
 //        if (!StringUtils.isEmpty(invoiceVO.getContractUser())) {
 //            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getContractUser));
@@ -244,6 +243,7 @@ public class PayedController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("已回款汇总按开票单位统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
 
@@ -296,6 +296,7 @@ public class PayedController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("已回款汇总按项目负责人统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
     @GetMapping("/gather/dep")
@@ -391,6 +392,7 @@ public class PayedController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("已回款汇总按部门统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
     @GetMapping("/gather/creditLimit")
@@ -448,15 +450,16 @@ public class PayedController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("已回款汇总按信用期限统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
 
-    private void setCreateLimitPart(List<InvoiceVO> invoiceVOS) {
-        invoiceVOS.forEach(invoiceVO1 -> {
-            String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit()) ? "企业" : "政府";
-            invoiceVO1.setCreateLimitPart(createLimitPart);
-        });
-    }
+//    private void setCreateLimitPart(List<InvoiceVO> invoiceVOS) {
+//        invoiceVOS.forEach(invoiceVO1 -> {
+//            String createLimitPart = "3个月".equals(invoiceVO1.getCreditLimit()) ? "企业" : "政府";
+//            invoiceVO1.setCreateLimitPart(createLimitPart);
+//        });
+//    }
 
     public List<InvoiceVO> getPayedGatherStatistics(Map<String, List<InvoiceVO>> map, String condition) {
         List<InvoiceVO> list = new ArrayList<>();

@@ -277,6 +277,7 @@ public class ReceiptController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("发票统计汇总按部门统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
 
@@ -377,6 +378,7 @@ public class ReceiptController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("发票统计汇总按项目负责人统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
     private String getYearStartDate(InvoiceVO invoiceVO) {
@@ -465,6 +467,7 @@ public class ReceiptController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("发票统计汇总按发票性质统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
 
 //        String path = "static/excel/receiptGatherDep.xlsx";
 //        Map<String, Object> mapParms = new HashMap<>();
@@ -613,6 +616,7 @@ public class ReceiptController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("发票统计汇总按开票单位统计.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
 

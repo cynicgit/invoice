@@ -533,7 +533,6 @@
                 and received_date &lt;= #{endDate}
             </if>
         </where>
-
     </select>
     <select id="listInvoices" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         SELECT ti.id, ti.task_id, ti.contract_number, ti.invoice_date, ti.credit_type, ti.credit_limit, ti.invoice_number,
