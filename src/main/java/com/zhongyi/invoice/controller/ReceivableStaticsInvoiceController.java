@@ -2,9 +2,11 @@ package com.zhongyi.invoice.controller;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
+import com.alibaba.fastjson.JSONArray;
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.InvoiceService;
+import com.zhongyi.invoice.utils.ExcelUtil2;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,17 +56,12 @@ public class ReceivableStaticsInvoiceController {
             }
 
         });
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("list", list);
-        map.put("sum",  sum[0] / 10000);
-        TemplateExportParams params = new TemplateExportParams();
-        params.setTemplateUrl(excelPath + "receivableStaticsInvoice.xlsx");
-        Workbook workbook = ExcelExportUtil.exportExcel(params, map);
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("content-Type", "application/vnd.ms-excel");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode("应收账款账龄分析明细.xlsx", "UTF-8"));
-        workbook.write(response.getOutputStream());
+
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.addAll(list);
+
+        ExcelUtil2.downloadExcelFile2("应收账款账龄分析明细", ExcelUtil2.getZhanglingHeaderMap(), jsonArray,sum[0] / 10000, response);
     }
 
 
@@ -120,6 +117,7 @@ public class ReceivableStaticsInvoiceController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode("应收账款账龄分析汇总.xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
 

@@ -44,7 +44,7 @@ public class EasyPoiUtils {
             response.setHeader("Content-Disposition",
                     "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
             workbook.write(response.getOutputStream());
-
+        workbook.close();
     }
     private static void defaultExport(List<Map<String, Object>> list, String fileName, HttpServletResponse response) throws IOException {
         Workbook workbook = ExcelExportUtil.exportExcel(list, ExcelType.HSSF);

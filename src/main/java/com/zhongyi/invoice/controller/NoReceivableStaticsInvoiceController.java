@@ -4,11 +4,13 @@ import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
+import com.alibaba.fastjson.JSONArray;
 import com.zhongyi.invoice.annontion.OperateLog;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.service.InvoiceService;
 import com.zhongyi.invoice.style.MyExcelExportStylerDefaultImpl;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
+import com.zhongyi.invoice.utils.ExcelUtil2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +69,9 @@ public class NoReceivableStaticsInvoiceController {
             name += "项目负责人";
             collect = invoiceVOS.stream().filter(i -> StringUtils.isEmpty(invoiceVO.getCondition()) || i.getContractUser().contains(invoiceVO.getCondition())).collect(Collectors.toList());
         }
-        exportParams.setTitle(name + " " + invoiceVO.getStartDate() + "-" + invoiceVO.getEndDate());
-        EasyPoiUtils.defaultExport(collect, Invoice.class, name +".xlsx", response, exportParams);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.addAll(collect);
+        ExcelUtil2.downloadExcelFile(name, ExcelUtil2.getHeaderMap(), jsonArray, response);
     }
 
     /**
@@ -128,6 +131,7 @@ public class NoReceivableStaticsInvoiceController {
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode(name + ".xlsx", "UTF-8"));
         workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
     private Map<String, Object> getInvoiceMap(List<ReceivableStaticsInvoice> invoiceVOS, int type, InvoiceVO invoiceVO) {
