@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReceivableStaticsInvoice extends Invoice {
 
-    private String limitAmount0;
-    private String limitAmount1;
-    private String limitAmount2;
-    private String limitAmount3;
-    private String limitAmount4;
-    private String limitAmount5;
-    private String limitAmount6;
+    private Double limitAmount0;
+    private Double limitAmount1;
+    private Double limitAmount2;
+    private Double limitAmount3;
+    private Double limitAmount4;
+    private Double limitAmount5;
+    private Double limitAmount6;
 
 }

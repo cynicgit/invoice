@@ -233,15 +233,32 @@ public class ExcelUtil2 {
                 SXSSFRow titleRow2 = sheet.createRow(1);//表头 rowIndex=0
                 titleRow.createCell(0).setCellValue(title);
                 titleRow.getCell(0).setCellStyle(titleStyle);
+
+                CellStyle zhanglingStyle = workbook.createCellStyle();
+                zhanglingStyle.setBorderBottom(BorderStyle.THIN);
+                zhanglingStyle.setBorderLeft(BorderStyle.THIN);
+                zhanglingStyle.setBorderRight(BorderStyle.THIN);
+                zhanglingStyle.setBorderTop(BorderStyle.THIN);
+                zhanglingStyle.setAlignment(HorizontalAlignment.CENTER);
+                Font zhanglingFont = workbook.createFont();
+                zhanglingFont.setFontHeightInPoints((short) 12);
+                zhanglingFont.setBold(true);
+                zhanglingStyle.setFont(zhanglingFont);
+                zhanglingStyle.setFillForegroundColor(IndexedColors.ROYAL_BLUE.getIndex());
+                zhanglingStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
                 int zhanglingSize = headMap.size() - 8 - 1;
                 sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, zhanglingSize));
                 titleRow.createCell(zhanglingSize + 1).setCellValue("总计: " + new BigDecimal(hejiValue).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                titleRow.getCell(zhanglingSize + 1).setCellStyle(zhanglingStyle);
                 SXSSFCell hejiValueCell = titleRow.createCell(zhanglingSize + 2);
                 hejiValueCell.setCellValue("万元");
+                hejiValueCell.setCellStyle(zhanglingStyle);
 
                 SXSSFCell zhanglingCell = titleRow2.createCell(zhanglingSize + 1);
                 zhanglingCell.setCellValue("账龄分析");
                 zhanglingCell.setCellStyle(titleStyle);
+                zhanglingCell.setCellStyle(zhanglingStyle);
                 sheet.addMergedRegion(new CellRangeAddress(1, 1, zhanglingSize + 1, headMap.size() - 1));
 
 

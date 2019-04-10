@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -32,27 +33,32 @@ public class ReceivableStaticsInvoiceController {
 
     @GetMapping("/receivable_statics_invoice")
     @OperateLog("应收账款账龄分析明细导出")
-    public void ReceivableStaticsInvoice(String startDate, String endDate, HttpServletResponse response) throws Exception {
+    public void ReceivableStaticsInvoice(String startDate, String endDate, HttpSession session, HttpServletResponse response) throws Exception {
+        User user = (User) session.getAttribute("user");
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
+        if (user != null && user.getType() == 2) {
+            list = list.stream().filter(i -> i.getContractUser().equals(user.getName())).collect(Collectors.toList());
+        }
+
         final double[] sum = {0.00f};
         list.forEach(i -> {
             i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             sum[0] = sum[0] + i.getNoReceivedAmount();
             int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), new Date());
             if (monthBetween <= 3) {
-                i.setLimitAmount0(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount0(i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 6) {
-                i.setLimitAmount1(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount1(i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 9) {
-                i.setLimitAmount2(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount2(i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 12) {
-                i.setLimitAmount3(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount3(i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 24) {
-                i.setLimitAmount4(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount4(i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 36) {
-                i.setLimitAmount5(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount5(i.getInvoiceAmount() - i.getReceivedAmount());
             } else {
-                i.setLimitAmount6(String.valueOf(i.getInvoiceAmount() - i.getReceivedAmount()));
+                i.setLimitAmount6(i.getInvoiceAmount() - i.getReceivedAmount());
             }
 
         });
@@ -67,8 +73,12 @@ public class ReceivableStaticsInvoiceController {
 
     @GetMapping("/receivable_statics_invoice_summary")
     @OperateLog("应收账款账龄分析汇总导出")
-    public void ReceivableStaticsInvoiceSummary(String startDate, String endDate, HttpServletResponse response) throws Exception {
+    public void ReceivableStaticsInvoiceSummary(String startDate, String endDate, HttpSession session, HttpServletResponse response) throws Exception {
+        User user = (User) session.getAttribute("user");
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
+        if (user != null && user.getType() == 2) {
+            list = list.stream().filter(i -> i.getContractUser().equals(user.getName())).collect(Collectors.toList());
+        }
         double sum = 0.00f;
         double summary0 = 0.00f;
         double summary1 = 0.00f;
