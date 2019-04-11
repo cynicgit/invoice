@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -277,11 +278,7 @@ public class PayedController {
             list = getPayedGatherStatistics(map, "contractUser");
         }
 
-//        if (StringUtils.isEmpty(invoiceVO.getContractUser())) {
-//
-//        } else {
-//
-//        }
+
         invoiceVO1.setContractUser("合计");
       //  invoiceVO1.setTotalInvoice(sumInvoice);
         invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
@@ -498,6 +495,73 @@ public class PayedController {
     public Double getReceivedAmount(List<InvoiceVO> list) {
         return list.stream().mapToDouble(value -> value.getReceivedAmount()).sum();
     }
+
+
+
+    @GetMapping("/gather/creditLimit2")
+    @OperateLog("已回款汇总")
+    public void payedGatherByCreditLimit2(InvoiceVO invoiceVO, String condition, HttpServletResponse response) throws IOException {
+        invoiceVO.setCreditLimit(condition);
+        List<InvoiceVO> invoiceVOS = invoiceService.exportExcelPayedGather(invoiceVO);
+
+        if (!StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
+            invoiceVOS = invoiceVOS.stream().filter(invoiceVO2 -> invoiceVO2.getCreditLimit().contains(invoiceVO.getCreditLimit())).collect(Collectors.toList());
+        }
+
+        List<InvoiceVO> list = new ArrayList<>();
+        Map<String, Object> mapParms = new HashMap<>();
+        Double sumInvoice = invoiceVOS.stream().mapToDouble(InvoiceVO::getInvoiceAmount).sum();
+
+        Double sumReceivedAmount = invoiceVOS.stream().mapToDouble(InvoiceVO::getReceivedAmount).sum();
+
+        String path = null;
+        path = excelPath + "payedGatherCreateLimit.xlsx";
+        InvoiceVO invoiceVO1 = new InvoiceVO();
+        if (StringUtils.isEmpty(invoiceVO.getCreditLimit())) {
+            Map<String, List<InvoiceVO>> map = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditLimit));
+            map.forEach((key,list2) ->{
+                Map<@NotBlank(message = "信用类别不能为空！") String, List<InvoiceVO>> collect = list2.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditType));
+                collect.forEach((key2,list3) -> {
+                    InvoiceVO in = new InvoiceVO();
+                    in.setCreateLimitPart(list3.get(0).getCreditType());
+                    in.setCreditLimit(key);
+                    Double receivedAmount = getReceivedAmount(list3);
+                    in.setReceiveTotalInvoice(receivedAmount);
+                    list.add(in);
+                });
+            });
+        } else {
+
+            Map<@NotBlank(message = "信用类别不能为空！") String, List<InvoiceVO>> collect = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getCreditType));
+
+            collect.forEach((key2,list3) -> {
+                InvoiceVO invoiceVO2 = new InvoiceVO();
+                invoiceVO2.setCreateLimitPart(key2);
+                invoiceVO2.setCreditLimit(invoiceVO.getCreditLimit());
+                Double receivedAmount = getReceivedAmount(list3);
+                invoiceVO2.setReceiveTotalInvoice(receivedAmount);
+                list.add(invoiceVO2);
+            });
+
+        }
+        invoiceVO1.setCreateLimitPart("合计");
+        invoiceVO1.setCreditLimit("");
+        invoiceVO1.setReceiveTotalInvoice(sumReceivedAmount);
+        list.add(invoiceVO1);
+        mapParms.put("list", list);
+
+        TemplateExportParams params = new TemplateExportParams();
+        params.setTemplateUrl(path);
+        Workbook workbook = ExcelExportUtil.exportExcel(params, mapParms);
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("content-Type", "application/vnd.ms-excel");
+        response.setHeader("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode("已回款汇总按信用期限统计.xlsx", "UTF-8"));
+        workbook.write(response.getOutputStream());
+        workbook.close();
+    }
+
+
 
 
 }

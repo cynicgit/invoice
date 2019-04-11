@@ -32,10 +32,10 @@ public class CreditService {
 
 
     public void updateCredit(Credit credit){
-        Credit byCreditLimit = creditMapper.findByCreditLimit(credit.getCreditLimit());
-        if (byCreditLimit != null){
-            throw new BusinessException("信用期限已存在");
-        }
+//        Credit byCreditLimit = creditMapper.findByCreditLimit(credit.getCreditLimit());
+//        if (byCreditLimit != null){
+//            throw new BusinessException("信用期限已存在");
+//        }
         creditMapper.updateCredit(credit);
     }
 

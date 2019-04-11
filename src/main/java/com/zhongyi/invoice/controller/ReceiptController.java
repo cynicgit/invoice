@@ -3,6 +3,7 @@ package com.zhongyi.invoice.controller;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.TemplateExportParams;
 import com.zhongyi.invoice.annontion.OperateLog;
+import com.zhongyi.invoice.entity.Credit;
 import com.zhongyi.invoice.entity.Invoice;
 import com.zhongyi.invoice.entity.InvoiceVO;
 import com.zhongyi.invoice.entity.User;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -755,29 +757,6 @@ public class ReceiptController {
 
     }
 
-    @GetMapping("/gather/test2")
-    public void test2(InvoiceVO invoiceVO, HttpServletResponse response) throws Exception {
-        List<InvoiceVO> invoiceVOS = invoiceService.receiptGatherStatistics(invoiceVO);
-        invoiceVOS.forEach(invoiceVO2 -> {
-            String dateString = DateUtils.date2String(invoiceVO2.getInvoiceDate());
-            invoiceVO2.setInvoiceDateTime(dateString);
-        });
-
-        Map<String, List<InvoiceVO>> collect1 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getDepartmentName));
-
-        Map<String, List<InvoiceVO>> collect2 = invoiceVOS.stream().collect(Collectors.groupingBy(InvoiceVO::getInvoiceDateTime));
-
-        List<String> times = new ArrayList<>();
-        collect2.forEach((key2, list2) -> {
-            times.add(key2);
-
-        });
-
-        collect1.forEach((key, list) -> {
-
-
-        });
-    }
 
 
 }

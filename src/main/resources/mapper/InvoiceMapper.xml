@@ -467,6 +467,7 @@
              and invoice_date &lt;= #{endDate}
          </if>
      </where>
+        order by invoice_date DESC
     </select>
     <select id="selectPayedDetail" resultType="com.zhongyi.invoice.entity.InvoiceVO">
         SELECT
@@ -504,6 +505,7 @@
                 and received_date &lt;= #{endDate}
             </if>
         </where>
+        order by received_date DESC
     </select>
     <select id="selectPayedGather" resultType="com.zhongyi.invoice.entity.InvoiceVO">
 

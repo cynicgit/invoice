@@ -404,6 +404,7 @@ public class ExcelUtil2 {
         headMap.put("creditType", "信用类别");
         headMap.put("creditLimit", "信用期限");
         headMap.put("invoiceNumber", "发票号");
+        headMap.put("invoiceType", "发票类型");
         headMap.put("invoiceOffice", "开票单位");
         headMap.put("departmentName", "所属部门");
         headMap.put("invoiceProject", "项目");
