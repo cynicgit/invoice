@@ -67,7 +67,7 @@ public class DayCompare {
     public static int getMonthBetween(Date fromDate, Date toDate) {
         DateTime startTime = new DateTime(fromDate);
         DateTime endTime = new DateTime(toDate);
-        int months = Months.monthsBetween(startTime, endTime).getMonths();
+        int months = Math.abs(Months.monthsBetween(startTime, endTime).getMonths());
         return months + 1;
     }
 

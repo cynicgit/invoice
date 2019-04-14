@@ -36,6 +36,8 @@
 		<input type="text" id="endDate" width="100px" class="demo-input" placeholder="请选择结束日期" readonly>
 		<button id="search-btn" class="btn btn-primary-outline radius"  onclick="detailExport()">应收账款账龄分析明细</button>
 		<button id="add-btn" class="btn btn-primary-outline radius" onclick="summaryExport()">应收账款账龄分析汇总</button>
+		<span style="margin-left: 15px;">回款日期：</span>
+		<input type="text" id="receiptDate" width="100px" class="demo-input" readonly placeholder="请选择回款日期">
 	</div>
 
 </div>
@@ -56,11 +58,15 @@
 		laydate.render({
             elem: '#endDate' //指定元素
         });
+		laydate.render({
+            elem: '#receiptDate' //指定元素
+        });
 
 
 		function detailExport() {
 			var startDate = $('#startDate').val();
 			var endDate = $('#endDate').val();
+			var receiptDate = $('#receiptDate').val();
 			if (!startDate || startDate == '') {
                 layer.msg('请选择开始时间', {icon: 2, time: 1000});
                 return;
@@ -69,6 +75,10 @@
                 layer.msg('请选择结束时间', {icon: 2, time: 1000});
                 return;
             }
+            if (!receiptDate || receiptDate == '') {
+                layer.msg('请选择回款时间', {icon: 2, time: 1000});
+                return;
+            }
 
             var start = new Date(startDate);
             var end = new Date(endDate);
@@ -76,13 +86,14 @@
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
 			}
 
-			window.location.href = "/receivable_statics_invoice?startDate="+startDate + "&endDate=" + endDate;
+			window.location.href = "/receivable_statics_invoice?startDate="+startDate + "&endDate=" + endDate + "&receiptDate=" + receiptDate;
         }
 
 
 		function summaryExport() {
             var startDate = $('#startDate').val();
             var endDate = $('#endDate').val();
+            var receiptDate = $('#receiptDate').val();
             if (!startDate || startDate == '') {
                 layer.msg('请选择开始时间', {icon: 2, time: 1000});
                 return;
@@ -91,6 +102,10 @@
                 layer.msg('请选择结束时间', {icon: 2, time: 1000});
                 return;
             }
+            if (!receiptDate || receiptDate == '') {
+                layer.msg('请选择回款时间', {icon: 2, time: 1000});
+                return;
+            }
 
             var start = new Date(startDate);
             var end = new Date(endDate);
@@ -98,7 +113,7 @@
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
 
-            window.location.href = "/receivable_statics_invoice_summary?startDate="+startDate + "&endDate=" + endDate;
+            window.location.href = "/receivable_statics_invoice_summary?startDate="+startDate + "&endDate=" + endDate+ "&receiptDate=" + receiptDate;;
 
         }
 

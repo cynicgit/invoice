@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,18 +34,19 @@ public class ReceivableStaticsInvoiceController {
 
     @GetMapping("/receivable_statics_invoice")
     @OperateLog("应收账款账龄分析明细导出")
-    public void ReceivableStaticsInvoice(String startDate, String endDate, HttpSession session, HttpServletResponse response) throws Exception {
+    public void ReceivableStaticsInvoice(String startDate, String endDate, String receiptDate, HttpSession session, HttpServletResponse response) throws Exception {
         User user = (User) session.getAttribute("user");
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
         if (user != null && user.getType() == 2) {
             list = list.stream().filter(i -> i.getContractUser().equals(user.getName())).collect(Collectors.toList());
         }
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(receiptDate);
         final double[] sum = {0.00f};
         list.forEach(i -> {
             i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             sum[0] = sum[0] + i.getNoReceivedAmount();
-            int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), new Date());
+            int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), date);
             if (monthBetween <= 3) {
                 i.setLimitAmount0(i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 6) {
@@ -73,8 +75,10 @@ public class ReceivableStaticsInvoiceController {
 
     @GetMapping("/receivable_statics_invoice_summary")
     @OperateLog("应收账款账龄分析汇总导出")
-    public void ReceivableStaticsInvoiceSummary(String startDate, String endDate, HttpSession session, HttpServletResponse response) throws Exception {
+    public void ReceivableStaticsInvoiceSummary(String startDate, String endDate, String receiptDate, HttpSession session, HttpServletResponse response) throws Exception {
         User user = (User) session.getAttribute("user");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date nowDate = sdf.parse(receiptDate);
         List<ReceivableStaticsInvoice> list = invoiceService.getInvoices(startDate, endDate);
         if (user != null && user.getType() == 2) {
             list = list.stream().filter(i -> i.getContractUser().equals(user.getName())).collect(Collectors.toList());
@@ -91,7 +95,7 @@ public class ReceivableStaticsInvoiceController {
         for (ReceivableStaticsInvoice i : list) {
             i.setNoReceivedAmount(i.getInvoiceAmount() - i.getReceivedAmount());
             sum = sum + i.getNoReceivedAmount();
-            int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), new Date());
+            int monthBetween = DayCompare.getMonthBetween(i.getInvoiceDate(), nowDate);
             if (monthBetween <= 3) {
                 summary0 = summary0 + (i.getInvoiceAmount() - i.getReceivedAmount());
             } else if (monthBetween <= 6) {
