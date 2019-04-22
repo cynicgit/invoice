@@ -36,11 +36,17 @@
 		<input type="text" id="endDate" width="100px" class="demo-input" placeholder="请选择结束日期" readonly>
 		<input type="text" id="condition" style="width: 150px"  class="input-text" placeholder="请输入部门/公司/负责人">
 
-		<select id="type" class="select" style="width: 100px;height: 30px">
+		<select id="type1" class="select" style="width: 100px;height: 30px;display: none">
 			<option value="0">部门</option>
 			<option value="2">信用期限</option>
 			<option value="3">开票单位</option>
 			<option value="4">项目负责人</option>
+		</select>
+
+		<select id="type2" class="select" style="width: 100px;height: 30px;display: none">
+			<option value="0">部门</option>
+			<option value="2">信用期限</option>
+			<option value="3">开票单位</option>
 		</select>
 
 		<button id="add-btn1" class="btn btn-primary-outline radius" onclick="summaryExport()">汇总导出</button>
@@ -114,7 +120,12 @@
 
         }
 
-
+        var type = $.cookie("type");
+		if (type == 2) {
+		    $("#type2").css('display','inline-block');
+		} else {
+            $("#type1").css('display','inline-block');
+		}
 
 	</script>
 </body>

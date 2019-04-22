@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -53,8 +54,12 @@ public class NoReceivableStaticsInvoiceController {
      */
     @GetMapping("/no_receiver_invoice")
     @OperateLog("未回款明细导出")
-    public void exportExcel(InvoiceVO invoiceVO, int type, HttpServletResponse response) throws IOException {
+    public void exportExcel(InvoiceVO invoiceVO, int type, HttpSession session, HttpServletResponse response) throws IOException {
+        User user = (User) session.getAttribute("user");
         List<InvoiceVO> invoiceVOS = invoiceService.noReceiveAmount(invoiceVO);
+        if (user != null && user.getType() == 2) {
+            invoiceVOS = invoiceVOS.stream().filter(i -> i.getContractUser().equals(user.getName())).collect(Collectors.toList());
+        }
         invoiceVOS = invoiceVOS.stream().filter(invoiceVO1 -> invoiceVO1.getNoReceivedAmount() > 0).collect(Collectors.toList());
         ExportParams exportParams = new ExportParams();
         exportParams.setType(ExcelType.XSSF);
@@ -87,8 +92,12 @@ public class NoReceivableStaticsInvoiceController {
      */
     @GetMapping("/no_receiver_invoice_summary")
     @OperateLog("未回款汇总导出")
-    public void exportExcelNoAmountStatistics(InvoiceVO invoiceVO, @RequestParam(required = true) int type, HttpServletResponse response) throws IOException {
+    public void exportExcelNoAmountStatistics(InvoiceVO invoiceVO, @RequestParam(required = true) int type, HttpSession session, HttpServletResponse response) throws IOException {
         List<ReceivableStaticsInvoice> invoiceVOS = invoiceService.getInvoices(invoiceVO.getStartDate(), invoiceVO.getEndDate());
+        User user = (User) session.getAttribute("user");
+        if (user != null && user.getType() == 2) {
+            invoiceVOS = invoiceVOS.stream().filter(i -> i.getContractUser().equals(user.getName())).collect(Collectors.toList());
+        }
         invoiceVOS = invoiceVOS.stream().filter(invoiceVO1 -> invoiceVO1.getNoReceivedAmount() > 0).collect(Collectors.toList());
         Map<String, Object> map = null;
         if (type == 1) {
