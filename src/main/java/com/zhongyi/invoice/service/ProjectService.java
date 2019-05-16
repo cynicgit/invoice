@@ -61,7 +61,7 @@ public class ProjectService {
 
         Integer parentId = departmentMapper.getParentIdByChildId(depId);
 
-        if (parentId == 0 || parentId == null){
+        if (parentId == null || parentId == 0){
             parentId = depId;
         }
 

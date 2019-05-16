@@ -57,6 +57,15 @@
         </div>
 
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 发票号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="formControls col-xs-8 col-sm-9">
+                    <input type="text" class="input-text" value="" placeholder="" id="invoiceNumber">
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span> 开票日期：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="formControls col-xs-8 col-sm-9">
@@ -227,7 +236,7 @@
                     <div class="formControls col-xs-8 col-sm-9">
                 <span class="select-box">
                     <select id="userId" name="userId" class="select" lay-verify="" lay-search>
-
+                        <!--<option value="">请选择</option>-->
                     </select>
                     </span>
                     </div>
@@ -373,17 +382,16 @@
                 type: 'date',
                 format: 'yyyy-MM-dd'
             });
-            layui.use('form', function () {
-                var form = layui.form;
-                form.render();
-            });
+            // layui.use('form', function () {
+            //     var form = layui.form;
+            //     form.render();
+            // });
         });
 
 
     })
 
     function getInvoice() {
-
         ajax({
             url: 'invoice?id=' + id,
             type: 'get',
@@ -430,6 +438,7 @@
 
                     $('#taskId').val(res.data.taskId);
                     $('#contractNumber').val(res.data.contractNumber);
+                    $('#invoiceNumber').val(res.data.invoiceNumber);
                 //    $("input[name='target'][value=" + res.data.creditType + "]").prop("checked", "checked");
                 //    $("input[name='time'][value=" + res.data.creditLimit + "]").prop("checked", "checked");
                     $("input[name='type'][value=" + res.data.invoiceType + "]").prop("checked", "checked");

@@ -80,6 +80,7 @@ public class EasyPoiUtils {
         List<T> list = null;
         try {
             list = ExcelImportUtil.importExcel(file.getInputStream(), pojoClass, params);
+         //   ExcelImportUtil.importExcelBySax();
         }catch (NoSuchElementException e){
             throw new RuntimeException("excel文件不能为空");
         } catch (Exception e) {

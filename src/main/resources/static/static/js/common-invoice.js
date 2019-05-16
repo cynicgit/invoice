@@ -75,6 +75,10 @@ function showUser(list,selected) {
     }
     console.log(options);
     $('#userId').html(options);
+    layui.use('form', function () {
+        var form = layui.form;
+        form.render();
+    });
 }
 
 function onblus(tag) {

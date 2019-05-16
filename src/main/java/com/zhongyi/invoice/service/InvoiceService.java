@@ -1,12 +1,20 @@
 package com.zhongyi.invoice.service;
 
+import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zhongyi.invoice.entity.*;
 import com.zhongyi.invoice.expection.BusinessException;
 import com.zhongyi.invoice.mapper.*;
 import com.zhongyi.invoice.utils.EasyPoiUtils;
+import com.zhongyi.invoice.utils.ExcelUtil2;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +22,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,8 +47,15 @@ public class InvoiceService {
     @Autowired
     private UserMapper userMapper;
 
+
     public Map<String, Object> importExcel(MultipartFile file) {
         List<Invoice> invoices = EasyPoiUtils.importExcel(file, 0, 1, Invoice.class);
+        List<Credit> creditAll = creditMapper.getCreditAll();
+        List<String> creditLimits = new ArrayList<>();
+        creditAll.forEach(credit -> {
+
+            creditLimits.add(credit.getCreditLimit());
+        });
         int zuofei = 0;
         int invoiceNumberRepeat = 0;
         List<Invoice> error = new ArrayList<>();
@@ -50,7 +67,7 @@ public class InvoiceService {
                     zuofei++;
                     continue;
                 }
-                checkInvoice(invoice);
+                checkInvoice(invoice,creditLimits);
                 Invoice invoiceByTaskIdAndInvoiceNumber = invoiceMapper.getInvoiceByTaskIdAndInvoiceNumber(invoice.getTaskId(), invoice.getInvoiceNumber());
                 if (invoiceByTaskIdAndInvoiceNumber != null) {
                     throw new BusinessException("任务号 发票号已存在");
@@ -116,7 +133,7 @@ public class InvoiceService {
         return map;
     }
 
-    private void checkInvoice(Invoice invoice) throws Exception {
+    private void checkInvoice(Invoice invoice,List<String> creditLimits) throws Exception {
         if (StringUtils.isEmpty(invoice.getTaskId())) {
             throw new Exception("任务单号不能为空");
         }if (StringUtils.isEmpty(invoice.getContractNumber())) {
@@ -131,9 +148,14 @@ public class InvoiceService {
         if (StringUtils.isEmpty(invoice.getCreditLimit())) {
             throw new Exception("信用期限不能为空");
         } else {
-            if (!"3个月".equals(invoice.getCreditLimit()) && !"6个月".equals(invoice.getCreditLimit())) {
+
+            if (!creditLimits.contains(invoice.getCreditLimit())){
                 throw new Exception("信用期限错误");
             }
+
+//            if (!"3个月".equals(invoice.getCreditLimit()) && !"6个月".equals(invoice.getCreditLimit())) {
+//
+//            }
         }
 
         if (StringUtils.isEmpty(invoice.getInvoiceType())) {

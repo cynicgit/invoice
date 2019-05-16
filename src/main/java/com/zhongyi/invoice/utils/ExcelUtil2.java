@@ -16,8 +16,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static org.apache.poi.ss.usermodel.CellType.NUMERIC;
 
 public class ExcelUtil2 {
     public static String NO_DEFINE = "no_define";//未定义的字段
@@ -431,6 +434,7 @@ public class ExcelUtil2 {
         headMap.put("creditType", "信用类别");
         headMap.put("creditLimit", "信用期限");
         headMap.put("invoiceNumber", "发票号");
+        headMap.put("invoiceType", "发票类型");
         headMap.put("invoiceOffice", "开票单位");
         headMap.put("departmentName", "所属部门");
         headMap.put("invoiceProject", "项目");
@@ -450,6 +454,55 @@ public class ExcelUtil2 {
         headMap.put("limitAmount6", "大于3年");
         headMap.put("badAmount", "坏账");
         return headMap;
+    }
+
+    public static String getCellValue(Cell cell) {
+        if (null == cell) {
+            return null;
+        }
+        String cellValue = "";
+        // 以下是判断数据的类型
+        switch (cell.getCellType()) {
+            case NUMERIC:
+                // 数字
+//                if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
+//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                    cellValue = sdf.format(org.apache.poi.ss.usermodel.DateUtil.getJavaDate(cell.getNumericCellValue())).toString();
+//                } else {
+                DecimalFormat df = new DecimalFormat("0");
+                cellValue = df.format(cell.getNumericCellValue());
+//                }
+                break;
+            case STRING:
+                // 字符串
+                cellValue = cell.getStringCellValue();
+                break;
+            case BOOLEAN:
+                // Boolean
+                cellValue = cell.getBooleanCellValue() + "";
+                break;
+            case FORMULA:
+                // 公式
+                cellValue = cell.getCellFormula() + "";
+                break;
+            case BLANK:
+                // 空值
+                cellValue = "";
+                break;
+            case ERROR:
+                // 故障
+                cellValue = "非法字符";
+                break;
+            default:
+                cellValue = "未知类型";
+                break;
+        }
+        return cellValue;
+    }
+
+    public static boolean isExcel2003(String fileName) {
+        return fileName.matches("^.+\\.(?i)(xls)$");
+
     }
 
     public static void main(String[] args) throws IOException {

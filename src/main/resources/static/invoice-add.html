@@ -330,6 +330,12 @@
 <script>
 
     $(function () {
+
+        getDep();
+        getUser(null);
+        getTaxRate(null);
+        getCredit(null);
+
         layui.use('laydate', function () {
             var laydate = layui.laydate;
             laydate.render({
@@ -349,16 +355,12 @@
             });
         });
 
-        layui.use('form', function () {
-            var form = layui.form;
-            form.render();
-        });
+        // layui.use('form', function () {
+        //     var form = layui.form;
+        //     form.render();
+        // });
 
 
-        getDep();
-        getUser(null);
-        getTaxRate(null);
-        getCredit(null);
 
     });
 
