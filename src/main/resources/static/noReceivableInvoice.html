@@ -90,7 +90,12 @@
             if (start.getMilliseconds() > end.getMilliseconds()) {
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
-            var mtype = $("#type").val();
+            var mtype
+            if (type == 2) {
+                mtype = $("#type2").val()
+            } else {
+                mtype = $("#type1").val()
+            }
             var condition = $("#condition").val();
             var url = "/no_receiver_invoice_summary?startDate="+startDate + "&endDate=" + endDate + "&condition=" +condition
             window.location.href = url + "&type=" + mtype
@@ -114,7 +119,12 @@
                 layer.msg('结束日期不能小于开始日期', {icon: 2, time: 1000});
             }
             var condition = $("#condition").val();
-            var mtype = $("#type").val();
+            var mtype
+            if (type == 2) {
+                mtype = $("#type2").val()
+            } else {
+                mtype = $("#type1").val()
+            }
             var url = "/no_receiver_invoice?startDate="+startDate + "&endDate=" + endDate + "&condition=" +condition
             window.location.href = url + "&type=" + mtype;
 

@@ -27,5 +27,5 @@ public interface DepartmentMapper {
 
     String getParentName(@Param("departmentName") String departmentName);
 
-    Integer getParentIdByChildId(@Param("childId")Integer childId);
+    Department getParentIdByDepName(@Param("depName")String depName);
 }

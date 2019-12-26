@@ -55,14 +55,15 @@ public class ProjectService {
         projectMapper.deleteProjectById(id);
     }
 
-    public List<Project> getProjectByDepId(Integer depId) {
+    public List<Project> getProjectByDepName(String depName) {
 
         //通过子id找到父Id
 
-        Integer parentId = departmentMapper.getParentIdByChildId(depId);
+        Department department = departmentMapper.getParentIdByDepName(depName);
+        Integer parentId = department.getPid();
 
-        if (parentId == null || parentId == 0){
-            parentId = depId;
+        if ( parentId== null || parentId == 0){
+            parentId = department.getId();
         }
 
         return projectMapper.getProjectByDepId(parentId);

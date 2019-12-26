@@ -4,7 +4,7 @@ function getUser(selected) {
         url: '/system/user/all',
         success: function (res) {
             if (res.result === 0) {
-                showUser(res.data,selected);
+                showUser(res.data, selected);
             } else if (res.result === 1) {
                 layer.msg(res.error);
             }
@@ -47,12 +47,12 @@ function showDep(list) {
     var options = '<option value="">请选择</option>';
     list.forEach(function (item) {
         if (item.childrenDep.length === 0) {
-            options += '<optgroup label="'+ item.name +'">'
-                + '<option value="'+ item.id+ '">'+ item.name+ '</option></optgroup>'
+            options += '<optgroup label="' + item.name + '">'
+                + '<option value="' + item.id + '">' + item.name + '</option></optgroup>'
         } else {
-            options += '<optgroup label="'+ item.name +'">'
+            options += '<optgroup label="' + item.name + '">'
             item.childrenDep.forEach(function (c) {
-                options +=  '<option value="'+ c.id+ '">'+ c.name+ '</option>'
+                options += '<option value="' + c.id + '">' + c.name + '</option>'
             })
             options += '</optgroup>'
         }
@@ -61,15 +61,15 @@ function showDep(list) {
 }
 
 
-function showUser(list,selected) {
+function showUser(list, selected) {
 
-    var options='' ;
+    var options = '';
     for (var i = 0; i < list.length; i++) {
-        if (selected === list[i].id){
+        if (selected === list[i].id) {
             options += '<option value="' + list[i].id + '" selected >' + list[i].name + '</option>'
             continue;
         }
-         options += '<option value="' + list[i].id + '" >' + list[i].name + '</option>'
+        options += '<option value="' + list[i].id + '" >' + list[i].name + '</option>'
 
 
     }
@@ -87,37 +87,37 @@ function onblus(tag) {
     var receivedAmount = $("#receivedAmount").val();
     var badAmount = $("#badAmount").val();
 
-    if (invoiceAmount !== '' && !validateNum(invoiceAmount,"发票金额")) {
+    if (invoiceAmount !== '' && !validateNum(invoiceAmount, "发票金额")) {
         return;
     }
-    if (receivedAmount !== '' && !validateNum(receivedAmount,"回款金额")) {
+    if (receivedAmount !== '' && !validateNum(receivedAmount, "回款金额")) {
         return;
     }
-    if (badAmount !== '' && !validateNum(badAmount,"坏账金额")) {
+    if (badAmount !== '' && !validateNum(badAmount, "坏账金额")) {
         return;
     }
 
-    if (badAmount === ''){
+    if (badAmount === '') {
         badAmount = 0
     }
-    if (receivedAmount === ''){
+    if (receivedAmount === '') {
         receivedAmount = 0
     }
 
     $("#noReceivedAmount").val(invoiceAmount - receivedAmount);
 
-    if (id === 'invoiceAmount'){
+    if (id === 'invoiceAmount') {
         var taxRate = $("#taxRate").val();
         var num = (100 + parseInt(taxRate)) / 100;
-        var noTaxAmount = invoiceAmount / num  ;
+        var noTaxAmount = invoiceAmount / num;
         $("#noTaxAmount").val(noTaxAmount.toFixed(2));
     }
 }
 
-function validateNum(num,string) {
+function validateNum(num, string) {
     var patrn = /^\d+(\.\d+)?$/;
     if (!patrn.exec(num)) {
-        layer.msg( string + "为数字", {icon: 2, time: 1000});
+        layer.msg(string + "为数字", {icon: 2, time: 1000});
         return false;
     }
     return true
@@ -131,7 +131,7 @@ function validateNull(con, string) {
     return true;
 }
 
-function validateYear(startDate,endDate){
+function validateYear(startDate, endDate) {
     if (!startDate || startDate == '') {
         layer.msg('请选择开始时间', {icon: 2, time: 1000});
         return false;
@@ -143,10 +143,10 @@ function validateYear(startDate,endDate){
 
     if (startDate !== '' && endDate !== '') {
 
-        var startYear = startDate.substring(0,4);
-        var endYear = endDate.substring(0,4);
+        var startYear = startDate.substring(0, 4);
+        var endYear = endDate.substring(0, 4);
 
-        if (startYear !== endYear){
+        if (startYear !== endYear) {
             layer.msg('日期不能跨越年份', {icon: 2, time: 1000});
             return false;
         }
@@ -162,7 +162,7 @@ function validateYear(startDate,endDate){
 }
 
 
-function validateYear2(startDate,endDate){
+function validateYear2(startDate, endDate) {
     if (!startDate || startDate == '') {
         layer.msg('请选择开始时间', {icon: 2, time: 1000});
         return false;
@@ -184,7 +184,7 @@ function validateYear2(startDate,endDate){
 }
 
 
-function getTaxRate(taxRate){
+function getTaxRate(taxRate) {
     ajax
     ({
         url: '/taxrate/all',
@@ -193,7 +193,7 @@ function getTaxRate(taxRate){
                 var list = res.data;
                 var options = '';
                 for (var i = 0; i < list.length; i++) {
-                    if(taxRate === list[i].taxRate){
+                    if (taxRate === list[i].taxRate) {
                         options += '<option value="' + list[i].taxRate + '" selected >' + list[i].taxRate + '</option>'
                         continue;
                     }
@@ -213,18 +213,19 @@ $('#taxRate').on('change', function () {
     var taxRate = $(this).val();
     var invoiceAmount = $("#invoiceAmount").val();
     var num = (100 + parseInt(taxRate)) / 100;
-    var noTaxAmount = invoiceAmount / num  ;
+    var noTaxAmount = invoiceAmount / num;
     $("#noTaxAmount").val(noTaxAmount.toFixed(2));
 });
 
 $('#depId-select').on('change', function () {
-    var depId = $(this).val();
-    getProject(depId,null)
+   // var depId = $(this).val();
+    var departmentName = $("#depId-select option:selected").text();
+    getProject(departmentName, null)
 });
 
-function getProject(depId,projectId) {
+function getProject(depName, invoiceProject) {
     ajax({
-        url:"project/dep?depId="+depId,
+        url: "project/dep?depName=" + depName,
         type: 'get',
         data: {},
         success: function (res) {
@@ -234,7 +235,7 @@ function getProject(depId,projectId) {
 
                 for (var i = 0; i < list.length; i++) {
 
-                    if(projectId === list[i].id){
+                    if (invoiceProject === list[i].projectName) {
                         options += '<option value="' + list[i].id + '" selected >' + list[i].projectName + '</option>'
                         continue;
                     }
@@ -259,7 +260,7 @@ function getCredit(credit) {
                 var list = res.data;
                 var options = '';
                 for (var i = 0; i < list.length; i++) {
-                    if(credit === list[i].creditLimit){
+                    if (credit === list[i].creditLimit) {
                         options += '<option value="' + list[i].creditLimit + '" selected >' + list[i].creditLimit + '</option>'
                         continue;
                     }

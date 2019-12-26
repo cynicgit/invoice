@@ -48,6 +48,7 @@ public class InvoiceService {
     private UserMapper userMapper;
 
 
+    @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> importExcel(MultipartFile file) {
         List<Invoice> invoices = EasyPoiUtils.importExcel(file, 0, 1, Invoice.class);
         List<Credit> creditAll = creditMapper.getCreditAll();
@@ -102,10 +103,11 @@ public class InvoiceService {
                     if (invoice.getInvoiceAmount() - invoice.getReceivedAmount() < 0) {
                         throw new BusinessException("回款金额大于发票金额");
                     }
-
-                    invoice.setNoReceivedAmount(invoice.getInvoiceAmount() - invoice.getReceivedAmount());
                 }
                 invoice.setUserId(userByName.getId());
+                if (invoice.getInvoiceAmount() != null && invoice.getReceivedAmount() != null){
+                    invoice.setNoReceivedAmount(invoice.getInvoiceAmount() - invoice.getReceivedAmount());
+                }
                 list.add(invoice);
             } catch (Exception e) {
                 e.printStackTrace();

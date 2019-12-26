@@ -55,8 +55,8 @@ public class ProjectController {
     }
 
     @GetMapping("/dep")
-    public ZYResponse getProjectByDepId(Integer depId){
-        List<Project> projects = projectService.getProjectByDepId(depId);
+    public ZYResponse getProjectByDepId(String depName){
+        List<Project> projects = projectService.getProjectByDepName(depName);
         return ZYResponse.success(projects);
     }
 

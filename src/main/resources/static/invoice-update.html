@@ -398,8 +398,9 @@
             data: {},
             success: function (res) {
                 if (res.result === 0) {
-                    var depId = res.data.depId;
-                    var projectId = res.data.projectId;
+                   // var depId = res.data.depId;
+
+                    var departmentName = res.data.departmentName.split("-")[1];
                     ajax({
                         url: "/system/dep/tree",
                         type: "get",
@@ -407,16 +408,16 @@
                             if (response.result === 0) {
                                 var options = ''
                                 response.data.forEach(function (item) {
-
+                                    console.log("response----" + response);
                                     if (item.childrenDep.length === 0) {
-                                        var selected = item.id === depId ? 'selected' : ''
+                                        var selected = item.name === departmentName ? 'selected' : ''
                                         options += '<optgroup label="' + item.name + '">'
                                             + '<option value="' + item.id + '"  ' + selected + '>' + item.name + '</option></optgroup>'
                                     } else {
                                         options += '<optgroup label="' + item.name + '">'
                                         item.childrenDep.forEach(function (c) {
-                                            var selected = item.id === depId ? ' selected' : ''
-                                            options += '<option value="' + item.id + '"  ' + selected + '>' + c.name + '</option>'
+                                            var selected = c.name === departmentName ? ' selected' : ''
+                                            options += '<option value="' + c.id + '"  ' + selected + '>' + c.name + '</option>'
                                         })
                                         options += '</optgroup>'
                                     }
@@ -426,7 +427,7 @@
                         }
                     });
 
-                    getProject(depId,projectId);
+                    getProject(departmentName,res.data.invoiceProject);
                     getUser(res.data.userId);
                     getTaxRate(res.data.taxRate);
                     getCredit(res.data.creditLimit);
